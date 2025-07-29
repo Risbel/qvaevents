@@ -3,33 +3,35 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = useTranslations("navigation");
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-primary">
-          QvaEvent
+          {t("brand")}
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
+          <Link href="#" className="text-foreground/80 hover:text-foreground transition">
+            {t("features")}
+          </Link>
           <Link href="#features" className="text-foreground/80 hover:text-foreground transition">
-            Features
+            {t("solutions")}
           </Link>
-          <Link href="#solutions" className="text-foreground/80 hover:text-foreground transition">
-            Solutions
-          </Link>
-          <Link href="#pricing" className="text-foreground/80 hover:text-foreground transition">
-            Pricing
+          <Link href="#" className="text-foreground/80 hover:text-foreground transition">
+            {t("pricing")}
           </Link>
           <Link
-            href="/login"
+            href="#"
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition"
           >
-            Get Started
+            {t("getStarted")}
           </Link>
         </div>
 
@@ -44,32 +46,32 @@ export function Navigation() {
         <div className="md:hidden bg-background border-b border-border animate-in slide-in-from-top">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
             <Link
+              href="#"
+              className="text-foreground/80 hover:text-foreground transition py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t("features")}
+            </Link>
+            <Link
               href="#features"
               className="text-foreground/80 hover:text-foreground transition py-2"
               onClick={() => setIsMenuOpen(false)}
             >
-              Features
+              {t("solutions")}
             </Link>
             <Link
-              href="#solutions"
+              href="#"
               className="text-foreground/80 hover:text-foreground transition py-2"
               onClick={() => setIsMenuOpen(false)}
             >
-              Solutions
+              {t("pricing")}
             </Link>
             <Link
-              href="#pricing"
-              className="text-foreground/80 hover:text-foreground transition py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/login"
+              href="#"
               className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition w-full text-center"
               onClick={() => setIsMenuOpen(false)}
             >
-              Get Started
+              {t("getStarted")}
             </Link>
           </div>
         </div>

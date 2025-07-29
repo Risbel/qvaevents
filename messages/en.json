@@ -1,0 +1,51 @@
+{
+  "navigation": {
+    "brand": "QvaEvent",
+    "features": "Features",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "getStarted": "Get Started"
+  },
+  "landing": {
+    "hero": {
+      "title": "Streamline Your Event Management with {brand}",
+      "description": "The all-in-one platform for businesses to create, manage, and coordinate multiple events with powerful customization tools and seamless client management.",
+      "startTrial": "Start Free Trial",
+      "requestDemo": "Request Demo"
+    },
+    "features": {
+      "title": "Everything You Need to Run Successful Events",
+      "cards": {
+        "eventPlanning": {
+          "title": "Event Planning",
+          "description": "Create and manage multiple events simultaneously with our intuitive planning tools."
+        },
+        "clientManagement": {
+          "title": "Client Management",
+          "description": "Keep track of attendees, vendors, and stakeholders in one centralized platform."
+        },
+        "customBranding": {
+          "title": "Custom Branding",
+          "description": "Customize every aspect of your events to match your brand identity."
+        },
+        "virtualEvents": {
+          "title": "Virtual Events",
+          "description": "Host engaging virtual and hybrid events with our integrated streaming solutions."
+        },
+        "analytics": {
+          "title": "Analytics",
+          "description": "Get detailed insights and reports to measure event success and ROI."
+        },
+        "security": {
+          "title": "Security",
+          "description": "Enterprise-grade security to protect your events and attendee data."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Event Management?",
+      "description": "Join thousands of businesses that trust QvaEvent to deliver exceptional event experiences.",
+      "button": "Get Started Today"
+    }
+  }
+}

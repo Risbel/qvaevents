@@ -1,0 +1,51 @@
+{
+  "navigation": {
+    "brand": "QvaEvent",
+    "features": "Características",
+    "solutions": "Soluciones",
+    "pricing": "Precios",
+    "getStarted": "Comenzar"
+  },
+  "landing": {
+    "hero": {
+      "title": "Optimiza tu Gestión de Eventos con {brand}",
+      "description": "La plataforma todo en uno para que las empresas creen, gestionen y coordinen múltiples eventos con potentes herramientas de personalización y gestión fluida de clientes.",
+      "startTrial": "Prueba Gratuita",
+      "requestDemo": "Solicitar Demo"
+    },
+    "features": {
+      "title": "Todo lo que Necesitas para Ejecutar Eventos Exitosos",
+      "cards": {
+        "eventPlanning": {
+          "title": "Planificación de Eventos",
+          "description": "Crea y gestiona múltiples eventos simultáneamente con nuestras herramientas intuitivas."
+        },
+        "clientManagement": {
+          "title": "Gestión de Clientes",
+          "description": "Mantén un seguimiento de asistentes, proveedores y partes interesadas en una plataforma centralizada."
+        },
+        "customBranding": {
+          "title": "Marca Personalizada",
+          "description": "Personaliza cada aspecto de tus eventos para que coincida con la identidad de tu marca."
+        },
+        "virtualEvents": {
+          "title": "Eventos Virtuales",
+          "description": "Organiza eventos virtuales e híbridos atractivos con nuestras soluciones integradas de streaming."
+        },
+        "analytics": {
+          "title": "Analíticas",
+          "description": "Obtén informes y análisis detallados para medir el éxito y el ROI de los eventos."
+        },
+        "security": {
+          "title": "Seguridad",
+          "description": "Seguridad de nivel empresarial para proteger tus eventos y datos de los asistentes."
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Transformar tu Gestión de Eventos?",
+      "description": "Únete a miles de empresas que confían en QvaEvent para ofrecer experiencias excepcionales en eventos.",
+      "button": "Comienza Hoy"
+    }
+  }
+}
