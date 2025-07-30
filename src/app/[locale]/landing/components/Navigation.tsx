@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import ModeToggle from "@/app/components/ModeToggle";
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,6 +35,8 @@ export function Navigation() {
             {t("getStarted")}
           </Link>
         </div>
+
+        <ModeToggle />
 
         {/* Mobile Menu Button */}
         <button className="md:hidden text-foreground p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>

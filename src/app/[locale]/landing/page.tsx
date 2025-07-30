@@ -6,10 +6,10 @@ export default async function LandingPage() {
   const t = await getTranslations("landing");
 
   return (
-    <div className="flex flex-col gap-12 md:gap-20 pb-12 md:pb-20">
+    <div className="flex flex-col gap-12 md:gap-20 pb-12 md:pb-20 px-4 md:px-16">
       {/* Hero Section */}
       <section id="hero" className="relative min-h-[80vh] md:h-[90vh] flex items-center pt-8 md:pt-0">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6 animate-in fade-in slide-in-from-left duration-800">
               {t("hero.title", { brand: "QvaEvent" })}
@@ -37,7 +37,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 scroll-mt-20">
+      <section id="features" className="container mx-auto scroll-mt-20">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-16 animate-in fade-in">
           {t("features.title")}
         </h2>
@@ -76,7 +76,7 @@ export default async function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section id="cta" className="container mx-auto px-4">
+      <section id="cta" className="container mx-auto">
         <div className="bg-accent rounded-xl md:rounded-2xl p-6 md:p-12 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4">{t("cta.title")}</h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
