@@ -1,24 +1,57 @@
 {
   "navigation": {
-    "brand": "QvaEvent",
+    "brand": "QvaEvents",
     "features": "Características",
     "solutions": "Soluciones",
     "pricing": "Precios",
-    "getStarted": "Comenzar"
+    "getStarted": "Comenzar",
+    "contact": "Contactar"
+  },
+  "Index": {
+    "hero": {
+      "title": "Gestiona tus eventos con nosotros",
+      "description": "Crea eventos inolvidables con nuestra potente plataforma. Desde la planificación hasta la ejecución, te respaldamos.",
+      "cta": {
+        "primary": "Explorar",
+        "secondary": "Contáctanos"
+      }
+    },
+    "features": {
+      "title": "Por Qué Elegirnos",
+      "cards": [
+        {
+          "title": "Planificación Sencilla",
+          "description": "Herramientas intuitivas para planificar y gestionar tus eventos sin esfuerzo"
+        },
+        {
+          "title": "Análisis Inteligente",
+          "description": "Obtén información valiosa para tomar decisiones basadas en datos"
+        },
+        {
+          "title": "Integración Perfecta",
+          "description": "Funciona perfectamente con tus herramientas y flujos de trabajo existentes"
+        }
+      ]
+    },
+    "contact": {
+      "title": "Hablemos",
+      "description": "¿Listo para llevar tus eventos al siguiente nivel? Estamos aquí para ayudarte a tener éxito.",
+      "cta": "Ponte en Contacto"
+    }
   },
   "landing": {
     "hero": {
       "title": "Optimiza tu Gestión de Eventos con {brand}",
-      "description": "La plataforma todo en uno para que las empresas creen, gestionen y coordinen múltiples eventos con potentes herramientas de personalización y gestión fluida de clientes.",
-      "startTrial": "Prueba Gratuita",
+      "description": "La plataforma todo en uno para que las empresas creen, gestionen y coordinen múltiples eventos con potentes herramientas de personalización y gestión de clientes sin problemas.",
+      "startTrial": "Comenzar Prueba Gratuita",
       "requestDemo": "Solicitar Demo"
     },
     "features": {
-      "title": "Todo lo que Necesitas para Ejecutar Eventos Exitosos",
+      "title": "Todo lo que Necesitas para Realizar Eventos Exitosos",
       "cards": {
         "eventPlanning": {
           "title": "Planificación de Eventos",
-          "description": "Crea y gestiona múltiples eventos simultáneamente con nuestras herramientas intuitivas."
+          "description": "Crea y gestiona múltiples eventos simultáneamente con nuestras herramientas intuitivas de planificación."
         },
         "clientManagement": {
           "title": "Gestión de Clientes",
@@ -33,8 +66,8 @@
           "description": "Organiza eventos virtuales e híbridos atractivos con nuestras soluciones integradas de streaming."
         },
         "analytics": {
-          "title": "Analíticas",
-          "description": "Obtén informes y análisis detallados para medir el éxito y el ROI de los eventos."
+          "title": "Análisis",
+          "description": "Obtén informes e insights detallados para medir el éxito y el ROI del evento."
         },
         "security": {
           "title": "Seguridad",

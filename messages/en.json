@@ -4,7 +4,40 @@
     "features": "Features",
     "solutions": "Solutions",
     "pricing": "Pricing",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "contact": "Contact"
+  },
+  "Index": {
+    "hero": {
+      "title": "Manage your events with us",
+      "description": "Create unforgettable events with our powerful platform. From planning to execution, we've got you covered.",
+      "cta": {
+        "primary": "Explore",
+        "secondary": "Contact Us"
+      }
+    },
+    "features": {
+      "title": "Why Choose Us",
+      "cards": [
+        {
+          "title": "Easy Planning",
+          "description": "Intuitive tools to plan and manage your events effortlessly"
+        },
+        {
+          "title": "Smart Analytics",
+          "description": "Get valuable insights to make data-driven decisions"
+        },
+        {
+          "title": "Seamless Integration",
+          "description": "Works perfectly with your existing tools and workflows"
+        }
+      ]
+    },
+    "contact": {
+      "title": "Let's Talk",
+      "description": "Ready to take your events to the next level? We're here to help you succeed.",
+      "cta": "Get in Touch"
+    }
   },
   "landing": {
     "hero": {
