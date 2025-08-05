@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import ModeToggle from "@/app/components/ModeToggle";
+import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 
 const MainNav = () => {
   const t = useTranslations("navigation");
@@ -21,7 +22,10 @@ const MainNav = () => {
           </a>
         </div>
 
-        <ModeToggle />
+        <div className="flex items-center gap-2">
+          <LocaleSwitcher />
+          <ModeToggle />
+        </div>
       </nav>
     </header>
   );
