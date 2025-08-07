@@ -1,8 +1,8 @@
-import { useTranslations } from "next-intl";
 import MainNav from "./components/MainNav";
+import { getTranslations } from "next-intl/server";
 
-export default function Home() {
-  const t = useTranslations("Index");
+export default async function Home() {
+  const t = await getTranslations("Index");
 
   return (
     <div className="min-h-screen">

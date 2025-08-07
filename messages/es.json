@@ -7,10 +7,58 @@
     "getStarted": "Comenzar",
     "contact": "Contactar"
   },
+  "Auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "description": "Inicia sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "signIn": "Iniciar sesión",
+      "signingIn": "Iniciando sesión...",
+      "or": "o",
+      "continueWithGoogle": "Continuar con Google",
+      "createAccount": "Crear una cuenta",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "invalidCredentials": "Credenciales inválidas"
+    },
+    "signup": {
+      "title": "Crear una cuenta",
+      "description": "Ingresa tus datos para comenzar",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "signUp": "Registrarse",
+      "confirmPassword": "Confirmar contraseña",
+      "createAccount": "Crear cuenta",
+      "creatingAccount": "Creando cuenta...",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    },
+    "emailConfirmation": {
+      "title": "Revisa tu correo electrónico",
+      "description": "Te hemos enviado un correo de confirmación para completar tu registro.",
+      "accountCreated": "¡Cuenta creada exitosamente!",
+      "checkEmail": "Por favor revisa tu correo en",
+      "nextSteps": "Próximos pasos:",
+      "step1": "Abre tu aplicación de correo electrónico",
+      "step2": "Busca un correo de QvaEvents",
+      "step3": "Haz clic en el enlace de confirmación en el correo",
+      "openEmailApp": "Abrir Aplicación de Correo",
+      "close": "Cerrar",
+      "error": "Error al confirmar el correo electrónico. Intenta de nuevo o contacta soporte si el problema persiste."
+    },
+    "signout": {
+      "signOut": "Cerrar sesión"
+    },
+    "error": {
+      "title": "Error de Autenticación",
+      "description": "Algo salió mal durante la autenticación",
+      "message": "Por favor intenta de nuevo o contacta soporte si el problema persiste.",
+      "backToLogin": "Volver al inicio de sesión"
+    }
+  },
   "Index": {
     "hero": {
       "title": "Gestiona tus eventos con nosotros",
-      "description": "Crea eventos inolvidables con nuestra potente plataforma. Desde la planificación hasta la ejecución, te respaldamos.",
+      "description": "Crea eventos inolvidables con nuestra potente plataforma. Desde la planificación hasta la ejecución, te tenemos cubierto.",
       "cta": {
         "primary": "Explorar",
         "secondary": "Contáctanos"
@@ -20,7 +68,7 @@
       "title": "Por Qué Elegirnos",
       "cards": [
         {
-          "title": "Planificación Sencilla",
+          "title": "Planificación Fácil",
           "description": "Herramientas intuitivas para planificar y gestionar tus eventos sin esfuerzo"
         },
         {
@@ -42,20 +90,20 @@
   "landing": {
     "hero": {
       "title": "Optimiza tu Gestión de Eventos con {brand}",
-      "description": "La plataforma todo en uno para que las empresas creen, gestionen y coordinen múltiples eventos con potentes herramientas de personalización y gestión de clientes sin problemas.",
+      "description": "La plataforma todo en uno para que las empresas creen, gestionen y coordinen múltiples eventos con potentes herramientas de personalización y gestión fluida de clientes.",
       "startTrial": "Comenzar Prueba Gratuita",
       "requestDemo": "Solicitar Demo"
     },
     "features": {
-      "title": "Todo lo que Necesitas para Realizar Eventos Exitosos",
+      "title": "Todo lo que Necesitas para Ejecutar Eventos Exitosos",
       "cards": {
         "eventPlanning": {
           "title": "Planificación de Eventos",
-          "description": "Crea y gestiona múltiples eventos simultáneamente con nuestras herramientas intuitivas de planificación."
+          "description": "Crea y gestiona múltiples eventos simultáneamente con nuestras herramientas de planificación intuitivas."
         },
         "clientManagement": {
           "title": "Gestión de Clientes",
-          "description": "Mantén un seguimiento de asistentes, proveedores y partes interesadas en una plataforma centralizada."
+          "description": "Mantén un registro de asistentes, proveedores y partes interesadas en una plataforma centralizada."
         },
         "customBranding": {
           "title": "Marca Personalizada",
@@ -63,22 +111,22 @@
         },
         "virtualEvents": {
           "title": "Eventos Virtuales",
-          "description": "Organiza eventos virtuales e híbridos atractivos con nuestras soluciones integradas de streaming."
+          "description": "Organiza eventos virtuales e híbridos atractivos con nuestras soluciones de transmisión integradas."
         },
         "analytics": {
           "title": "Análisis",
-          "description": "Obtén informes e insights detallados para medir el éxito y el ROI del evento."
+          "description": "Obtén información detallada y reportes para medir el éxito del evento y el ROI."
         },
         "security": {
           "title": "Seguridad",
-          "description": "Seguridad de nivel empresarial para proteger tus eventos y datos de los asistentes."
+          "description": "Seguridad de nivel empresarial para proteger tus eventos y datos de asistentes."
         }
       }
     },
     "cta": {
       "title": "¿Listo para Transformar tu Gestión de Eventos?",
-      "description": "Únete a miles de empresas que confían en QvaEvent para ofrecer experiencias excepcionales en eventos.",
-      "button": "Comienza Hoy"
+      "description": "Únete a miles de empresas que confían en QvaEvent para ofrecer experiencias de eventos excepcionales.",
+      "button": "Comenzar Hoy"
     }
   }
 }

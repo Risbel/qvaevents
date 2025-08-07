@@ -7,6 +7,54 @@
     "getStarted": "Get Started",
     "contact": "Contact"
   },
+  "Auth": {
+    "login": {
+      "title": "Welcome back",
+      "description": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "signIn": "Login",
+      "signingIn": "Signing in...",
+      "or": "or",
+      "continueWithGoogle": "Continue with Google",
+      "createAccount": "Create an account",
+      "forgotPassword": "Forgot password?",
+      "invalidCredentials": "Invalid credentials"
+    },
+    "signup": {
+      "title": "Create an account",
+      "description": "Enter your details to get started",
+      "email": "Email",
+      "password": "Password",
+      "signUp": "Register",
+      "confirmPassword": "Confirm password",
+      "createAccount": "Create account",
+      "creatingAccount": "Creating account...",
+      "alreadyHaveAccount": "Already have an account?"
+    },
+    "emailConfirmation": {
+      "title": "Check your email",
+      "description": "We've sent you a confirmation email to complete your registration.",
+      "accountCreated": "Account created successfully!",
+      "checkEmail": "Please check your email at",
+      "nextSteps": "Next steps:",
+      "step1": "Open your email application",
+      "step2": "Look for an email from QvaEvents",
+      "step3": "Click the confirmation link in the email",
+      "openEmailApp": "Open Email App",
+      "close": "Close",
+      "error": "Error confirming email. Try again or contact support if the problem persists."
+    },
+    "signout": {
+      "signOut": "Sign out"
+    },
+    "error": {
+      "title": "Authentication Error",
+      "description": "Something went wrong during authentication",
+      "message": "Please try again or contact support if the problem persists.",
+      "backToLogin": "Back to login"
+    }
+  },
   "Index": {
     "hero": {
       "title": "Manage your events with us",

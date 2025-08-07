@@ -1,11 +1,19 @@
-"use client";
-
-import { useTranslations } from "next-intl";
 import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
+import { getTranslations } from "next-intl/server";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { signOut } from "@/actions/auth/signOut";
 
-const MainNav = () => {
-  const t = useTranslations("navigation");
+const MainNav = async () => {
+  const t = await getTranslations("navigation");
+  const tAuth = await getTranslations("Auth");
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -25,6 +33,28 @@ const MainNav = () => {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
+          {user ? (
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+                redirect("/auth/org/login?message=Signed out successfully");
+              }}
+              className="flex items-center gap-2"
+            >
+              <p>{user.email}</p>
+              <Button type="submit">{tAuth("signout.signOut")}</Button>
+            </form>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline">
+                <Link href="/auth/org/login">{tAuth("login.signIn")}</Link>
+              </Button>
+              <Button asChild variant="default">
+                <Link href="/auth/org/signup">{tAuth("signup.signUp")}</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </nav>
     </header>
