@@ -19,7 +19,8 @@
       "continueWithGoogle": "Continue with Google",
       "createAccount": "Create an account",
       "forgotPassword": "Forgot password?",
-      "invalidCredentials": "Invalid credentials"
+      "invalidCredentials": "Invalid credentials",
+      "googleSuccess": "Waiting for Google to redirect you..."
     },
     "signup": {
       "title": "Create an account",
@@ -30,7 +31,9 @@
       "confirmPassword": "Confirm password",
       "createAccount": "Create account",
       "creatingAccount": "Creating account...",
-      "alreadyHaveAccount": "Already have an account?"
+      "alreadyHaveAccount": "Already have an account?",
+      "continueWithGoogle": "Continue with Google",
+      "googleSuccess": "Waiting for Google to redirect you..."
     },
     "emailConfirmation": {
       "title": "Check your email",

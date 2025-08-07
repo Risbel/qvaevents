@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import EmailConfirmationModal from "./components/EmailConfirmationModal";
+import GoogleSignIn from "@/app/[locale]/components/GoogleSignIn";
 
 export default function SignUpPage() {
   const t = useTranslations("Auth.signup");
@@ -25,6 +26,7 @@ export default function SignUpPage() {
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
+      // Only show email confirmation modal for email signup, not Google
       setShowEmailModal(true);
     }
 
@@ -77,6 +79,17 @@ export default function SignUpPage() {
             )}
           </Button>
         </form>
+
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">or</span>
+          </div>
+        </div>
+
+        <GoogleSignIn mode="signup" />
       </CardContent>
       <CardFooter>
         <Button variant="link" className="w-full" asChild>
@@ -84,6 +97,7 @@ export default function SignUpPage() {
         </Button>
       </CardFooter>
 
+      {/* Email confirmation modal - only shows for email signup, not Google */}
       <EmailConfirmationModal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} email={userEmail} />
     </>
   );

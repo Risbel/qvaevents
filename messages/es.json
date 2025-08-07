@@ -19,7 +19,8 @@
       "continueWithGoogle": "Continuar con Google",
       "createAccount": "Crear una cuenta",
       "forgotPassword": "¿Olvidaste tu contraseña?",
-      "invalidCredentials": "Credenciales inválidas"
+      "invalidCredentials": "Credenciales inválidas",
+      "googleSuccess": "Esperando a que Google te redirija..."
     },
     "signup": {
       "title": "Crear una cuenta",
@@ -30,7 +31,9 @@
       "confirmPassword": "Confirmar contraseña",
       "createAccount": "Crear cuenta",
       "creatingAccount": "Creando cuenta...",
-      "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+      "continueWithGoogle": "Continuar con Google",
+      "googleSuccess": "Esperando a que Google te redirija..."
     },
     "emailConfirmation": {
       "title": "Revisa tu correo electrónico",
