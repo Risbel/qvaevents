@@ -1,11 +1,10 @@
 import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
+import UserDropdown from "@/app/components/UserDropdown";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { signOut } from "@/actions/auth/signOut";
 
 const MainNav = async () => {
   const t = await getTranslations("navigation");
@@ -34,17 +33,7 @@ const MainNav = async () => {
           <LocaleSwitcher />
           <ModeToggle />
           {user ? (
-            <form
-              action={async () => {
-                "use server";
-                await signOut();
-                redirect("/auth/org/login?message=Signed out successfully");
-              }}
-              className="flex items-center gap-2"
-            >
-              <p>{user.email}</p>
-              <Button type="submit">{tAuth("signout.signOut")}</Button>
-            </form>
+            <UserDropdown user={user} />
           ) : (
             <div className="flex items-center gap-2">
               <Button asChild variant="outline">

@@ -1,5 +1,3 @@
-"use client";
-
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import ModeToggle from "@/app/components/ModeToggle";
 import { Button } from "@/components/ui/button";
