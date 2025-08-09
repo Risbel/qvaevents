@@ -27,13 +27,13 @@ export default function LoginPage() {
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
-      router.push(`/${locale}`);
+      router.push(`/${locale}/new`);
     }
 
     if (state.status === "error") {
       toast.error(state.message);
     }
-  }, [state, router, locale]);
+  }, [state]);
 
   return (
     <>

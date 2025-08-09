@@ -99,7 +99,7 @@
     "organizerProfileDescription": "Manage your company and business information",
     "noOrganizerProfile": "No Organizer Profile",
     "createOrganizerProfileDescription": "Create an organizer profile to manage your company information and business details.",
-    "createOrganizerProfile": "Organizer Profile",
+    "createOrganizerProfile": "Create profile",
     "edit": "Edit",
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
@@ -109,7 +109,8 @@
     "updateError": "Failed to update profile. Please try again.",
     "createSuccess": "Organizer profile created successfully!",
     "createError": "Failed to create organizer profile. Please try again.",
-    "errorLoading": "Error loading profile. Please refresh the page."
+    "errorLoading": "Error loading profile. Please refresh the page.",
+    "newPageTitle": "New Organizer Profile"
   },
   "Index": {
     "hero": {

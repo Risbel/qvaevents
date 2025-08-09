@@ -99,7 +99,7 @@
     "organizerProfileDescription": "Gestiona la información de tu empresa y negocio",
     "noOrganizerProfile": "Sin Perfil de Organizador",
     "createOrganizerProfileDescription": "Crea un perfil de organizador para gestionar la información de tu empresa y detalles del negocio.",
-    "createOrganizerProfile": "Perfil de Organizador",
+    "createOrganizerProfile": "Crear perfil",
     "edit": "Editar",
     "cancel": "Cancelar",
     "saveChanges": "Guardar Cambios",
@@ -109,7 +109,8 @@
     "updateError": "Error al actualizar el perfil. Por favor intenta de nuevo.",
     "createSuccess": "¡Perfil de organizador creado exitosamente!",
     "createError": "Error al crear el perfil de organizador. Por favor intenta de nuevo.",
-    "errorLoading": "Error al cargar el perfil. Por favor actualiza la página."
+    "errorLoading": "Error al cargar el perfil. Por favor actualiza la página.",
+    "newPageTitle": "Nuevo   de Organizador"
   },
   "Index": {
     "hero": {

@@ -29,12 +29,14 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
     const rawData = {
       companyName: formData.get("companyName") as string,
       companyType: formData.get("companyType") as string,
-      companyLogo: formData.get("companyLogo") as string,
+      companyLogo: (formData.get("companyLogo") ?? "") as string,
     };
 
     const validatedData = createOrganizerProfileSchema.safeParse(rawData);
 
     if (!validatedData.success) {
+      console.log(validatedData.error);
+
       const errors: { [key: string]: string[] } = {};
       validatedData.error.issues.forEach((error) => {
         const field = error.path[0] as string;
