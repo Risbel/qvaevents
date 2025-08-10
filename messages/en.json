@@ -20,7 +20,9 @@
       "createAccount": "Create an account",
       "forgotPassword": "Forgot password?",
       "invalidCredentials": "Invalid credentials",
-      "googleSuccess": "Waiting for Google to redirect you..."
+      "googleSuccess": "Waiting for Google to redirect you...",
+      "loginSuccess": "Login successful!",
+      "loginError": "Login failed!"
     },
     "signup": {
       "title": "Create an account",
@@ -33,7 +35,9 @@
       "creatingAccount": "Creating account...",
       "alreadyHaveAccount": "Already have an account?",
       "continueWithGoogle": "Continue with Google",
-      "googleSuccess": "Waiting for Google to redirect you..."
+      "googleSuccess": "Waiting for Google to redirect you...",
+      "signupSuccess": "Signup successful!",
+      "signupError": "Signup failed!"
     },
     "emailConfirmation": {
       "title": "Check your email",
@@ -110,7 +114,22 @@
     "createSuccess": "Organizer profile created successfully!",
     "createError": "Failed to create organizer profile. Please try again.",
     "errorLoading": "Error loading profile. Please refresh the page.",
-    "newPageTitle": "New Organizer Profile"
+    "newPageTitle": "New Organizer Profile",
+    "selectPlan": "Select Plan",
+    "selectPlanPlaceholder": "Choose a plan for your organization",
+    "planRequired": "Plan selection is required",
+    "subscription": "Subscription",
+    "plan": "Plan",
+    "price": "Price",
+    "status": "Status",
+    "expiresAt": "Expires At",
+    "statusExpired": "Expired",
+    "statusActive": "Active",
+    "statusTrialing": "Trialing",
+    "statusCanceled": "Canceled",
+    "statusPaused": "Paused",
+    "statusUnknown": "Unknown",
+    "month": "month"
   },
   "Index": {
     "hero": {

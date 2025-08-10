@@ -20,7 +20,9 @@
       "createAccount": "Crear una cuenta",
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "invalidCredentials": "Credenciales inválidas",
-      "googleSuccess": "Esperando a que Google te redirija..."
+      "googleSuccess": "Esperando a que Google te redirija...",
+      "loginSuccess": "Inicio de sesión exitoso!",
+      "loginError": "Inicio de sesión fallido!"
     },
     "signup": {
       "title": "Crear una cuenta",
@@ -33,7 +35,9 @@
       "creatingAccount": "Creando cuenta...",
       "alreadyHaveAccount": "¿Ya tienes una cuenta?",
       "continueWithGoogle": "Continuar con Google",
-      "googleSuccess": "Esperando a que Google te redirija..."
+      "googleSuccess": "Esperando a que Google te redirija...",
+      "signupSuccess": "Registro exitoso!",
+      "signupError": "Registro fallido!"
     },
     "emailConfirmation": {
       "title": "Revisa tu correo electrónico",
@@ -110,7 +114,22 @@
     "createSuccess": "¡Perfil de organizador creado exitosamente!",
     "createError": "Error al crear el perfil de organizador. Por favor intenta de nuevo.",
     "errorLoading": "Error al cargar el perfil. Por favor actualiza la página.",
-    "newPageTitle": "Nuevo   de Organizador"
+    "newPageTitle": "Nuevo Perfil de Organizador",
+    "selectPlan": "Seleccionar Plan",
+    "selectPlanPlaceholder": "Elige un plan para tu organización",
+    "planRequired": "La selección de plan es requerida",
+    "subscription": "Suscripción",
+    "plan": "Plan",
+    "price": "Precio",
+    "status": "Estado",
+    "expiresAt": "Expira el",
+    "statusExpired": "Expirado",
+    "statusActive": "Activo",
+    "statusTrialing": "En Prueba",
+    "statusCanceled": "Cancelado",
+    "statusPaused": "Pausado",
+    "statusUnknown": "Desconocido",
+    "month": "mes"
   },
   "Index": {
     "hero": {

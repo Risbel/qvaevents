@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -50,7 +52,6 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* Personal Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <User className="w-5 h-5" />
@@ -73,7 +74,6 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             </div>
           </div>
 
-          {/* Account Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <Shield className="w-5 h-5" />

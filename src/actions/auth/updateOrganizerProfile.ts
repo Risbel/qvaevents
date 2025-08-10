@@ -10,7 +10,7 @@ const updateOrganizerProfileSchema = z.object({
   companyLogo: z.string().url().optional().or(z.literal("").or(z.null())),
 });
 
-export async function updateOrganizerProfileAction(prevState: State, formData: FormData): Promise<State> {
+export async function updateOrganizerProfile(prevState: State, formData: FormData): Promise<State> {
   try {
     const supabase = await createClient();
 
@@ -22,7 +22,6 @@ export async function updateOrganizerProfileAction(prevState: State, formData: F
     if (userError || !user) {
       return {
         status: "error",
-        message: "User not authenticated",
       } satisfies State;
     }
 
@@ -46,7 +45,6 @@ export async function updateOrganizerProfileAction(prevState: State, formData: F
 
       return {
         status: "error",
-        message: "Validation failed",
         errors,
       } satisfies State;
     }
@@ -65,25 +63,20 @@ export async function updateOrganizerProfileAction(prevState: State, formData: F
       .single();
 
     if (updateError) {
-      console.error("Error updating organizer profile:", updateError);
       return {
         status: "error",
-        message: "Failed to update organizer profile",
       } satisfies State;
     }
 
     return {
       status: "success",
-      message: "Organizer profile updated successfully!",
       data: {
         profile: updatedProfile,
       },
     } satisfies State;
   } catch (error) {
-    console.error("Unexpected error updating organizer profile:", error);
     return {
       status: "error",
-      message: "An unexpected error occurred",
     } satisfies State;
   }
 }

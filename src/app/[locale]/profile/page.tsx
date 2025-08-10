@@ -1,11 +1,14 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import ProfileForm from "./components/ProfileForm";
-import OrganizerProfileSection from "./components/OrganizerProfileSection";
+import OrganizerProfileInfo from "./components/OrganizerProfileInfo";
+import SubscriptionInfo from "./components/SubscriptionInfo";
+import LoadingCard from "./components/LoadingCard";
 
-export default async function ProfilePage() {
-  const t = await getTranslations("Profile");
+export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+
   const supabase = await createClient();
 
   const {
@@ -14,21 +17,18 @@ export default async function ProfilePage() {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    redirect("/auth/org/login");
+    redirect(`/${locale}/auth/org/login`);
   }
-
-  const { data: organizerProfiles, error: profileError } = await supabase
-    .from("OrganizerProfile")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("isDeleted", false);
-
-  const organizerProfile = organizerProfiles && organizerProfiles.length > 0 ? organizerProfiles[0] : null;
 
   return (
     <>
       <ProfileForm user={user} />
-      <OrganizerProfileSection user={user} organizerProfile={organizerProfile} hasError={!!profileError} />
+      <Suspense fallback={<LoadingCard />}>
+        <OrganizerProfileInfo user={user} locale={locale} />
+      </Suspense>
+      <Suspense fallback={<LoadingCard />}>
+        <SubscriptionInfo user={user} />
+      </Suspense>
     </>
   );
 }

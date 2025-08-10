@@ -7,14 +7,21 @@ import { Home } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-const NewOrganizerProfileLayout = async ({ children }: { children: React.ReactNode }) => {
+const NewOrganizerProfileLayout = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) => {
+  const { locale } = await params;
   const t = await getTranslations("Profile");
 
   return (
     <>
       <nav className="flex justify-between items-center fixed w-full px-2 md:px-4 top-0 py-2 border-b z-50 bg-background/20 shadow-sm backdrop-blur-sm">
         <Button asChild variant="outline" size="icon">
-          <Link href="/">
+          <Link href={`/${locale}`}>
             <Home />
           </Link>
         </Button>

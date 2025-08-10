@@ -18,20 +18,20 @@ export default function SignUpPage() {
   const t = useTranslations("Auth.signup");
   const params = useParams();
   const locale = params.locale as string;
-  const initialState: State = { message: "", status: undefined };
+  const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(emailSignup, initialState);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     if (state.status === "success") {
-      toast.success(state.message);
+      toast.success(t("signupSuccess"));
       // Only show email confirmation modal for email signup, not Google
       setShowEmailModal(true);
     }
 
     if (state.status === "error") {
-      toast.error(state.message);
+      toast.error(t("signupError"));
     }
   }, [state]);
 

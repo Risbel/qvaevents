@@ -8,26 +8,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Loader2, Building, Plus } from "lucide-react";
-import { createOrganizerProfileAction } from "@/actions/auth/createOrganizerProfile";
+import { createOrganizerProfile } from "@/actions/auth/createOrganizerProfile";
 import { State } from "@/types/state";
 import { useParams } from "next/navigation";
 
-export default function CreateOrganizerProfileForm() {
+interface Plan {
+  id: number;
+  type: string;
+  name: string;
+  price: number;
+}
+
+interface CreateOrganizerProfileFormProps {
+  plans: Plan[];
+}
+
+export default function CreateOrganizerProfileForm({ plans }: CreateOrganizerProfileFormProps) {
   const t = useTranslations("Profile");
   const params = useParams();
   const locale = params.locale as string;
   const router = useRouter();
-  const initialState: State = { message: "", status: undefined };
-  const [state, formAction, isPending] = useActionState(createOrganizerProfileAction, initialState);
+  const initialState: State = { status: undefined };
+  const [state, formAction, isPending] = useActionState(createOrganizerProfile, initialState);
 
   useEffect(() => {
     if (state.status === "success") {
-      toast.success(state.message);
+      toast.success(t("createSuccess"));
       router.push(`/${locale}/profile`);
     } else if (state.status === "error") {
-      toast.error(state.message);
+      toast.error(t("createError"));
     }
   }, [state]);
 
@@ -66,6 +78,34 @@ export default function CreateOrganizerProfileForm() {
               />
               {state.errors?.companyType && <p className="text-sm text-destructive">{state.errors.companyType[0]}</p>}
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="planId">{t("selectPlan")} *</Label>
+            <Select
+              name="planId"
+              required
+              onValueChange={(value: string) => {
+                // Update hidden input when select value changes
+                const hiddenInput = document.getElementById("planId") as HTMLInputElement;
+                if (hiddenInput) {
+                  hiddenInput.value = value;
+                }
+              }}
+            >
+              <SelectTrigger className={state.errors?.planId ? "border-destructive" : ""}>
+                <SelectValue placeholder={t("selectPlanPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {plans.map((plan) => (
+                  <SelectItem key={plan.id} value={plan.id.toString()}>
+                    {plan.name} - ${plan.price}/month
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input id="planId" name="planId" type="hidden" required />
+            {state.errors?.planId && <p className="text-sm text-destructive">{state.errors.planId[0]}</p>}
           </div>
 
           <div className="flex justify-center items-center">

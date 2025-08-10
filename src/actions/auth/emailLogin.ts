@@ -3,8 +3,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { State } from "@/types/state";
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -25,7 +23,6 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
     if (!validation.success) {
       return {
         status: "error",
-        message: "Validation failed",
         errors: validation.error.flatten().fieldErrors,
       } satisfies State;
     }
@@ -38,23 +35,18 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
     if (authError) {
       return {
         status: "error",
-        message: "Authentication failed",
         errors: {
           auth: [authError.message],
         },
       } satisfies State;
     }
 
-    // Return success state instead of redirecting immediately
-    // This allows the client to show the success toast before redirecting
     return {
       status: "success",
-      message: "Login successful!",
     } satisfies State;
   } catch (error) {
     return {
       status: "error",
-      message: "Something went wrong during login",
     } satisfies State;
   }
 }

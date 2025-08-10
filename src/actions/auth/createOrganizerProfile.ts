@@ -3,14 +3,16 @@
 import { createClient } from "@/utils/supabase/server";
 import { z } from "zod";
 import { State } from "@/types/state";
+import { addMonths, endOfMonth } from "date-fns";
 
 const createOrganizerProfileSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   companyType: z.string().min(1, "Company type is required"),
   companyLogo: z.string().url().optional().or(z.literal("")),
+  planId: z.string().min(1, "Plan selection is required"),
 });
 
-export async function createOrganizerProfileAction(prevState: State, formData: FormData): Promise<State> {
+export async function createOrganizerProfile(prevState: State, formData: FormData): Promise<State> {
   try {
     const supabase = await createClient();
 
@@ -22,7 +24,6 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
     if (userError || !user) {
       return {
         status: "error",
-        message: "User not authenticated",
       } satisfies State;
     }
 
@@ -30,13 +31,12 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
       companyName: formData.get("companyName") as string,
       companyType: formData.get("companyType") as string,
       companyLogo: (formData.get("companyLogo") ?? "") as string,
+      planId: formData.get("planId") as string,
     };
 
     const validatedData = createOrganizerProfileSchema.safeParse(rawData);
 
     if (!validatedData.success) {
-      console.log(validatedData.error);
-
       const errors: { [key: string]: string[] } = {};
       validatedData.error.issues.forEach((error) => {
         const field = error.path[0] as string;
@@ -48,7 +48,6 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
 
       return {
         status: "error",
-        message: "Validation failed",
         errors,
       } satisfies State;
     }
@@ -63,14 +62,12 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
     if (checkError) {
       return {
         status: "error",
-        message: "Failed to check existing profile",
       } satisfies State;
     }
 
     if (existingProfiles && existingProfiles.length > 0) {
       return {
         status: "error",
-        message: "Organizer profile already exists",
       } satisfies State;
     }
 
@@ -91,24 +88,46 @@ export async function createOrganizerProfileAction(prevState: State, formData: F
       .single();
 
     if (insertError) {
-      console.error("Error creating organizer profile:", insertError);
       return {
         status: "error",
-        message: "Failed to create organizer profile",
+      } satisfies State;
+    }
+
+    // Calculate expiration date (same day next month, handling month length differences)
+    const now = new Date();
+    const nextMonth = addMonths(now, 1);
+
+    // If the current day doesn't exist in the next month, use the last day of that month
+    const expDate = nextMonth.getDate() !== now.getDate() ? endOfMonth(nextMonth) : nextMonth;
+
+    const { data: newSubscription, error: subscriptionError } = await supabase
+      .from("Subscription")
+      .insert({
+        planId: parseInt(validatedData.data.planId),
+        organizerId: newProfile.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        expDate: expDate.toISOString(),
+      })
+      .select()
+      .single();
+
+    if (subscriptionError) {
+      return {
+        status: "error",
       } satisfies State;
     }
 
     return {
       status: "success",
-      message: "Organizer profile created successfully!",
       data: {
         profile: newProfile,
+        subscription: newSubscription,
       },
     } satisfies State;
   } catch (error) {
     return {
       status: "error",
-      message: "An unexpected error occurred",
     } satisfies State;
   }
 }

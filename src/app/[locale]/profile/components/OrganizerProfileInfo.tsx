@@ -1,34 +1,22 @@
-"use client";
-
-import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Building, Image } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
+import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/geyOrganizerProfile";
+import { getTranslations } from "next-intl/server";
 import EmptyState from "./EmptyState";
 
-interface OrganizerProfile {
-  id: number;
-  isDeleted: boolean;
-  isActive: boolean;
-  updatedAt: string;
-  user_id: string;
-  createdAt: string;
-  companyName: string;
-  companyType: string;
-  companyLogo: string;
-}
-
-interface OrganizerProfileSectionProps {
+interface OrganizerProfileInfoProps {
   user: SupabaseUser;
-  organizerProfile: OrganizerProfile | null;
-  hasError: boolean;
+  locale: string;
 }
 
-export default function OrganizerProfileSection({ user, organizerProfile, hasError }: OrganizerProfileSectionProps) {
-  const t = useTranslations("Profile");
+export default async function OrganizerProfileInfo({ user, locale }: OrganizerProfileInfoProps) {
+  const t = await getTranslations("Profile");
+
+  const organizerProfileResult = await getOrganizerProfile(user.id);
 
   const getInitials = (name: string) => {
     return name
@@ -39,7 +27,7 @@ export default function OrganizerProfileSection({ user, organizerProfile, hasErr
       .slice(0, 2);
   };
 
-  if (hasError) {
+  if (organizerProfileResult.status === "error") {
     return (
       <Card>
         <CardHeader>
@@ -56,6 +44,8 @@ export default function OrganizerProfileSection({ user, organizerProfile, hasErr
       </Card>
     );
   }
+
+  const organizerProfile = organizerProfileResult.data?.organizerProfile as OrganizerProfile | null;
 
   if (!organizerProfile) {
     return <EmptyState />;

@@ -30,7 +30,6 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
     if (!validation.success) {
       return {
         status: "error",
-        message: "Validation failed",
         errors: validation.error.flatten().fieldErrors,
       } satisfies State;
     }
@@ -43,7 +42,6 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
     if (authError) {
       return {
         status: "error",
-        message: "Signup failed",
         errors: {
           auth: [authError.message],
         },
@@ -52,12 +50,10 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
 
     return {
       status: "success",
-      message: "Signup successful!",
     } satisfies State;
   } catch (error) {
     return {
       status: "error",
-      message: "Something went wrong during signup",
     } satisfies State;
   }
 }

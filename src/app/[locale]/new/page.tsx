@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import CreateOrganizerProfileForm from "./components/CreateOrganizerProfileForm";
+import { getActivePlans, Plan } from "@/queries/getPlans";
 
 export default async function NewOrganizerProfilePage() {
   const supabase = await createClient();
@@ -24,10 +25,15 @@ export default async function NewOrganizerProfilePage() {
     redirect("/profile");
   }
 
-  // If user already has a profile, redirect to profile page
   if (existingProfiles && existingProfiles.length > 0) {
     redirect("/profile");
   }
 
-  return <CreateOrganizerProfileForm />;
+  const plans = await getActivePlans();
+
+  if (plans.status === "error") {
+    redirect("/profile");
+  }
+
+  return <CreateOrganizerProfileForm plans={(plans.data?.plans as Plan[]) || []} />;
 }

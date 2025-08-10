@@ -42,7 +42,13 @@ export default function GoogleSignIn({ mode }: GoogleSignInProps) {
   };
 
   return (
-    <Button type="button" variant="outline" onClick={handleGoogleSignIn} disabled={isLoading} className="w-full">
+    <Button
+      type="button"
+      variant="outline"
+      onClick={handleGoogleSignIn}
+      disabled={isLoading}
+      className="w-full cursor-pointer"
+    >
       {isLoading ? (
         <>
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />

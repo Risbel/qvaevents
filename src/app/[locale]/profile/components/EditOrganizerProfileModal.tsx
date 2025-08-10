@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { useActionState } from "react";
@@ -14,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, Building, Edit } from "lucide-react";
-import { updateOrganizerProfileAction } from "@/actions/auth/updateOrganizerProfile";
+import { updateOrganizerProfile } from "@/actions/auth/updateOrganizerProfile";
 import { State } from "@/types/state";
 import { useRouter } from "next/navigation";
 
@@ -38,17 +40,16 @@ export default function EditOrganizerProfileModal({ profile }: EditOrganizerProf
   const t = useTranslations("Profile");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const initialState: State = { message: "", status: undefined };
-  const [state, formAction, isPending] = useActionState(updateOrganizerProfileAction, initialState);
+  const initialState: State = { status: undefined };
+  const [state, formAction, isPending] = useActionState(updateOrganizerProfile, initialState);
 
-  // Handle form submission response
   useEffect(() => {
     if (state.status === "success") {
-      toast.success(state.message);
+      toast.success(t("updateSuccess"));
       setIsOpen(false);
       router.refresh();
     } else if (state.status === "error") {
-      toast.error(state.message);
+      toast.error(t("updateError"));
     }
   }, [state, router]);
 

@@ -21,17 +21,17 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const locale = params.locale as string;
-  const initialState: State = { message: "", status: undefined };
+  const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(emailLogin, initialState);
 
   useEffect(() => {
     if (state.status === "success") {
-      toast.success(state.message);
+      toast.success(t("loginSuccess"));
       router.push(`/${locale}/new`);
     }
 
     if (state.status === "error") {
-      toast.error(state.message);
+      toast.error(t("loginError"));
     }
   }, [state]);
 
