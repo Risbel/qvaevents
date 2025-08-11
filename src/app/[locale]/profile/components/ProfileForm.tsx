@@ -56,8 +56,8 @@ export default function ProfileForm({ user }: { user: SupabaseUser }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">{t("fullName")}</Label>
-                <Input id="fullName" value={getUserName()} disabled className="bg-muted" />
+                <Label htmlFor="defaultName">{t("defaultName")}</Label>
+                <Input id="defaultName" value={getUserName()} disabled className="bg-muted" />
               </div>
 
               <div className="space-y-2">

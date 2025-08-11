@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Loader2, Building, Plus } from "lucide-react";
 import { createOrganizerProfile } from "@/actions/auth/createOrganizerProfile";
@@ -23,6 +24,10 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
   const router = useRouter();
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(createOrganizerProfile, initialState);
+  const [billingCycle, setBillingCycle] = useState<string>("1"); // 0 = monthly, 1 = yearly, 3 = quarterly
+
+  // Filter plans based on billing cycle
+  const filteredPlans = plans.filter((plan) => plan.billingCycle === parseInt(billingCycle));
 
   useEffect(() => {
     if (state.status === "success") {
@@ -71,6 +76,30 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
           </div>
 
           <div className="space-y-2">
+            <Label>{t("billingCycle")}</Label>
+            <RadioGroup value={billingCycle} onValueChange={setBillingCycle} className="flex flex-row gap-8">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="yearly" className="cursor-pointer" />
+                <Label htmlFor="yearly" className="cursor-pointer">
+                  {t("yearly")}
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="monthly" className="cursor-pointer" />
+                <Label htmlFor="monthly" className="cursor-pointer">
+                  {t("monthly")}
+                </Label>
+              </div>
+              {/* <div className="flex items-center space-x-2">
+                <RadioGroupItem value="3" id="quarterly" className="cursor-pointer" />
+                <Label htmlFor="quarterly" className="cursor-pointer">
+                  {t("quarterly")}
+                </Label>
+              </div> */}
+            </RadioGroup>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="planId">{t("selectPlan")} *</Label>
             <Select
               name="planId"
@@ -87,14 +116,17 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
                 <SelectValue placeholder={t("selectPlanPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                {plans.map((plan) => (
+                {filteredPlans.map((plan) => (
                   <SelectItem key={plan.id} value={plan.id.toString()}>
-                    {plan.name} - ${plan.price}/month
+                    {plan.name} - ${plan.price}/
+                    {billingCycle === "0" ? t("month") : billingCycle === "3" ? t("quarter") : t("year")} -{" "}
+                    {plan.eventLimit} {t("events")}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <input id="planId" name="planId" type="hidden" required />
+            <input id="billingCycle" name="billingCycle" type="hidden" value={billingCycle} required />
             {state.errors?.planId && <p className="text-sm text-destructive">{state.errors.planId[0]}</p>}
           </div>
 
