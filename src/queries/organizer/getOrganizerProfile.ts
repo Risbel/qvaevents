@@ -1,38 +1,12 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { SubscriptionStatus } from "@/utils/subscriptionStatus";
 import { State } from "@/types/state";
+import { Tables } from "@/types/supabase";
 
-export interface OrganizerProfile {
-  id: number;
-  isDeleted: boolean;
-  isActive: boolean;
-  updatedAt: string;
-  user_id: string;
-  createdAt: string;
-  companyName: string;
-  companyType: string;
-  companyLogo: string;
-}
-
-export interface Plan {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-}
-
-export interface Subscription {
-  id: number;
-  planId: number;
-  organizerId: number;
-  status: SubscriptionStatus;
-  createdAt: string;
-  updatedAt: string;
-  expDate: string;
-  Plan: Plan;
-}
+export type OrganizerProfile = Tables<"OrganizerProfile">;
+export type Subscription = Tables<"Subscription">;
+export type Plan = Tables<"Plan">;
 
 export async function getOrganizerProfile(userId: string): Promise<State> {
   try {
@@ -55,7 +29,7 @@ export async function getOrganizerProfile(userId: string): Promise<State> {
     return {
       status: "success",
       data: {
-        organizerProfile,
+        organizerProfile: organizerProfile as OrganizerProfile,
       },
     } satisfies State;
   } catch (error) {

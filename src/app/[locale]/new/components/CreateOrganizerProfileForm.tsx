@@ -14,19 +14,9 @@ import { Loader2, Building, Plus } from "lucide-react";
 import { createOrganizerProfile } from "@/actions/auth/createOrganizerProfile";
 import { State } from "@/types/state";
 import { useParams } from "next/navigation";
+import { Plan } from "@/queries/getPlans";
 
-interface Plan {
-  id: number;
-  type: string;
-  name: string;
-  price: number;
-}
-
-interface CreateOrganizerProfileFormProps {
-  plans: Plan[];
-}
-
-export default function CreateOrganizerProfileForm({ plans }: CreateOrganizerProfileFormProps) {
+export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] }) {
   const t = useTranslations("Profile");
   const params = useParams();
   const locale = params.locale as string;

@@ -19,24 +19,9 @@ import { Loader2, Building, Edit } from "lucide-react";
 import { updateOrganizerProfile } from "@/actions/auth/updateOrganizerProfile";
 import { State } from "@/types/state";
 import { useRouter } from "next/navigation";
+import { OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
 
-interface OrganizerProfile {
-  id: number;
-  isDeleted: boolean;
-  isActive: boolean;
-  updatedAt: string;
-  user_id: string;
-  createdAt: string;
-  companyName: string;
-  companyType: string;
-  companyLogo: string;
-}
-
-interface EditOrganizerProfileModalProps {
-  profile: OrganizerProfile;
-}
-
-export default function EditOrganizerProfileModal({ profile }: EditOrganizerProfileModalProps) {
+export default function EditOrganizerProfileModal({ profile }: { profile: OrganizerProfile }) {
   const t = useTranslations("Profile");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -77,7 +62,7 @@ export default function EditOrganizerProfileModal({ profile }: EditOrganizerProf
               <Input
                 id="companyName"
                 name="companyName"
-                defaultValue={profile.companyName}
+                defaultValue={profile.companyName || ""}
                 placeholder={t("companyNamePlaceholder")}
                 required
                 className={state.errors?.companyName ? "border-destructive" : ""}
@@ -90,7 +75,7 @@ export default function EditOrganizerProfileModal({ profile }: EditOrganizerProf
               <Input
                 id="companyType"
                 name="companyType"
-                defaultValue={profile.companyType}
+                defaultValue={profile.companyType || ""}
                 placeholder={t("companyTypePlaceholder")}
                 required
                 className={state.errors?.companyType ? "border-destructive" : ""}

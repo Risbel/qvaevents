@@ -1,11 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface LoadingCardProps {
-  title?: string;
-}
-
-export default function LoadingCard({ title }: LoadingCardProps) {
+export default function LoadingCard() {
   return (
     <Card>
       <CardHeader>

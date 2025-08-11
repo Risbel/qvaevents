@@ -3,15 +3,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { State } from "@/types/state";
 
-export interface Plan {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Tables } from "@/types/supabase";
+
+export type Plan = Tables<"Plan">;
 
 export async function getActivePlans(): Promise<State> {
   try {
@@ -32,7 +26,7 @@ export async function getActivePlans(): Promise<State> {
     return {
       status: "success",
       data: {
-        plans: plans || [],
+        plans: plans as Plan[],
       },
     } satisfies State;
   } catch (error) {

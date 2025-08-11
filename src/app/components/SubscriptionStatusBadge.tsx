@@ -1,10 +1,10 @@
 "use client";
 
-import { SubscriptionStatus, getSubscriptionStatusText, getSubscriptionStatusColor } from "@/utils/subscriptionStatus";
+import { Subscription, getSubscriptionStatusText, getSubscriptionStatusColor } from "@/utils/subscriptionStatus";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
-export default function SubscriptionStatusBadge({ status }: { status: SubscriptionStatus }) {
+export default function SubscriptionStatusBadge({ status }: { status: Subscription["status"] }) {
   const t = useTranslations("Profile");
 
   return (

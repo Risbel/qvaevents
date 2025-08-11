@@ -1,6 +1,8 @@
-export type SubscriptionStatus = 0 | 1 | 2 | 3 | 4;
+import { Tables } from "@/types/supabase";
 
-export function getSubscriptionStatusText(status: SubscriptionStatus, t: any): string {
+export type Subscription = Tables<"Subscription">;
+
+export function getSubscriptionStatusText(status: Subscription["status"], t: any): string {
   switch (status) {
     case 0:
       // expired
@@ -23,7 +25,7 @@ export function getSubscriptionStatusText(status: SubscriptionStatus, t: any): s
   }
 }
 
-export function getSubscriptionStatusColor(status: SubscriptionStatus): string {
+export function getSubscriptionStatusColor(status: Subscription["status"]): string {
   switch (status) {
     case 0: // expired
       return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";

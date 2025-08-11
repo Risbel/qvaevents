@@ -1,7 +1,16 @@
-"client";
+"use server";
 
 import { State } from "@/types/state";
 import { createClient } from "@/utils/supabase/server";
+import { Tables } from "@/types/supabase";
+
+export type Subscription = Tables<"Subscription">;
+
+export type Plan = Tables<"Plan">;
+
+export type SubscriptionWithPlan = Subscription & {
+  Plan: Plan;
+};
 
 export async function getOrganizerSubscription(organizerId: number): Promise<State> {
   try {
@@ -33,7 +42,7 @@ export async function getOrganizerSubscription(organizerId: number): Promise<Sta
     return {
       status: "success",
       data: {
-        subscription: subscriptionData,
+        subscription: subscriptionData as SubscriptionWithPlan,
       },
     } satisfies State;
   } catch (error) {

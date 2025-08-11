@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { getOrganizerProfile, OrganizerProfile, Subscription } from "@/queries/organizer/geyOrganizerProfile";
+import { getOrganizerProfile, OrganizerProfile, Subscription } from "@/queries/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import SubscriptionStatusBadge from "@/app/components/SubscriptionStatusBadge";
-import { getOrganizerSubscription } from "@/queries/organizer/getOrganizerSubscription";
+import { getOrganizerSubscription, SubscriptionWithPlan } from "@/queries/organizer/getOrganizerSubscription";
 
 interface SubscriptionInfoProps {
   user: SupabaseUser;
@@ -27,7 +27,7 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
     return null;
   }
 
-  const subscription = subscriptionResult.data.subscription as Subscription;
+  const subscription = subscriptionResult.data.subscription as SubscriptionWithPlan;
 
   return (
     <Card className="gap-4">
@@ -56,7 +56,7 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t("expiresAt")}</span>
-              <span className="font-medium">{new Date(subscription.expDate).toLocaleDateString()}</span>
+              <span className="font-medium">{new Date(subscription.expDate || "").toLocaleDateString()}</span>
             </div>
           </div>
         </div>

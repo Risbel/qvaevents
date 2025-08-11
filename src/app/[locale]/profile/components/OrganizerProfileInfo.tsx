@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Building, Image } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
-import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/geyOrganizerProfile";
+import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import EmptyState from "./EmptyState";
 
@@ -67,7 +67,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={organizerProfile.companyLogo} />
+              <AvatarImage src={organizerProfile.companyLogo || undefined} />
               <AvatarFallback className="text-lg">
                 {getInitials(organizerProfile.companyName || user.user_metadata?.full_name || user.email || "")}
               </AvatarFallback>

@@ -8,11 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Mail, Calendar, Shield, MailCheck } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 
-interface ProfileFormProps {
-  user: SupabaseUser;
-}
-
-export default function ProfileForm({ user }: ProfileFormProps) {
+export default function ProfileForm({ user }: { user: SupabaseUser }) {
   const t = useTranslations("Profile");
 
   const getInitials = (name: string) => {
