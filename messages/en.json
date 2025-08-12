@@ -136,7 +136,23 @@
     "statusCanceled": "Canceled",
     "statusPaused": "Paused",
     "statusUnknown": "Unknown",
-    "month": "month"
+    "month": "month",
+    "createBusiness": "Create Business",
+    "viewDashboard": "View Dashboard"
+  },
+  "Business": {
+    "createBusiness": "Create Business",
+    "createBusinessDescription": "Create a new business for",
+    "businessName": "Business Name",
+    "businessNamePlaceholder": "Enter your business name",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe your business...",
+    "slug": "Slug",
+    "slugPlaceholder": "my-business",
+    "slugDescription": "This will be used as your business URL. Only lowercase letters, numbers, and hyphens are allowed.",
+    "creating": "Creating...",
+    "createSuccess": "Business created successfully!",
+    "createError": "Failed to create business. Please try again."
   },
   "Index": {
     "hero": {

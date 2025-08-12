@@ -136,7 +136,23 @@
     "statusCanceled": "Cancelado",
     "statusPaused": "Pausado",
     "statusUnknown": "Desconocido",
-    "month": "mes"
+    "month": "mes",
+    "createBusiness": "Crear Negocio",
+    "viewDashboard": "Ver Dashboard"
+  },
+  "Business": {
+    "createBusiness": "Crear Negocio",
+    "createBusinessDescription": "Crear un nuevo negocio para",
+    "businessName": "Nombre del Negocio",
+    "businessNamePlaceholder": "Ingresa el nombre de tu negocio",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe tu negocio...",
+    "slug": "Slug",
+    "slugPlaceholder": "mi-negocio",
+    "slugDescription": "Esto se usará como la URL de tu negocio. Solo se permiten letras minúsculas, números y guiones.",
+    "creating": "Creando...",
+    "createSuccess": "¡Negocio creado exitosamente!",
+    "createError": "Error al crear el negocio. Por favor intenta de nuevo."
   },
   "Index": {
     "hero": {
