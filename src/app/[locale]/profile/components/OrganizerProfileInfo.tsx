@@ -1,12 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Building, Image } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building, Image, Plus, LayoutDashboard } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
 import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import EmptyState from "./EmptyState";
+import Link from "next/link";
 
 interface OrganizerProfileInfoProps {
   user: SupabaseUser;
@@ -94,6 +96,21 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
               </div>
             </div>
           )}
+
+          <div className="flex gap-2 pt-4">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/${locale}/new/${organizerProfile.id}`}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("createBusiness")}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/${locale}/dashboard/org/${organizerProfile.id}`}>
+                <LayoutDashboard className="w-4 h-4 mr-2" />
+                {t("viewDashboard")}
+              </Link>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
