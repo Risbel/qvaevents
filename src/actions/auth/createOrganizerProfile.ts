@@ -23,6 +23,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
+      console.error(userError);
       return {
         status: "error",
       } satisfies State;
@@ -62,12 +63,14 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .eq("isDeleted", false);
 
     if (checkError) {
+      console.error(checkError);
       return {
         status: "error",
       } satisfies State;
     }
 
     if (existingProfiles && existingProfiles.length > 0) {
+      console.error("Organizer profile already exists");
       return {
         status: "error",
       } satisfies State;
@@ -90,6 +93,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .single();
 
     if (insertError) {
+      console.error(insertError);
       return {
         status: "error",
       } satisfies State;
@@ -134,6 +138,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .single();
 
     if (subscriptionError) {
+      console.error(subscriptionError);
       return {
         status: "error",
       } satisfies State;
@@ -147,6 +152,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       },
     } satisfies State;
   } catch (error) {
+    console.error(error);
     return {
       status: "error",
     } satisfies State;

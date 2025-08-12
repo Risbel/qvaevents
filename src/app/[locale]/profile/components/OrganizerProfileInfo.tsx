@@ -99,14 +99,14 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
 
           <div className="flex gap-2 pt-4">
             <Button asChild variant="outline" size="sm">
-              <Link href={`/${locale}/new/${organizerProfile.id}`}>
-                <Plus className="w-4 h-4 mr-2" />
+              <Link href={`/${locale}/new/${organizerProfile.codeId}`}>
+                <Plus className="w-4 h-4" />
                 {t("createBusiness")}
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <Link href={`/${locale}/dashboard/org/${organizerProfile.id}`}>
-                <LayoutDashboard className="w-4 h-4 mr-2" />
+              <Link href={`/${locale}/dashboard/org/${organizerProfile.codeId}`}>
+                <LayoutDashboard className="w-4 h-4" />
                 {t("viewDashboard")}
               </Link>
             </Button>

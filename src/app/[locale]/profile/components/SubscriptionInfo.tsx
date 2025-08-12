@@ -47,7 +47,7 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t("price")}</span>
               <span className="font-medium">
-                ${subscription.Plan.price}/{t("month")}
+                ${subscription.Plan.price}/ {subscription.Plan.billingCycle === 0 ? t("month") : t("year")}
               </span>
             </div>
             <div className="flex items-center justify-between">

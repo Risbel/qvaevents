@@ -15,15 +15,10 @@ import { createBusiness } from "@/actions/business/createBusiness";
 import { State } from "@/types/state";
 import { useParams } from "next/navigation";
 
-interface CreateBusinessFormProps {
-  organizerId: number;
-  organizerName: string;
-}
-
-export default function CreateBusinessForm({ organizerId, organizerName }: CreateBusinessFormProps) {
+export default function CreateBusinessForm({ organizerId, companyName }: { organizerId: number; companyName: string }) {
   const t = useTranslations("Business");
   const params = useParams();
-  const locale = params.locale as string;
+  const { codeId, locale } = params;
   const router = useRouter();
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(createBusiness, initialState);
@@ -47,7 +42,7 @@ export default function CreateBusinessForm({ organizerId, organizerName }: Creat
   useEffect(() => {
     if (state.status === "success") {
       toast.success(t("createSuccess"));
-      router.push(`/${locale}/profile`);
+      router.push(`/${locale}/dashboard/org/${codeId}`);
     } else if (state.status === "error") {
       toast.error(t("createError"));
     }
@@ -61,7 +56,7 @@ export default function CreateBusinessForm({ organizerId, organizerName }: Creat
           <CardTitle>{t("createBusiness")}</CardTitle>
         </div>
         <CardDescription>
-          {t("createBusinessDescription")} {organizerName}
+          {t("createBusinessDescription")} {companyName}
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -8,8 +8,53 @@ export type Database = {
   };
   public: {
     Tables: {
+      Business: {
+        Row: {
+          codeId: string;
+          createdAt: string;
+          description: string;
+          id: string;
+          isActive: boolean;
+          isDeleted: boolean;
+          name: string | null;
+          organizerId: number;
+          slug: string | null;
+        };
+        Insert: {
+          codeId?: string;
+          createdAt?: string;
+          description: string;
+          id?: string;
+          isActive: boolean;
+          isDeleted?: boolean;
+          name?: string | null;
+          organizerId: number;
+          slug?: string | null;
+        };
+        Update: {
+          codeId?: string;
+          createdAt?: string;
+          description?: string;
+          id?: string;
+          isActive?: boolean;
+          isDeleted?: boolean;
+          name?: string | null;
+          organizerId?: number;
+          slug?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Business_organizerId_fkey";
+            columns: ["organizerId"];
+            isOneToOne: false;
+            referencedRelation: "OrganizerProfile";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       OrganizerProfile: {
         Row: {
+          codeId: string;
           companyLogo: string | null;
           companyName: string | null;
           companyType: string | null;
@@ -21,17 +66,19 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          codeId?: string;
           companyLogo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
           createdAt?: string;
-          id?: number;
+          id: number;
           isActive?: boolean;
           isDeleted?: boolean;
           updatedAt?: string | null;
           user_id?: string;
         };
         Update: {
+          codeId?: string;
           companyLogo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
