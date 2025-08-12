@@ -154,6 +154,22 @@
     "createSuccess": "¡Negocio creado exitosamente!",
     "createError": "Error al crear el negocio. Por favor intenta de nuevo."
   },
+  "Dashboard": {
+    "createBusiness": "Crear Negocio",
+    "businesses": "Negocios",
+    "businessesDescription": "Gestiona tus negocios y sus eventos",
+    "errorLoadingBusinesses": "Error al cargar los negocios. Por favor actualiza la página.",
+    "noBusinesses": "Aún No Hay Negocios",
+    "noBusinessesDescription": "Aún no has creado ningún negocio. Crea tu primer negocio para comenzar.",
+    "createFirstBusiness": "Crear Primer Negocio",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "noDescription": "Sin descripción disponible",
+    "slug": "Slug",
+    "created": "Creado",
+    "viewBusiness": "Ver Negocio",
+    "dashboard": "Dashboard"
+  },
   "Index": {
     "hero": {
       "title": "Gestiona tus eventos con nosotros",

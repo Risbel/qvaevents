@@ -154,6 +154,22 @@
     "createSuccess": "Business created successfully!",
     "createError": "Failed to create business. Please try again."
   },
+  "Dashboard": {
+    "createBusiness": "Create Business",
+    "businesses": "Businesses",
+    "businessesDescription": "Manage your businesses and their events",
+    "errorLoadingBusinesses": "Error loading businesses. Please refresh the page.",
+    "noBusinesses": "No Businesses Yet",
+    "noBusinessesDescription": "You haven't created any businesses yet. Create your first business to get started.",
+    "createFirstBusiness": "Create First Business",
+    "active": "Active",
+    "inactive": "Inactive",
+    "noDescription": "No description available",
+    "slug": "Slug",
+    "created": "Created",
+    "viewBusiness": "View Business",
+    "dashboard": "Dashboard"
+  },
   "Index": {
     "hero": {
       "title": "Manage your events with us",

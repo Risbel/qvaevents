@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const MainNav = async () => {
+const NavbarOrg = async () => {
   const t = await getTranslations("navigation");
   const tAuth = await getTranslations("Auth");
   const supabase = await createClient();
@@ -20,14 +20,6 @@ const MainNav = async () => {
         <a href="#" className="text-primary text-xl font-bold">
           {t("brand")}
         </a>
-        <div className="hidden md:flex items-center gap-2 md:gap-4">
-          <a href="#features" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            {t("features")}
-          </a>
-          <a href="#contact" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            {t("contact")}
-          </a>
-        </div>
 
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
@@ -50,4 +42,4 @@ const MainNav = async () => {
   );
 };
 
-export default MainNav;
+export default NavbarOrg;

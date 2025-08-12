@@ -2,21 +2,15 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import CreateBusinessForm from "./components/CreateBusinessForm";
 
-export default async function CreateBusinessPage({ params }: { params: Promise<{ organizerId: string }> }) {
-  const { organizerId } = await params;
+export default async function CreateBusinessPage({ params }: { params: Promise<{ codeId: string }> }) {
+  const { codeId } = await params;
   const supabase = await createClient();
-
-  // Validate organizerId is a number
-  const organizerIdNumber = parseInt(organizerId);
-  if (isNaN(organizerIdNumber)) {
-    notFound();
-  }
 
   // Check if organizer exists
   const { data: organizer, error } = await supabase
     .from("OrganizerProfile")
     .select("id, companyName")
-    .eq("id", organizerId)
+    .eq("codeId", codeId)
     .eq("isDeleted", false)
     .single();
 
@@ -24,5 +18,5 @@ export default async function CreateBusinessPage({ params }: { params: Promise<{
     notFound();
   }
 
-  return <CreateBusinessForm organizerId={organizerIdNumber} organizerName={organizer.companyName} />;
+  return <CreateBusinessForm organizerId={organizer.id} companyName={organizer.companyName} />;
 }
