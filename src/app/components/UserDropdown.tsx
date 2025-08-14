@@ -37,7 +37,7 @@ export default function UserDropdown({ user }: { user: SupabaseUser }) {
   };
 
   const getUserAvatar = () => {
-    return user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
+    return user.user_metadata?.avatar_url || user.user_metadata?.picture || undefined;
   };
 
   const getInitials = (name: string) => {

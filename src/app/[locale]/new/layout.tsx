@@ -6,6 +6,7 @@ import { Home } from "lucide-react";
 
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import GoBackButton from "../components/GoBackButton";
 
 const NewOrganizerProfileLayout = async ({
   children,
@@ -16,6 +17,7 @@ const NewOrganizerProfileLayout = async ({
 }) => {
   const { locale } = await params;
   const t = await getTranslations("Profile");
+  const tnav = await getTranslations("navigation");
 
   return (
     <>
@@ -33,8 +35,8 @@ const NewOrganizerProfileLayout = async ({
       </nav>
 
       <div className="container mx-auto space-y-4 w-full max-w-2xl lg:max-w-4xl py-16 px-4">
+        <GoBackButton text={tnav("goBack")} />
         <h1 className="text-2xl font-bold text-center">{t("newPageTitle")}</h1>
-
         {children}
       </div>
     </>

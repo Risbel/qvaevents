@@ -17,7 +17,7 @@ const NavbarOrg = async () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="flex flex-1 justify-between items-center space-x-2 px-2 md:px-4 py-2">
-        <a href="#" className="text-primary text-xl font-bold">
+        <a href="/" className="text-primary text-xl font-bold">
           {t("brand")}
         </a>
 

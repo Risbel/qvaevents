@@ -5,7 +5,8 @@
     "solutions": "Soluciones",
     "pricing": "Precios",
     "getStarted": "Comenzar",
-    "contact": "Contactar"
+    "contact": "Contactar",
+    "goBack": "Volver"
   },
   "Auth": {
     "login": {
@@ -152,7 +153,20 @@
     "slugDescription": "Esto se usará como la URL de tu negocio. Solo se permiten letras minúsculas, números y guiones.",
     "creating": "Creando...",
     "createSuccess": "¡Negocio creado exitosamente!",
-    "createError": "Error al crear el negocio. Por favor intenta de nuevo."
+    "createError": "Error al crear el negocio. Por favor intenta de nuevo.",
+    "active": "Activo",
+    "established": "Establecido",
+    "about": "Acerca de",
+    "noDescription": "Sin descripción disponible",
+    "upcomingEvents": "Próximos Eventos",
+    "upcomingEventsDescription": "Revisa nuestros próximos eventos y actividades",
+    "noEventsYet": "Aún No Hay Eventos",
+    "noEventsDescription": "Estamos planificando algunos eventos emocionantes. ¡Vuelve pronto!",
+    "organizerInfo": "Información del Organizador",
+    "businessType": "Tipo de Negocio",
+    "memberSince": "Miembro Desde",
+    "quickStats": "Estadísticas Rápidas",
+    "totalEvents": "Total de Eventos"
   },
   "Dashboard": {
     "createBusiness": "Crear Negocio",
