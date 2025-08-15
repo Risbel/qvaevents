@@ -75,8 +75,8 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-muted-foreground">{organizerProfile.companyType || t("noCompanyType")}</p>
               <h3 className="text-lg font-semibold">{organizerProfile.companyName || t("noCompanyName")}</h3>
+              <p className="text-muted-foreground">{organizerProfile.companyType || t("noCompanyType")}</p>
             </div>
           </div>
 
