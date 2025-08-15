@@ -37,4 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Generate types using remote DB from supabase
 
-npx supabase gen types typescript --project-id "wkbkpitwnujokbqucubh" --schema public > src/types/supabase.ts
+npx supabase gen types typescript --project-id "*****************" --schema public > src/types/supabase.ts
