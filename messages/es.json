@@ -8,6 +8,17 @@
     "contact": "Contactar",
     "goBack": "Volver"
   },
+  "Sidebar": {
+    "dashboard": "Panel de Control",
+    "overview": "Vista General",
+    "landingSettings": "Customizar Landing",
+    "events": "Eventos",
+    "createEvent": "Crear Evento",
+    "myEvents": "Mis Eventos",
+    "management": "Gestión",
+    "clients": "Clientes",
+    "qrCodes": "Códigos QR"
+  },
   "Auth": {
     "login": {
       "title": "Bienvenido de nuevo",

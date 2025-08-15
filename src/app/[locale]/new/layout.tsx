@@ -1,12 +1,13 @@
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import ModeToggle from "@/app/components/ModeToggle";
+import UserDropdown from "@/app/components/UserDropdown";
 import { Button } from "@/components/ui/button";
 
 import { Home } from "lucide-react";
 
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
-import GoBackButton from "../components/GoBackButton";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 const NewOrganizerProfileLayout = async ({
   children,
@@ -16,8 +17,15 @@ const NewOrganizerProfileLayout = async ({
   params: Promise<{ locale: string }>;
 }) => {
   const { locale } = await params;
-  const t = await getTranslations("Profile");
-  const tnav = await getTranslations("navigation");
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    redirect(`/${locale}/auth/org/login`);
+  }
 
   return (
     <>
@@ -31,14 +39,11 @@ const NewOrganizerProfileLayout = async ({
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
+          <UserDropdown user={user} />
         </div>
       </nav>
 
-      <div className="container mx-auto space-y-4 w-full max-w-2xl lg:max-w-4xl py-16 px-4">
-        <GoBackButton text={tnav("goBack")} />
-        <h1 className="text-2xl font-bold text-center">{t("newPageTitle")}</h1>
-        {children}
-      </div>
+      <div className="container mx-auto space-y-4 w-full max-w-2xl lg:max-w-4xl py-16 px-4">{children}</div>
     </>
   );
 };

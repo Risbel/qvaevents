@@ -8,6 +8,17 @@
     "contact": "Contact",
     "goBack": "Go Back"
   },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "landingSettings": "Customize Landing",
+    "events": "Events",
+    "createEvent": "Create Event",
+    "myEvents": "My Events",
+    "management": "Management",
+    "clients": "Clients",
+    "qrCodes": "QR Codes"
+  },
   "Auth": {
     "login": {
       "title": "Welcome back",
