@@ -2,8 +2,13 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import CreateOrganizerProfileForm from "./components/CreateOrganizerProfileForm";
 import { getActivePlans, Plan } from "@/queries/getPlans";
+import GoBackButton from "../components/GoBackButton";
+import { getTranslations } from "next-intl/server";
 
-export default async function NewOrganizerProfilePage() {
+export default async function NewOrganizerProfilePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations("Profile");
+  const tnav = await getTranslations("navigation");
   const supabase = await createClient();
 
   const {
@@ -12,7 +17,7 @@ export default async function NewOrganizerProfilePage() {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    redirect("/auth/org/login");
+    redirect(`/${locale}/auth/org/login`);
   }
 
   const { data: existingProfiles, error: profileError } = await supabase
@@ -22,18 +27,24 @@ export default async function NewOrganizerProfilePage() {
     .eq("isDeleted", false);
 
   if (profileError) {
-    redirect("/profile");
+    redirect(`/${locale}/profile`);
   }
 
   if (existingProfiles && existingProfiles.length > 0) {
-    redirect("/profile");
+    redirect(`/${locale}/profile`);
   }
 
   const plans = await getActivePlans();
 
   if (plans.status === "error") {
-    redirect("/profile");
+    redirect(`/${locale}/profile`);
   }
 
-  return <CreateOrganizerProfileForm plans={(plans.data?.plans as Plan[]) || []} />;
+  return (
+    <div className="flex flex-col items-center justify-center py-24">
+      <GoBackButton text={tnav("goBack")} />
+      <h1 className="text-2xl font-bold text-center">{t("newPageTitle")}</h1>
+      <CreateOrganizerProfileForm plans={(plans.data?.plans as Plan[]) || []} />
+    </div>
+  );
 }

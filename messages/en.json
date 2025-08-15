@@ -5,7 +5,19 @@
     "solutions": "Solutions",
     "pricing": "Pricing",
     "getStarted": "Get Started",
-    "contact": "Contact"
+    "contact": "Contact",
+    "goBack": "Go Back"
+  },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "landingSettings": "Customize Landing",
+    "events": "Events",
+    "createEvent": "Create Event",
+    "myEvents": "My Events",
+    "management": "Management",
+    "clients": "Clients",
+    "qrCodes": "QR Codes"
   },
   "Auth": {
     "login": {
@@ -152,7 +164,20 @@
     "slugDescription": "This will be used as your business URL. Only lowercase letters, numbers, and hyphens are allowed.",
     "creating": "Creating...",
     "createSuccess": "Business created successfully!",
-    "createError": "Failed to create business. Please try again."
+    "createError": "Failed to create business. Please try again.",
+    "active": "Active",
+    "established": "Established",
+    "about": "About",
+    "noDescription": "No description available",
+    "upcomingEvents": "Upcoming Events",
+    "upcomingEventsDescription": "Check out our upcoming events and activities",
+    "noEventsYet": "No Events Yet",
+    "noEventsDescription": "We're planning some exciting events. Check back soon!",
+    "organizerInfo": "Organizer Information",
+    "businessType": "Business Type",
+    "memberSince": "Member Since",
+    "quickStats": "Quick Stats",
+    "totalEvents": "Total Events"
   },
   "Dashboard": {
     "createBusiness": "Create Business",

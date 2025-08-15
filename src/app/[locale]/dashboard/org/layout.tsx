@@ -1,4 +1,4 @@
-import NavbarOrg from "./components/NavbarOrg";
+import NavbarOrg from "./[codeId]/components/NavbarOrg";
 
 const OrgLayout = ({ children }: { children: React.ReactNode }) => {
   return (
