@@ -268,5 +268,69 @@
       "description": "Join thousands of businesses that trust QvaEvent to deliver exceptional event experiences.",
       "button": "Get Started Today"
     }
+  },
+  "EventCreation": {
+    "title": "New Event",
+    "description": "Let's set up the basic information for your event",
+    "useSavedConfig": "Use saved config",
+    "loaded": "Loaded",
+    "next": "Next",
+    "typeSelector": {
+      "title": "Let's select the type of event you want to organize",
+      "selectSubtype": "Select {type} subtype:",
+      "specifyCustom": "Specify custom subtype:",
+      "customPlaceholder": "Enter custom subtype name...",
+      "other": "Other",
+      "noSubtypes": "No subtypes available for {type}"
+    },
+    "minorsSuitability": {
+      "title": "Suitable for minors?",
+      "yes": "Yes",
+      "no": "No 🔞",
+      "suitableForMinors": "Suitable for minors",
+      "notSuitableForMinors": "Not suitable for minors"
+    },
+    "eventVisibility": {
+      "title": "Event visibility",
+      "public": "Public",
+      "private": "Private",
+      "publicEvent": "Public event",
+      "invitationRequired": "Invitation link required for access"
+    },
+    "spaceType": {
+      "title": "Space type",
+      "indoor": "Indoor",
+      "outdoors": "Outdoors",
+      "semiCovered": "Semi-covered",
+      "airConditioned": "Air conditioned",
+      "mixed": "Mixed",
+      "indoorVenue": "Indoor venue",
+      "outdoorVenue": "Outdoor venue",
+      "semiCoveredVenue": "Semi-covered venue",
+      "airConditionedVenue": "Air conditioned venue",
+      "mixedVenue": "Mixed venue"
+    },
+    "accessType": {
+      "title": "Access type",
+      "confirmations": "Confirmations",
+      "tickets": "Tickets",
+      "ticketsAndSpaces": "Tickets & Spaces",
+      "spaces": "Seats",
+      "simpleAccess": "Simple access with one click",
+      "ticketBased": "Ticket-based access",
+      "ticketsWithSpaces": "Tickets with optional space reservation",
+      "idealForTheaters": "Ideal for theaters and auditoriums"
+    },
+    "languages": {
+      "title": "Event languages",
+      "description": "Additional languages will be generated with AI ✨",
+      "selected": "Selected: {count} language{count, plural, one {} other {s}} ({languages})"
+    },
+    "validation": {
+      "languagesRequired": "Please select at least one language for your event",
+      "languagesDescription": "Event languages are required to proceed",
+      "subtypeRequired": "Please select a subtype for your event",
+      "subtypeDescription": "Event subtype is required to proceed"
+    }
   }
 }

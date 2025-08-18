@@ -59,9 +59,9 @@ export default async function BusDashboard({ params }: PageProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full flex flex-col items-center max-w-7xl">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between w-full">
         <div>
           <h1 className="text-3xl font-bold">{business.name}</h1>
           <p className="text-muted-foreground">{business.description}</p>
@@ -69,7 +69,7 @@ export default async function BusDashboard({ params }: PageProps) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+      <div className="grid auto-rows-min gap-4 md:grid-cols-3 w-full">
         {stats.map((stat) => (
           <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -85,7 +85,7 @@ export default async function BusDashboard({ params }: PageProps) {
       </div>
 
       {/* Recent Events */}
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -126,7 +126,7 @@ export default async function BusDashboard({ params }: PageProps) {
       </Card>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
           <CardDescription>Common tasks and shortcuts</CardDescription>
