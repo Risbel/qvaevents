@@ -41,8 +41,8 @@ export default async function Layout({ children, params }: LayoutProps) {
   return (
     <SidebarProvider>
       <BusSidebar locale={locale} codeId={codeId} business={business} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <SidebarInset className="flex flex-col h-screen">
+        <header className="flex h-16 w-full items-center gap-2 border-b px-4 bg-background/50 backdrop-blur-sm border-b-border flex-shrink-0">
           <SidebarTrigger className="-ml-1 cursor-pointer" />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
           <Breadcrumb>
@@ -60,7 +60,9 @@ export default async function Layout({ children, params }: LayoutProps) {
             {user && <UserDropdown user={user} />}
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        <main className="flex-1 overflow-y-auto">
+          <div className="flex flex-col items-center gap-4 p-4 w-full bg-background min-h-full">{children}</div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

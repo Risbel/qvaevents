@@ -268,5 +268,69 @@
       "description": "Únete a miles de empresas que confían en QvaEvent para ofrecer experiencias de eventos excepcionales.",
       "button": "Comenzar Hoy"
     }
+  },
+  "EventCreation": {
+    "title": "Nuevo Evento",
+    "description": "Configuremos la información básica para tu evento",
+    "useSavedConfig": "Usar configuración guardada",
+    "loaded": "Cargado",
+    "next": "Siguiente",
+    "typeSelector": {
+      "title": "Seleccionemos el tipo de evento que quieres organizar",
+      "selectSubtype": "Selecciona el subtipo de {type}:",
+      "specifyCustom": "Especifica subtipo personalizado:",
+      "customPlaceholder": "Ingresa el nombre del subtipo personalizado...",
+      "other": "Otro",
+      "noSubtypes": "No hay subtipos disponibles para {type}"
+    },
+    "minorsSuitability": {
+      "title": "¿Apto para menores?",
+      "yes": "Sí",
+      "no": "No 🔞",
+      "suitableForMinors": "Apto para menores",
+      "notSuitableForMinors": "No apto para menores"
+    },
+    "eventVisibility": {
+      "title": "Visibilidad del evento",
+      "public": "Público",
+      "private": "Privado",
+      "publicEvent": "Evento público",
+      "invitationRequired": "Se requiere enlace de invitación para acceder"
+    },
+    "spaceType": {
+      "title": "Tipo de espacio",
+      "indoor": "Interior",
+      "outdoors": "Exterior",
+      "semiCovered": "Semi-cubierto",
+      "airConditioned": "Climatizado",
+      "mixed": "Mixto",
+      "indoorVenue": "Lugar interior",
+      "outdoorVenue": "Lugar exterior",
+      "semiCoveredVenue": "Lugar semi-cubierto",
+      "airConditionedVenue": "Lugar con aire acondicionado",
+      "mixedVenue": "Lugar mixto"
+    },
+    "accessType": {
+      "title": "Tipo de acceso",
+      "confirmations": "Confirmaciones",
+      "tickets": "Entradas",
+      "ticketsAndSpaces": "Entradas y Espacios",
+      "spaces": "Asientos",
+      "simpleAccess": "Acceso simple con un clic",
+      "ticketBased": "Acceso basado en entradas",
+      "ticketsWithSpaces": "Entradas con reserva opcional de espacio",
+      "idealForTheaters": "Ideal para teatros y auditorios"
+    },
+    "languages": {
+      "title": "Idiomas del evento",
+      "description": "Los idiomas adicionales serán generados con IA ✨",
+      "selected": "Seleccionado: {count} idioma{count, plural, one {} other {s}} ({languages})"
+    },
+    "validation": {
+      "languagesRequired": "Por favor selecciona al menos un idioma para tu evento",
+      "languagesDescription": "Los idiomas del evento son requeridos para continuar",
+      "subtypeRequired": "Por favor selecciona un subtipo para tu evento",
+      "subtypeDescription": "El subtipo del evento es requerido para continuar"
+    }
   }
 }
