@@ -8,11 +8,12 @@ import BusinessList from "./BusinessList";
 import { OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
 
 interface OrganizerDashboardProps {
+  codeId: string;
   organizer: OrganizerProfile;
   locale: string;
 }
 
-export default async function OrganizerDashboard({ organizer, locale }: OrganizerDashboardProps) {
+export default async function OrganizerDashboard({ codeId, organizer, locale }: OrganizerDashboardProps) {
   const t = await getTranslations("Dashboard");
 
   const getInitials = (name: string) => {
@@ -59,7 +60,7 @@ export default async function OrganizerDashboard({ organizer, locale }: Organize
           <CardDescription>{t("businessesDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <BusinessList organizerId={organizer.id} locale={locale} />
+          <BusinessList codeId={codeId} organizerId={organizer.id} locale={locale} />
         </CardContent>
       </Card>
     </div>

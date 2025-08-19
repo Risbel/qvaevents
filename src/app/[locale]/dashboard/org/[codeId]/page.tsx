@@ -40,5 +40,5 @@ export default async function OrganizerDashboardPage({
     redirect(`/${locale}/profile`);
   }
 
-  return <OrganizerDashboard organizer={organizer} locale={locale} />;
+  return <OrganizerDashboard codeId={codeId} organizer={organizer} locale={locale} />;
 }

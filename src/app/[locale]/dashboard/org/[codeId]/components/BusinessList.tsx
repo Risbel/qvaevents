@@ -1,12 +1,20 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Building2, ExternalLink, LayoutDashboard } from "lucide-react";
+import { Building, Building2, ExternalLink, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Business, getOrganizerBusinesses } from "@/queries/business/getOrganizerBusinesses";
 
-export default async function BusinessList({ organizerId, locale }: { organizerId: number; locale: string }) {
+export default async function BusinessList({
+  codeId,
+  organizerId,
+  locale,
+}: {
+  codeId: string;
+  organizerId: number;
+  locale: string;
+}) {
   const t = await getTranslations("Dashboard");
 
   const businessesResult = await getOrganizerBusinesses(organizerId);
@@ -28,8 +36,8 @@ export default async function BusinessList({ organizerId, locale }: { organizerI
         <h3 className="text-lg font-semibold mb-2">{t("noBusinesses")}</h3>
         <p className="text-muted-foreground mb-4">{t("noBusinessesDescription")}</p>
         <Button asChild>
-          <Link href={`/${locale}/new/${organizerId}`}>
-            <Building2 className="w-4 h-4 mr-2" />
+          <Link href={`/${locale}/new/${codeId}`}>
+            <Building className="w-4 h-4" />
             {t("createFirstBusiness")}
           </Link>
         </Button>

@@ -6,9 +6,11 @@ import { Tables } from "@/types/supabase";
 
 export type Business = Tables<"Business">;
 export type OrganizerProfile = Tables<"OrganizerProfile">;
+export type CustomEventConfig = Tables<"CustomEventConfig">;
 
 export interface BusinessWithOrganizer extends Business {
   OrganizerProfile: OrganizerProfile;
+  CustomEventConfig: CustomEventConfig[];
 }
 
 export async function getBusinessByCodeId(codeId: string): Promise<State> {
@@ -28,6 +30,17 @@ export async function getBusinessByCodeId(codeId: string): Promise<State> {
           codeId,
           user_id,
           isDeleted
+        ),
+        CustomEventConfig (
+          id,
+          name,
+          type,
+          subType,
+          isForMinors,
+          isPublic,
+          spaceType,
+          accessType,
+          selectedLanguages
         )
       `
       )

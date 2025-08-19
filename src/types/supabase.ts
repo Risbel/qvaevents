@@ -19,7 +19,7 @@ export type Database = {
           codeId: string
           createdAt: string
           description: string
-          id: string
+          id: number
           isActive: boolean
           isDeleted: boolean
           name: string | null
@@ -30,7 +30,7 @@ export type Database = {
           codeId?: string
           createdAt?: string
           description: string
-          id?: string
+          id?: number
           isActive: boolean
           isDeleted?: boolean
           name?: string | null
@@ -41,7 +41,7 @@ export type Database = {
           codeId?: string
           createdAt?: string
           description?: string
-          id?: string
+          id?: number
           isActive?: boolean
           isDeleted?: boolean
           name?: string | null
@@ -54,6 +54,56 @@ export type Database = {
             columns: ["organizerId"]
             isOneToOne: false
             referencedRelation: "OrganizerProfile"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      CustomEventConfig: {
+        Row: {
+          accessType: string
+          businessId: number
+          createdAt: string
+          id: number
+          isForMinors: boolean
+          isPublic: boolean
+          name: string
+          selectedLanguages: string[] | null
+          spaceType: string
+          subType: string | null
+          type: string
+        }
+        Insert: {
+          accessType: string
+          businessId: number
+          createdAt?: string
+          id?: number
+          isForMinors: boolean
+          isPublic: boolean
+          name: string
+          selectedLanguages?: string[] | null
+          spaceType: string
+          subType?: string | null
+          type: string
+        }
+        Update: {
+          accessType?: string
+          businessId?: number
+          createdAt?: string
+          id?: number
+          isForMinors?: boolean
+          isPublic?: boolean
+          name?: string
+          selectedLanguages?: string[] | null
+          spaceType?: string
+          subType?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "CustomEventConfig_businessId_fkey"
+            columns: ["businessId"]
+            isOneToOne: false
+            referencedRelation: "Business"
             referencedColumns: ["id"]
           },
         ]
@@ -90,7 +140,7 @@ export type Database = {
       Event: {
         Row: {
           accessType: string | null
-          businessId: string
+          businessId: number | null
           createdAt: string
           defaultLocale: string | null
           id: number
@@ -106,7 +156,7 @@ export type Database = {
         }
         Insert: {
           accessType?: string | null
-          businessId: string
+          businessId?: number | null
           createdAt?: string
           defaultLocale?: string | null
           id?: number
@@ -122,7 +172,7 @@ export type Database = {
         }
         Update: {
           accessType?: string | null
-          businessId?: string
+          businessId?: number | null
           createdAt?: string
           defaultLocale?: string | null
           id?: number
