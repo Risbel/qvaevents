@@ -8,7 +8,7 @@ import { EventVisibilitySelector } from "./components/EventVisibilitySelector";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { SpaceTypeSelector } from "./components/SpaceTypeSelector";
 import { AccessTypeSelector } from "./components/AccessTypeSelector";
-import { SavedConfigSelector } from "./components/SavedConfigSelector";
+import { SavedConfigSelectorWrapper } from "./components/SavedConfigSelectorWrapper";
 import { SaveConfigButton } from "./components/SaveConfigButton";
 import { EventConfigProvider } from "./components/EventConfigProvider";
 import { NextButton } from "./components/NextButton";
@@ -41,7 +41,7 @@ const NewBusPage = async ({ params }: { params: Promise<{ codeId: string; locale
         </div>
 
         <div className="flex justify-between">
-          <SavedConfigSelector />
+          <SavedConfigSelectorWrapper codeId={codeId} />
 
           {/* <SaveConfigButton /> NFMVP*/}
         </div>

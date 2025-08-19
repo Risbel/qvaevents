@@ -3,18 +3,39 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
+import { CustomEventConfig } from "@/queries/business/getBusinessByCodeId";
 
-export const SavedConfigSelector = () => {
-  const { config, loadSavedConfig, getSavedConfigs } = useEventConfig();
+export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs: CustomEventConfig[] }) => {
+  const { config, updateConfig } = useEventConfig();
   const t = useTranslations("EventCreation");
 
   const handleConfigChange = (value: string) => {
     if (value) {
-      loadSavedConfig(value);
+      const dbConfig = customEventConfigs.find((c) => c.id.toString() === value);
+      if (dbConfig) {
+        // Convert database config to the format expected by the provider
+        const convertedConfig = {
+          type: dbConfig.type,
+          subType: dbConfig.subType || "",
+          isForMinors: dbConfig.isForMinors ? "yes" : "no",
+          isPublic: dbConfig.isPublic,
+          spaceType: dbConfig.spaceType,
+          accessType: dbConfig.accessType,
+          selectedLanguages: dbConfig.selectedLanguages || [],
+          savedConfigId: value,
+        };
+
+        // Update all config values at once
+        updateConfig(convertedConfig);
+      }
     }
   };
 
-  const savedConfigs = getSavedConfigs();
+  // Only use database configs
+  const allConfigs = customEventConfigs.map((dbConfig) => ({
+    id: dbConfig.id.toString(),
+    name: dbConfig.name,
+  }));
 
   return (
     <div className="flex items-center gap-2">
@@ -23,9 +44,9 @@ export const SavedConfigSelector = () => {
           <SelectValue placeholder={t("useSavedConfig")} className="text-sm" />
         </SelectTrigger>
         <SelectContent>
-          {savedConfigs.map((savedConfig) => (
-            <SelectItem key={savedConfig.id} value={savedConfig.id} className="text-sm">
-              <span className="font-medium">{savedConfig.name}</span>
+          {allConfigs.map((configItem) => (
+            <SelectItem key={configItem.id} value={configItem.id} className="text-sm">
+              <span className="font-medium">{configItem.name}</span>
             </SelectItem>
           ))}
         </SelectContent>

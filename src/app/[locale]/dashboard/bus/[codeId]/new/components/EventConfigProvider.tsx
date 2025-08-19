@@ -14,92 +14,14 @@ interface EventConfig {
   savedConfigId?: string;
 }
 
-interface SavedConfig {
-  id: string;
-  name: string;
-  type: string;
-  subType: string;
-  customSubType: string;
-  isForMinors: string;
-  isPublic: boolean;
-  spaceType: string;
-  accessType: string;
-  selectedLanguages: string[];
-}
-
 interface EventConfigContextType {
   config: EventConfig;
   updateConfig: (updates: Partial<EventConfig>) => void;
   buildUrl: () => string;
-  loadSavedConfig: (configId: string) => void;
   resetConfig: () => void;
-  getSavedConfigs: () => SavedConfig[];
 }
 
 const EventConfigContext = createContext<EventConfigContextType | undefined>(undefined);
-
-const savedConfigurations: SavedConfig[] = [
-  {
-    id: "1",
-    name: "Party Club Nocturno",
-    type: "party",
-    subType: "nightClub",
-    customSubType: "",
-    isForMinors: "no",
-    isPublic: true,
-    spaceType: "mixed",
-    accessType: "ticketsAndSpaces",
-    selectedLanguages: ["es"],
-  },
-  {
-    id: "2",
-    name: "Conierto",
-    type: "art",
-    subType: "concert",
-    customSubType: "",
-    isForMinors: "no",
-    isPublic: true,
-    spaceType: "outdoors",
-    accessType: "ticketsAndSpaces",
-    selectedLanguages: ["es"],
-  },
-  {
-    id: "3",
-    name: "Taller de Cocina",
-    type: "educational",
-    subType: "workshop",
-    customSubType: "",
-    isForMinors: "yes",
-    isPublic: false,
-    spaceType: "indoor",
-    accessType: "confirmations",
-    selectedLanguages: ["es"],
-  },
-  {
-    id: "4",
-    name: "Art Exhibition",
-    type: "art",
-    subType: "gallery",
-    customSubType: "",
-    isForMinors: "yes",
-    isPublic: true,
-    spaceType: "indoor",
-    accessType: "tickets",
-    selectedLanguages: ["es", "en"],
-  },
-  {
-    id: "5",
-    name: "Excursion",
-    type: "excursion",
-    subType: "playa",
-    customSubType: "",
-    isForMinors: "yes",
-    isPublic: false,
-    spaceType: "outdoors",
-    accessType: "seat",
-    selectedLanguages: ["es"],
-  },
-];
 
 const initialConfig: EventConfig = {
   selectedLanguages: [],
@@ -113,22 +35,8 @@ export const EventConfigProvider: React.FC<{ children: ReactNode }> = ({ childre
     setConfig((prev) => ({ ...prev, ...updates }));
   };
 
-  const loadSavedConfig = (configId: string) => {
-    const savedConfig = savedConfigurations.find((config) => config.id === configId);
-    if (savedConfig) {
-      setConfig({
-        ...savedConfig,
-        savedConfigId: configId,
-      });
-    }
-  };
-
   const resetConfig = () => {
     setConfig(initialConfig);
-  };
-
-  const getSavedConfigs = (): SavedConfig[] => {
-    return savedConfigurations;
   };
 
   const buildUrl = (): string => {
@@ -162,9 +70,7 @@ export const EventConfigProvider: React.FC<{ children: ReactNode }> = ({ childre
     config,
     updateConfig,
     buildUrl,
-    loadSavedConfig,
     resetConfig,
-    getSavedConfigs,
   };
 
   return <EventConfigContext.Provider value={value}>{children}</EventConfigContext.Provider>;
