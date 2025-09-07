@@ -41,9 +41,9 @@ export default async function NewOrganizerProfilePage({ params }: { params: Prom
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <GoBackButton text={tnav("goBack")} />
-      <h1 className="text-2xl font-bold text-center">{t("newPageTitle")}</h1>
+    <div className="flex flex-col justify-center py-16">
+      <GoBackButton text={tnav("goBack")} className="w-fit" />
+
       <CreateOrganizerProfileForm plans={(plans.data?.plans as Plan[]) || []} />
     </div>
   );

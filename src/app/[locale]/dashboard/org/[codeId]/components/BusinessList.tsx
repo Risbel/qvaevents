@@ -52,7 +52,7 @@ export default async function BusinessList({
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-primary" />
+                <Building className="w-5 h-5 text-primary" />
                 <CardTitle className="text-lg">{business.name}</CardTitle>
               </div>
               <Badge variant={business.isActive ? "default" : "secondary"}>

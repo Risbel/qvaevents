@@ -13,7 +13,7 @@ export interface BusinessWithOrganizer extends Business {
   CustomEventConfig: CustomEventConfig[];
 }
 
-export async function getBusinessByCodeId(codeId: string): Promise<State> {
+export async function getBusinessByCodeId(codeId: string): Promise<State<{ business: BusinessWithOrganizer }>> {
   try {
     const supabase = await createClient();
 

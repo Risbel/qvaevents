@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Building, Edit } from "lucide-react";
+import { Loader2, Building, Edit, UserCheck2 } from "lucide-react";
 import { updateOrganizerProfile } from "@/actions/auth/updateOrganizerProfile";
 import { State } from "@/types/state";
 import { useRouter } from "next/navigation";
@@ -49,7 +49,7 @@ export default function EditOrganizerProfileModal({ profile }: { profile: Organi
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Building className="w-5 h-5" />
+            <UserCheck2 className="w-5 h-5" />
             {t("editProfile")}
           </DialogTitle>
           <DialogDescription>{t("editDescription")}</DialogDescription>

@@ -4,7 +4,7 @@ import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/business/get
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Calendar, MapPin, Phone, Globe, Mail } from "lucide-react";
+import { Building, Calendar, MapPin, Phone, Globe, Mail } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -61,17 +61,6 @@ export default async function BusinessPage({ params }: PageProps) {
                     {organizer.companyName} • {organizer.companyType}
                   </p>
                 </div>
-
-                <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                  <Badge variant="secondary" className="text-sm">
-                    <Building2 className="w-3 h-3 mr-1" />
-                    {t("active")}
-                  </Badge>
-                  <Badge variant="outline" className="text-sm">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {t("established")} {new Date(business.createdAt).getFullYear()}
-                  </Badge>
-                </div>
               </div>
             </div>
           </div>
@@ -82,8 +71,8 @@ export default async function BusinessPage({ params }: PageProps) {
         <Card className="gap-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5" />
-              {t("about")}
+              <Building className="w-5 h-5" />
+              {t("about")} {business.name}
             </CardTitle>
           </CardHeader>
           <CardContent>

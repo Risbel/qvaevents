@@ -3,7 +3,7 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Home, Snowflake, Sun, Umbrella, Zap } from "lucide-react";
+import { Cloud, Home, Snowflake, Sun, SunSnow, Umbrella, Zap } from "lucide-react";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
 
@@ -70,9 +70,21 @@ export const SpaceTypeSelector = () => {
                 variant={config.spaceType === "mixed" ? "default" : "outline"}
                 className="hover:bg-primary hover:text-primary-foreground transition-colors"
               >
-                <Snowflake className="size-3" />
-                <Sun className="size-3" />
+                <SunSnow className="size-3" />
                 {t("spaceType.mixed")}
+              </Badge>
+            </Label>
+          </div>
+          <div className="flex items-center space-x-1">
+            <RadioGroupItem className="cursor-pointer" value="mixed2" id="space-mixed2" />
+            <Label htmlFor="space-mixed2" className="cursor-pointer">
+              <Badge
+                variant={config.spaceType === "mixed2" ? "default" : "outline"}
+                className="hover:bg-primary hover:text-primary-foreground transition-colors -space-x-2"
+              >
+                <Home className="size-3" />
+                <Sun className="size-2 -translate-y-[3px]" />
+                {t("spaceType.mixed2")}
               </Badge>
             </Label>
           </div>

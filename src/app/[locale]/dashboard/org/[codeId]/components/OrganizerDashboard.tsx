@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Building } from "lucide-react";
+import { Building2 } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import BusinessList from "./BusinessList";
@@ -53,7 +53,7 @@ export default async function OrganizerDashboard({ codeId, organizer, locale }: 
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Building className="w-5 h-5" />
+              <Building2 className="w-5 h-5" />
               <CardTitle>{t("businesses")}</CardTitle>
             </div>
           </div>

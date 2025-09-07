@@ -36,7 +36,7 @@ export const NextButton = () => {
     }
 
     const queryString = buildUrl();
-    const nextUrl = `/dashboard/bus/${codeId}/new/basic${queryString}`;
+    const nextUrl = `/dashboard/bus/${codeId}/new/${0}/${queryString}`;
     router.push(nextUrl);
   };
 

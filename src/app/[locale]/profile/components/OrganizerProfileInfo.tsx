@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Building, Image, Plus, LayoutDashboard } from "lucide-react";
+import { Building, Image, Plus, LayoutDashboard, UserCheck2 } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
 import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
@@ -34,7 +34,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
       <Card>
         <CardHeader>
           <CardTitle className="text-xl flex items-center gap-2">
-            <Building className="w-5 h-5" />
+            <UserCheck2 className="w-5 h-5" />
             {t("organizerProfile")}
           </CardTitle>
         </CardHeader>
@@ -58,7 +58,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Building className="w-5 h-5" />
+            <UserCheck2 className="w-5 h-5" />
             <CardTitle className="text-xl">{t("organizerProfile")}</CardTitle>
           </div>
           <EditOrganizerProfileModal profile={organizerProfile} />
@@ -66,7 +66,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
         <CardDescription>{t("organizerProfileDescription")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="flex flex-col md:flex-row justify-between gap-4">
           <div className="flex items-center space-x-4">
             <Avatar className="h-16 w-16">
               <AvatarImage src={organizerProfile.companyLogo || undefined} />
@@ -80,37 +80,12 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
             </div>
           </div>
 
-          {organizerProfile.companyLogo && (
-            <div className="space-y-2">
-              <Label>{t("companyLogo")}</Label>
-              <div className="flex items-center space-x-2">
-                <Image className="w-4 h-4 text-muted-foreground" />
-                <a
-                  href={organizerProfile.companyLogo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {organizerProfile.companyLogo}
-                </a>
-              </div>
-            </div>
-          )}
-
-          <div className="flex gap-2 pt-4">
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/${locale}/new/${organizerProfile.codeId}`}>
-                <Plus className="w-4 h-4" />
-                {t("createBusiness")}
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/${locale}/dashboard/org/${organizerProfile.codeId}`}>
-                <LayoutDashboard className="w-4 h-4" />
-                {t("viewDashboard")}
-              </Link>
-            </Button>
-          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/${locale}/dashboard/org/${organizerProfile.codeId}`}>
+              <LayoutDashboard className="w-4 h-4" />
+              {t("viewDashboard")}
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

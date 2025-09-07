@@ -6,6 +6,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)";
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       Business: {
@@ -54,7 +79,7 @@ export type Database = {
       };
       CustomEventConfig: {
         Row: {
-          accessType: string;
+          accessType: Database["public"]["Enums"]["custom_event_access_type"];
           businessId: number;
           createdAt: string;
           id: number;
@@ -62,12 +87,12 @@ export type Database = {
           isPublic: boolean;
           name: string;
           selectedLanguages: string[] | null;
-          spaceType: string;
-          subType: string | null;
-          type: string;
+          spaceType: Database["public"]["Enums"]["custom_event_space_type"];
+          subType: Database["public"]["Enums"]["custom_event_subtype"] | null;
+          type: Database["public"]["Enums"]["custom_event_type"];
         };
         Insert: {
-          accessType: string;
+          accessType: Database["public"]["Enums"]["custom_event_access_type"];
           businessId: number;
           createdAt?: string;
           id?: number;
@@ -75,12 +100,12 @@ export type Database = {
           isPublic: boolean;
           name: string;
           selectedLanguages?: string[] | null;
-          spaceType: string;
-          subType?: string | null;
-          type: string;
+          spaceType: Database["public"]["Enums"]["custom_event_space_type"];
+          subType?: Database["public"]["Enums"]["custom_event_subtype"] | null;
+          type: Database["public"]["Enums"]["custom_event_type"];
         };
         Update: {
-          accessType?: string;
+          accessType?: Database["public"]["Enums"]["custom_event_access_type"];
           businessId?: number;
           createdAt?: string;
           id?: number;
@@ -88,9 +113,9 @@ export type Database = {
           isPublic?: boolean;
           name?: string;
           selectedLanguages?: string[] | null;
-          spaceType?: string;
-          subType?: string | null;
-          type?: string;
+          spaceType?: Database["public"]["Enums"]["custom_event_space_type"];
+          subType?: Database["public"]["Enums"]["custom_event_subtype"] | null;
+          type?: Database["public"]["Enums"]["custom_event_type"];
         };
         Relationships: [
           {
@@ -102,50 +127,26 @@ export type Database = {
           }
         ];
       };
-      CustomType: {
-        Row: {
-          createdAt: string;
-          eventId: number | null;
-          id: number;
-          name: string;
-        };
-        Insert: {
-          createdAt?: string;
-          eventId?: number | null;
-          id?: number;
-          name: string;
-        };
-        Update: {
-          createdAt?: string;
-          eventId?: number | null;
-          id?: number;
-          name?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "CustomCategory_eventId_fkey";
-            columns: ["eventId"];
-            isOneToOne: false;
-            referencedRelation: "Event";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
       Event: {
         Row: {
           accessType: string | null;
           businessId: number | null;
           createdAt: string;
           defaultLocale: string | null;
+          endDate: string | null;
           id: number;
           isActive: boolean | null;
           isDeleted: boolean;
           isForMinors: boolean | null;
           isPubished: boolean | null;
           isPublic: boolean | null;
+          keywords: string[] | null;
           slug: string;
           spaceType: string | null;
+          startDate: string | null;
           step: number;
+          subType: string;
+          type: string;
           visitsLimit: number | null;
         };
         Insert: {
@@ -153,15 +154,20 @@ export type Database = {
           businessId?: number | null;
           createdAt?: string;
           defaultLocale?: string | null;
+          endDate?: string | null;
           id?: number;
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
           isPubished?: boolean | null;
           isPublic?: boolean | null;
-          slug: string;
+          keywords?: string[] | null;
+          slug?: string;
           spaceType?: string | null;
+          startDate?: string | null;
           step?: number;
+          subType: string;
+          type: string;
           visitsLimit?: number | null;
         };
         Update: {
@@ -169,15 +175,20 @@ export type Database = {
           businessId?: number | null;
           createdAt?: string;
           defaultLocale?: string | null;
+          endDate?: string | null;
           id?: number;
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
           isPubished?: boolean | null;
           isPublic?: boolean | null;
+          keywords?: string[] | null;
           slug?: string;
           spaceType?: string | null;
+          startDate?: string | null;
           step?: number;
+          subType?: string;
+          type?: string;
           visitsLimit?: number | null;
         };
         Relationships: [
@@ -224,6 +235,81 @@ export type Database = {
             referencedColumns: ["id"];
           }
         ];
+      };
+      EventText: {
+        Row: {
+          createdAt: string;
+          description: string;
+          eventId: number;
+          id: number;
+          languageId: number;
+          locationText: string | null;
+          tiptapText: Json | null;
+          title: string;
+        };
+        Insert: {
+          createdAt?: string;
+          description: string;
+          eventId: number;
+          id?: number;
+          languageId: number;
+          locationText?: string | null;
+          tiptapText?: Json | null;
+          title: string;
+        };
+        Update: {
+          createdAt?: string;
+          description?: string;
+          eventId?: number;
+          id?: number;
+          languageId?: number;
+          locationText?: string | null;
+          tiptapText?: Json | null;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "EventText_eventId_fkey";
+            columns: ["eventId"];
+            isOneToOne: false;
+            referencedRelation: "Event";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "EventText_languageId_fkey";
+            columns: ["languageId"];
+            isOneToOne: false;
+            referencedRelation: "Language";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      Language: {
+        Row: {
+          code: string;
+          createdAt: string;
+          icon: string | null;
+          id: number;
+          name: string;
+          native: string;
+        };
+        Insert: {
+          code: string;
+          createdAt?: string;
+          icon?: string | null;
+          id?: number;
+          name: string;
+          native: string;
+        };
+        Update: {
+          code?: string;
+          createdAt?: string;
+          icon?: string | null;
+          id?: number;
+          name?: string;
+          native?: string;
+        };
+        Relationships: [];
       };
       OrganizerProfile: {
         Row: {
@@ -395,52 +481,6 @@ export type Database = {
           }
         ];
       };
-      typeOnEvent: {
-        Row: {
-          createdAt: string;
-          eventId: number;
-          id: number;
-          subTypeId: number | null;
-          typeId: number;
-        };
-        Insert: {
-          createdAt?: string;
-          eventId: number;
-          id?: number;
-          subTypeId?: number | null;
-          typeId: number;
-        };
-        Update: {
-          createdAt?: string;
-          eventId?: number;
-          id?: number;
-          subTypeId?: number | null;
-          typeId?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "categoryOnEvent_categoryId_fkey";
-            columns: ["typeId"];
-            isOneToOne: false;
-            referencedRelation: "Types";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "categoryOnEvent_eventId_fkey";
-            columns: ["eventId"];
-            isOneToOne: false;
-            referencedRelation: "Event";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "typeOnEvent_subTypeId_fkey";
-            columns: ["subTypeId"];
-            isOneToOne: false;
-            referencedRelation: "SubType";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
       Types: {
         Row: {
           createdAt: string;
@@ -476,7 +516,37 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      custom_event_access_type: "confirmations" | "tickets" | "ticketsAndSpaces" | "seat";
+      custom_event_space_type: "indoor" | "outdoors" | "semiCovered" | "airConditioned" | "mixed" | "mixed2";
+      custom_event_subtype:
+        | "nightClub"
+        | "comedyShow"
+        | "theater"
+        | "cinema"
+        | "dance"
+        | "literature"
+        | "gallery"
+        | "food"
+        | "spiritsTasting"
+        | "marathon"
+        | "fitness"
+        | "conference"
+        | "workshop"
+        | "bachelorParty"
+        | "wedding"
+        | "birthday"
+        | "babyShower"
+        | "genderReveal"
+        | "fashion"
+        | "cityTour"
+        | "natureExcursion"
+        | "camping"
+        | "beach"
+        | "concert"
+        | "skating"
+        | "networking"
+        | "childrensParty";
+      custom_event_type: "party" | "art" | "food" | "sport" | "educational" | "familiar" | "excursion";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -594,7 +664,43 @@ export type CompositeTypes<
   : never;
 
 export const Constants = {
-  public: {
+  graphql_public: {
     Enums: {},
+  },
+  public: {
+    Enums: {
+      custom_event_access_type: ["confirmations", "tickets", "ticketsAndSpaces", "seat"],
+      custom_event_space_type: ["indoor", "outdoors", "semiCovered", "airConditioned", "mixed", "mixed2"],
+      custom_event_subtype: [
+        "nightClub",
+        "comedyShow",
+        "theater",
+        "cinema",
+        "dance",
+        "literature",
+        "gallery",
+        "food",
+        "spiritsTasting",
+        "marathon",
+        "fitness",
+        "conference",
+        "workshop",
+        "bachelorParty",
+        "wedding",
+        "birthday",
+        "babyShower",
+        "genderReveal",
+        "fashion",
+        "cityTour",
+        "natureExcursion",
+        "camping",
+        "beach",
+        "concert",
+        "skating",
+        "networking",
+        "childrensParty",
+      ],
+      custom_event_type: ["party", "art", "food", "sport", "educational", "familiar", "excursion"],
+    },
   },
 } as const;

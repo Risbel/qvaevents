@@ -1,0 +1,391 @@
+"use client";
+
+import { useActionState, useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { createEventBasicInfo } from "@/actions/event/createEventBasicInfo";
+import { MetaTagsInput } from "./MetaTagsInput";
+import { LanguageSelector } from "./LanguageSelector";
+import { DateTimePicker } from "./DateTimePicker";
+import { Language } from "@/queries/language/getLanguages";
+import { State } from "@/types/state";
+import { useState } from "react";
+import { Loader2, Sparkles } from "lucide-react";
+
+interface CreateBasicInfoProps {
+  languages: Language[];
+  businessId: number;
+}
+
+interface EventText {
+  title: string;
+  description: string;
+  locationText: string;
+}
+
+export const CreateBasicInfo = ({ languages, businessId }: CreateBasicInfoProps) => {
+  const t = useTranslations("EventCreation");
+  const searchParams = useSearchParams();
+  const params = useParams();
+  console.log(params);
+
+  const { codeId } = params as { codeId: string };
+  const router = useRouter();
+
+  // Get URL parameters from the previous step
+  const type = searchParams.get("type") || "";
+  const subType = searchParams.get("subType") || "";
+  const customSubType = searchParams.get("customSubType") || "";
+  const isForMinors = searchParams.get("isForMinors") === "yes";
+  const isPublic = searchParams.get("isPublic") === "true";
+  const spaceType = searchParams.get("spaceType") || "";
+  const accessType = searchParams.get("accessType") || "";
+  // Handle URL-encoded comma (%2C) in languages parameter
+  const languagesParam = searchParams.get("languages") || "";
+  const selectedLanguageCodes = languagesParam ? languagesParam.split(/%2C|,/) : [];
+
+  // Map language codes to IDs for initial selection
+  const initialLanguageIds = languages
+    .filter((lang) => selectedLanguageCodes.includes(lang.code))
+    .map((lang) => lang.id);
+
+  // Determine default language logic
+  const hasMultipleLanguages = initialLanguageIds.length > 1;
+  let defaultLanguageId: number | null = null;
+
+  if (hasMultipleLanguages) {
+    // If multiple languages, prioritize Spanish (es) or English (en) as default
+    const spanishLanguage = languages.find((lang) => lang.code === "es");
+    const englishLanguage = languages.find((lang) => lang.code === "en");
+
+    if (spanishLanguage && initialLanguageIds.includes(spanishLanguage.id)) {
+      defaultLanguageId = spanishLanguage.id;
+    } else if (englishLanguage && initialLanguageIds.includes(englishLanguage.id)) {
+      defaultLanguageId = englishLanguage.id;
+    } else {
+      defaultLanguageId = initialLanguageIds[0];
+    }
+  } else if (initialLanguageIds.length === 1) {
+    // If only one language, use it as current language
+    defaultLanguageId = initialLanguageIds[0];
+  }
+
+  // Local state for form
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [selectedLanguageIds, setSelectedLanguageIds] = useState<number[]>(
+    hasMultipleLanguages ? [defaultLanguageId!] : initialLanguageIds
+  );
+  const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(defaultLanguageId);
+
+  // Date and time state
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState<string>("");
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [endTime, setEndTime] = useState<string>("");
+
+  // Event texts for each language - only for the languages in the URL
+  const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
+
+  const initialState: State = { status: undefined };
+  const [state, formAction] = useActionState(createEventBasicInfo, initialState);
+
+  // Handle successful form submission
+  useEffect(() => {
+    if (state?.status === "success") {
+      router.push(`/dashboard/bus/${codeId}/new/1?slug=${state.data?.slug}`);
+    }
+  }, [state?.status, state?.data?.slug, router, codeId]);
+
+  const handleLanguageChange = (languageIds: number[]) => {
+    setSelectedLanguageIds(languageIds);
+    // Don't change currentLanguageId - default language selector only affects defaultLocale
+  };
+
+  const handleEventTextChange = (field: keyof EventText, value: string) => {
+    if (!currentLanguageId) return;
+
+    setEventTexts((prev) => ({
+      ...prev,
+      [currentLanguageId]: {
+        title: prev[currentLanguageId]?.title || "",
+        description: prev[currentLanguageId]?.description || "",
+        locationText: prev[currentLanguageId]?.locationText || "",
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleGenerateWithAI = () => {
+    // TODO: Implement AI generation logic
+    console.log("Generate with AI for languages:", initialLanguageIds);
+  };
+
+  // Check if at least one form is complete
+  const isAnyFormComplete = () => {
+    return Object.values(eventTexts).some(
+      (text) =>
+        text &&
+        typeof text.title === "string" &&
+        typeof text.description === "string" &&
+        text.title.trim() !== "" &&
+        text.description.trim() !== ""
+    );
+  };
+
+  // Check if date/time fields are valid
+  const isDateTimeValid = () => {
+    if (!startDate || !startTime || !endDate || !endTime) return false;
+
+    const startDateTime = new Date(`${startDate.toISOString().split("T")[0]}T${startTime}`);
+    const endDateTime = new Date(`${endDate.toISOString().split("T")[0]}T${endTime}`);
+
+    return startDateTime < endDateTime;
+  };
+
+  // Get the selected language code for defaultLocale
+  const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageIds[0]);
+  const defaultLocale = selectedLanguage?.code || "es";
+
+  // Prepare event texts array for submission - only include texts with content
+  const eventTextsArray = Object.entries(eventTexts)
+    .filter(
+      ([_, text]) =>
+        text &&
+        typeof text.title === "string" &&
+        typeof text.description === "string" &&
+        (text.title.trim() !== "" || text.description.trim() !== "")
+    )
+    .map(([languageId, text]) => ({
+      ...text,
+      languageId: parseInt(languageId),
+    }));
+
+  return (
+    <div className="space-y-6 w-full md:w-auto lg:w-5xl">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{t("basicInfo.title")}</h1>
+        <p className="text-muted-foreground">{t("basicInfo.description")}</p>
+      </div>
+
+      <form action={formAction} className="space-y-4 md:space-y-6">
+        {/* Hidden inputs for form data */}
+        <input type="hidden" name="type" value={type} />
+        <input type="hidden" name="subType" value={customSubType || subType} />
+        <input type="hidden" name="isForMinors" value={isForMinors.toString()} />
+        <input type="hidden" name="isPublic" value={isPublic.toString()} />
+        <input type="hidden" name="spaceType" value={spaceType} />
+        <input type="hidden" name="accessType" value={accessType} />
+        <input type="hidden" name="businessId" value={businessId.toString()} />
+        <input type="hidden" name="defaultLocale" value={defaultLocale} />
+        <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
+
+        {/* Hidden inputs for keywords */}
+        {keywords.map((keyword, index) => (
+          <input key={index} type="hidden" name="keywords" value={keyword} />
+        ))}
+
+        {/* Hidden inputs for date/time */}
+        <input type="hidden" name="startDate" value={startDate ? startDate.toISOString() : ""} />
+        <input type="hidden" name="startTime" value={startTime} />
+        <input type="hidden" name="endDate" value={endDate ? endDate.toISOString() : ""} />
+        <input type="hidden" name="endTime" value={endTime} />
+
+        {/* Event Date and Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("basicInfo.eventDateTime")}</CardTitle>
+            <CardDescription>{t("basicInfo.eventDateTimeDescription")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <DateTimePicker
+                label={t("basicInfo.startDateTime")}
+                date={startDate}
+                time={startTime}
+                onDateChange={setStartDate}
+                onTimeChange={setStartTime}
+                required={true}
+                minDate={new Date(new Date().setHours(0, 0, 0, 0))}
+              />
+              <div className="space-y-2">
+                <DateTimePicker
+                  label={t("basicInfo.endDateTime")}
+                  date={endDate}
+                  time={endTime}
+                  onDateChange={setEndDate}
+                  onTimeChange={setEndTime}
+                  required={true}
+                  minDate={startDate || new Date(new Date().setHours(0, 0, 0, 0))}
+                />
+                {startDate && startTime && endDate && endTime && !isDateTimeValid() && (
+                  <p className="text-xs text-destructive">{t("basicInfo.endDateMustBeAfterStart")}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Default Language Selector - for setting defaultLocale in Event table */}
+        {hasMultipleLanguages && (
+          <Card className="gap-2">
+            <CardHeader>
+              <CardTitle>{t("basicInfo.defaultLanguage")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LanguageSelector
+                languages={languages}
+                selectedLanguages={selectedLanguageIds}
+                onLanguageChange={handleLanguageChange}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Event Texts */}
+        {selectedLanguageIds.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span>{languages.find((lang) => lang.id === currentLanguageId)?.icon || "🌐"}</span>
+                  {t("basicInfo.eventTexts")} - {languages.find((lang) => lang.id === currentLanguageId)?.native}
+                </div>
+                {isAnyFormComplete() && hasMultipleLanguages && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleGenerateWithAI}
+                    className="flex items-center cursor-pointer font-light"
+                  >
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    Generate other languages with<span className="font-semibold">AI</span>
+                  </Button>
+                )}
+              </CardTitle>
+              <CardDescription>{t("basicInfo.eventTextsDescription")}</CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-2 md:space-y-4">
+              {/* Language Switcher - only for multiple languages from URL */}
+              {hasMultipleLanguages && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {initialLanguageIds.map((languageId) => {
+                    const language = languages.find((lang) => lang.id === languageId);
+                    const isActive = currentLanguageId === languageId;
+                    const hasContent =
+                      eventTexts[languageId] &&
+                      typeof eventTexts[languageId].title === "string" &&
+                      typeof eventTexts[languageId].description === "string" &&
+                      (eventTexts[languageId].title.trim() !== "" || eventTexts[languageId].description.trim() !== "");
+
+                    return (
+                      <Button
+                        key={languageId}
+                        type="button"
+                        variant={isActive ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentLanguageId(languageId)}
+                        className="flex items-center gap-2"
+                      >
+                        <span>{language?.icon || "🌐"}</span>
+                        {language?.native}
+                        {hasContent && <span className="w-2 h-2 bg-green-500 rounded-full"></span>}
+                      </Button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Text Inputs */}
+              {currentLanguageId && (
+                <div className="space-y-2 md:space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">{t("basicInfo.eventTitle")}</Label>
+                    <Input
+                      id="title"
+                      value={eventTexts[currentLanguageId]?.title || ""}
+                      onChange={(e) => handleEventTextChange("title", e.target.value)}
+                      placeholder={t("basicInfo.titlePlaceholder")}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">{t("basicInfo.eventDescription")}</Label>
+                    <Textarea
+                      id="description"
+                      value={eventTexts[currentLanguageId]?.description || ""}
+                      onChange={(e) => handleEventTextChange("description", e.target.value)}
+                      placeholder={t("basicInfo.descriptionPlaceholder")}
+                      rows={4}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="locationText">{t("basicInfo.locationText")}</Label>
+                    <Input
+                      id="locationText"
+                      value={eventTexts[currentLanguageId]?.locationText || ""}
+                      onChange={(e) => handleEventTextChange("locationText", e.target.value)}
+                      placeholder={t("basicInfo.locationTextPlaceholder")}
+                    />
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Basic Event Info */}
+        <Card>
+          <CardContent className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="visitsLimit">{t("basicInfo.visitsLimit")}</Label>
+                <Input
+                  id="visitsLimit"
+                  name="visitsLimit"
+                  type="number"
+                  min={10}
+                  placeholder={t("basicInfo.visitsLimitPlaceholder")}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Keywords */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("basicInfo.keywords")}</CardTitle>
+            <CardDescription>{t("basicInfo.keywordsDescription")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 md:space-y-6">
+            <MetaTagsInput value={keywords} onChange={setKeywords} />
+          </CardContent>
+        </Card>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <Button type="submit" disabled={selectedLanguageIds.length === 0 || !isDateTimeValid()}>
+            {t("basicInfo.createEvent")} {state.status === "loading" && <Loader2 className="w-4 h-4 animate-spin" />}
+          </Button>
+        </div>
+
+        {/* Error Display */}
+        {state?.status === "error" && (
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+            <p className="text-destructive">{t("basicInfo.errorCreating")}</p>
+          </div>
+        )}
+      </form>
+    </div>
+  );
+};

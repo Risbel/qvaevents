@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { Loader2, Building, Plus } from "lucide-react";
+import { Loader2, Building, Plus, UserCheck2Icon } from "lucide-react";
 import { createOrganizerProfile } from "@/actions/auth/createOrganizerProfile";
 import { State } from "@/types/state";
 import { useParams } from "next/navigation";
@@ -42,7 +42,7 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
     <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Building className="w-5 h-5" />
+          <UserCheck2Icon className="w-5 h-5" />
           <CardTitle>{t("createOrganizerProfile")}</CardTitle>
         </div>
         <CardDescription>{t("createOrganizerProfileDescription")}</CardDescription>
@@ -140,7 +140,7 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
               ) : (
                 <>
                   <Plus className="w-4 h-4" />
-                  {t("createOrganizerProfile")}
+                  {t("createOrganizerProfileButton")}
                 </>
               )}
             </Button>

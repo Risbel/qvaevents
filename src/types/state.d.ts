@@ -1,7 +1,7 @@
-export type State = {
+export type State<T = Record<string, unknown>> = {
   status?: "success" | "error";
   errors?: {
     [key: string]: string[];
   };
-  data?: Record<string, unknown>;
+  data?: T;
 };
