@@ -5,8 +5,9 @@ import { State } from "@/types/state";
 import { z } from "zod";
 import { convertLocalToUTC } from "@/utils/dateTime";
 
-const createEventBasicInfoSchema = z
+const updateEventBasicInfoSchema = z
   .object({
+    eventId: z.number().min(1, "Event ID is required"),
     visitsLimit: z.number().optional(),
     type: z.string().min(1, "Type is required"),
     subType: z.string().min(1, "SubType is required"),
@@ -23,6 +24,7 @@ const createEventBasicInfoSchema = z
     endTime: z.string().min(1, "End time is required"),
     eventTexts: z.array(
       z.object({
+        id: z.number().min(1, "Text ID is required"),
         title: z.string().min(1, "Title is required"),
         description: z.string().min(1, "Description is required"),
         locationText: z.string().optional(),
@@ -43,24 +45,13 @@ const createEventBasicInfoSchema = z
     }
   );
 
-export async function createEventBasicInfo(prevState: State, formData: FormData): Promise<any> {
+export async function updateEventBasicInfo(prevState: State, formData: FormData): Promise<any> {
   const supabase = await createClient();
 
   try {
-    // Get user to ensure authentication
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return {
-        status: "error",
-        errors: { auth: ["User not authenticated"] },
-      } satisfies State;
-    }
-
     // Parse and validate form data
     const rawData = {
+      eventId: Number(formData.get("eventId")),
       visitsLimit: formData.get("visitsLimit") ? Number(formData.get("visitsLimit")) : undefined,
       type: formData.get("type") as string,
       subType: formData.get("subType") as string,
@@ -81,20 +72,19 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
     };
 
-    const validatedData = createEventBasicInfoSchema.parse(rawData);
+    const validatedData = updateEventBasicInfoSchema.parse(rawData);
 
     // Convert local dates to UTC for storage
     const startDate = new Date(validatedData.startDate);
     const endDate = new Date(validatedData.endDate);
 
-    const startDateTimeUTC = convertLocalToUTC(startDate, validatedData.startTime);
-    const endDateTimeUTC = convertLocalToUTC(endDate, validatedData.endTime);
+    const startDateTime = convertLocalToUTC(startDate, validatedData.startTime);
+    const endDateTime = convertLocalToUTC(endDate, validatedData.endTime);
 
-    // Start a transaction by creating the event first
+    // Update the event
     const { data: event, error: eventError } = await supabase
       .from("Event")
-      .insert({
-        step: 1, // Initially 1 when creating basic info
+      .update({
         visitsLimit: validatedData.visitsLimit,
         type: validatedData.type,
         subType: validatedData.subType,
@@ -105,11 +95,10 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         businessId: validatedData.businessId,
         defaultLocale: validatedData.defaultLocale,
         keywords: validatedData.keywords || [],
-        startDate: startDateTimeUTC.toISOString(),
-        endDate: endDateTimeUTC.toISOString(),
-        isActive: true,
-        isDeleted: false,
+        startDate: startDateTime.toISOString(),
+        endDate: endDateTime.toISOString(),
       })
+      .eq("id", validatedData.eventId)
       .select("id, slug")
       .single();
 
@@ -120,29 +109,28 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       } satisfies State;
     }
 
-    const eventId = event.id;
+    // Update event texts using their specific IDs
+    for (const text of validatedData.eventTexts) {
+      const { error: updateError } = await supabase
+        .from("EventText")
+        .update({
+          title: text.title,
+          description: text.description,
+          locationText: text.locationText || null,
+        })
+        .eq("id", text.id);
 
-    // Insert event texts
-    const eventTextsData = validatedData.eventTexts.map((text) => ({
-      title: text.title,
-      description: text.description,
-      locationText: text.locationText || null,
-      languageId: text.languageId,
-      eventId: eventId,
-    }));
-
-    const { error: eventTextsError } = await supabase.from("EventText").insert(eventTextsData);
-
-    if (eventTextsError) {
-      return {
-        status: "error",
-        errors: { eventTexts: [eventTextsError.message] },
-      } satisfies State;
+      if (updateError) {
+        return {
+          status: "error",
+          errors: { eventTexts: [updateError.message] },
+        } satisfies State;
+      }
     }
 
     return {
       status: "success",
-      data: { eventId: eventId, slug: event.slug },
+      data: { eventId: validatedData.eventId, slug: event.slug },
     } satisfies State;
   } catch (error) {
     return {

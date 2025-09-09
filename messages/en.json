@@ -364,6 +364,9 @@
       "createEvent": "Create Event",
       "creating": "Creating...",
       "errorCreating": "Error creating event",
+      "updateEvent": "Update Event",
+      "updating": "Updating...",
+      "errorUpdating": "Error updating event",
       "endDateMustBeAfterStart": "End date and time must be after start date and time"
     }
   }

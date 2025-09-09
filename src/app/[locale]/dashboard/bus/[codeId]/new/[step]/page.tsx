@@ -1,6 +1,8 @@
 import { getLanguages } from "@/queries/language/getLanguages";
 import { getBusinessByCodeId } from "@/queries/business/getBusinessByCodeId";
 import { CreateBasicInfo } from "./components/CreateBasicInfo";
+import { EditBasicInfoWrapper } from "./components/EditBasicInfoWrapper";
+import { Suspense } from "react";
 
 const NewStepPage = async ({
   params,
@@ -46,16 +48,21 @@ const NewStepPage = async ({
         return <CreateBasicInfo languages={languages} businessId={business.id} />;
       case "1":
         if (eventSlug) {
-          // TODO: Implement EditBasicInfo component
           return (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-muted-foreground">Edit Basic Info coming soon</p>
-            </div>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-64">
+                  <p className="text-muted-foreground">Loading event...</p>
+                </div>
+              }
+            >
+              <EditBasicInfoWrapper eventSlug={eventSlug} languages={languages} businessId={business.id} />
+            </Suspense>
           );
         } else {
           return (
             <div className="flex items-center justify-center h-64">
-              <p className="text-destructive">Event ID is required</p>
+              <p className="text-destructive">Event slug is required</p>
             </div>
           );
         }

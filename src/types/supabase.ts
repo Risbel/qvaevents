@@ -133,7 +133,7 @@ export type Database = {
           businessId: number | null;
           createdAt: string;
           defaultLocale: string | null;
-          endDate: string | null;
+          endDate: string;
           id: number;
           isActive: boolean | null;
           isDeleted: boolean;
@@ -143,7 +143,7 @@ export type Database = {
           keywords: string[] | null;
           slug: string;
           spaceType: string | null;
-          startDate: string | null;
+          startDate: string;
           step: number;
           subType: string;
           type: string;
@@ -154,7 +154,7 @@ export type Database = {
           businessId?: number | null;
           createdAt?: string;
           defaultLocale?: string | null;
-          endDate?: string | null;
+          endDate: string;
           id?: number;
           isActive?: boolean | null;
           isDeleted?: boolean;
@@ -164,7 +164,7 @@ export type Database = {
           keywords?: string[] | null;
           slug?: string;
           spaceType?: string | null;
-          startDate?: string | null;
+          startDate: string;
           step?: number;
           subType: string;
           type: string;
@@ -175,7 +175,7 @@ export type Database = {
           businessId?: number | null;
           createdAt?: string;
           defaultLocale?: string | null;
-          endDate?: string | null;
+          endDate?: string;
           id?: number;
           isActive?: boolean | null;
           isDeleted?: boolean;
@@ -185,7 +185,7 @@ export type Database = {
           keywords?: string[] | null;
           slug?: string;
           spaceType?: string | null;
-          startDate?: string | null;
+          startDate?: string;
           step?: number;
           subType?: string;
           type?: string;

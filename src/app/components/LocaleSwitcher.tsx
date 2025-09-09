@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,11 +13,17 @@ import { Languages } from "lucide-react";
 const LocaleSwitcher = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const switchLocale = (locale: string) => {
     const pathWithoutLocale = pathname.split("/").slice(2).join("/");
     const newPath = `/${locale}/${pathWithoutLocale}`;
-    router.push(newPath);
+
+    // Preserve search parameters
+    const searchString = searchParams.toString();
+    const fullPath = searchString ? `${newPath}?${searchString}` : newPath;
+
+    router.push(fullPath);
   };
 
   return (

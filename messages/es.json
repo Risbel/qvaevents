@@ -364,6 +364,9 @@
       "createEvent": "Crear Evento",
       "creating": "Creando...",
       "errorCreating": "Error al crear el evento",
+      "updateEvent": "Actualizar Evento",
+      "updating": "Actualizando...",
+      "errorUpdating": "Error al actualizar el evento",
       "endDateMustBeAfterStart": "La fecha y hora de fin deben ser posteriores a la fecha y hora de inicio"
     }
   }

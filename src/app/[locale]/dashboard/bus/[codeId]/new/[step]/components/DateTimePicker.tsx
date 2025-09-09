@@ -37,8 +37,8 @@ export function DateTimePicker({
   };
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col gap-3">
+    <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
         <Label htmlFor={`${label.toLowerCase()}-date-picker`} className="px-1">
           {label} {required && <span className="text-destructive">*</span>}
         </Label>
@@ -67,7 +67,7 @@ export function DateTimePicker({
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 w-36">
         <Label htmlFor={`${label.toLowerCase()}-time-picker`} className="px-1">
           {t("time")}
         </Label>
