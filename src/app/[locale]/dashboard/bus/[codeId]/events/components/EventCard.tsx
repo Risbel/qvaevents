@@ -1,0 +1,94 @@
+"use client";
+
+import React from "react";
+import { EventWithTexts } from "@/queries/event/getEventsByBusinessCodeId";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Calendar, Users, Pencil, BarChart } from "lucide-react";
+import { convertUTCToLocal, formatDateForDisplay } from "@/utils/dateTime";
+import { toNormalCase } from "@/utils/textFormating";
+import { getEventTitle, getEventDescription } from "@/utils/eventTextExtraction";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+
+interface EventCardProps {
+  event: EventWithTexts;
+}
+
+const EventCard: React.FC<EventCardProps> = ({ event }) => {
+  const { locale } = useParams();
+  const { codeId } = useParams();
+  const t = useTranslations("actions");
+  const tEventCard = useTranslations("EventCard");
+
+  const formatEventDate = (utcDateString: string) => {
+    try {
+      const localDate = convertUTCToLocal(utcDateString);
+      return formatDateForDisplay(localDate, true, locale as string);
+    } catch {
+      return "Invalid date";
+    }
+  };
+
+  return (
+    <Card className="shadow-md border-primary/40 transition-shadow gap-4">
+      <CardHeader className="relative gap-0">
+        <CardTitle className="text-lg">{getEventTitle(event, locale as string)}</CardTitle>
+        <CardDescription className="line-clamp-2 text-wrap">
+          {getEventDescription(event, locale as string)}
+        </CardDescription>
+
+        <div className="flex flex-wrap items-center gap-1 mt-2">
+          <Badge variant="outline">{toNormalCase(event.type)}</Badge>
+          <Badge variant="outline">{toNormalCase(event.subType)}</Badge>
+
+          {event.isForMinors ? (
+            <Badge variant="outline" className="bg-green-300/50">
+              {tEventCard("minorsAllowed")}
+            </Badge>
+          ) : (
+            <Badge variant="outline">{tEventCard("onlyForAdults")}</Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="relative">
+        <div className="space-y-2 text-xs">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" /> {formatEventDate(event.startDate)} (
+            {tEventCard("start")})
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" /> {formatEventDate(event.endDate)} ({tEventCard("end")}
+            )
+          </div>
+
+          {event.visitsLimit && (
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span>
+                {tEventCard("visitsLimit")}: {event.visitsLimit} {tEventCard("visitors", { count: event.visitsLimit })}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-4 flex justify-end gap-2">
+          <Button variant="outline" size="default" className="cursor-pointer">
+            <BarChart /> {t("viewDetails")}
+          </Button>
+          <Link
+            className={cn(buttonVariants({ variant: "default", size: "default" }))}
+            href={`/${locale}/dashboard/bus/${codeId}/new/1?slug=${event.slug}`}
+          >
+            <Pencil /> {t("edit")}
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default EventCard;

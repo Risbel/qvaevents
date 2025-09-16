@@ -6,7 +6,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { DynamicBreadcrumb } from "./components/DynamicBreadcrumb";
@@ -15,7 +14,7 @@ import ModeToggle from "@/app/components/ModeToggle";
 import UserDropdown from "@/app/components/UserDropdown";
 import { createClient } from "@/utils/supabase/server";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,10 +32,13 @@ export default async function Layout({ children, params }: LayoutProps) {
     redirect(`/${locale}/auth/org/login`);
   }
 
-  // Fetch business data
   const businessResult = await getBusinessByCodeId(codeId);
-  const business =
-    businessResult.status === "success" ? (businessResult.data?.business as BusinessWithOrganizer) : undefined;
+
+  if (businessResult.status === "error") {
+    notFound();
+  }
+
+  const business = businessResult.data?.business as BusinessWithOrganizer;
 
   return (
     <SidebarProvider>

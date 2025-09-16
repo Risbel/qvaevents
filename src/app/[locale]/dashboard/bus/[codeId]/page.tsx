@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, TrendingUp, Plus, Eye } from "lucide-react";
 import Link from "next/link";
+import { getBusinessByCodeId, BusinessWithOrganizer } from "@/queries/business/getBusinessByCodeId";
 
 interface PageProps {
   params: Promise<{ codeId: string; locale: string }>;
@@ -12,13 +13,9 @@ interface PageProps {
 export default async function BusDashboard({ params }: PageProps) {
   const { codeId, locale } = await params;
 
-  // Mock data for demonstration
-  const business = {
-    id: codeId,
-    name: "Sample Business",
-    description: "A sample business for demonstration purposes",
-    isActive: true,
-  };
+  // Get business data (layout already validates existence)
+  const businessResult = await getBusinessByCodeId(codeId);
+  const business = businessResult.data?.business as BusinessWithOrganizer;
 
   const stats = [
     {
@@ -63,8 +60,10 @@ export default async function BusDashboard({ params }: PageProps) {
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <div>
-          <h1 className="text-3xl font-bold">{business.name}</h1>
-          <p className="text-muted-foreground">{business.description}</p>
+          <h1 className="text-3xl font-bold">{business.name || "Business Dashboard"}</h1>
+          <p className="text-muted-foreground">
+            {business.description || "Manage your business events and activities"}
+          </p>
         </div>
       </div>
 
