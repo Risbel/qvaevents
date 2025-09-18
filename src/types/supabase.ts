@@ -138,7 +138,7 @@ export type Database = {
           isActive: boolean | null;
           isDeleted: boolean;
           isForMinors: boolean | null;
-          isPubished: boolean | null;
+          isPublished: boolean | null;
           isPublic: boolean | null;
           keywords: string[] | null;
           slug: string;
@@ -159,7 +159,7 @@ export type Database = {
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
-          isPubished?: boolean | null;
+          isPublished?: boolean | null;
           isPublic?: boolean | null;
           keywords?: string[] | null;
           slug?: string;
@@ -180,7 +180,7 @@ export type Database = {
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
-          isPubished?: boolean | null;
+          isPublished?: boolean | null;
           isPublic?: boolean | null;
           keywords?: string[] | null;
           slug?: string;

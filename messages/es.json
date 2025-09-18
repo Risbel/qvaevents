@@ -6,12 +6,14 @@
     "pricing": "Precios",
     "getStarted": "Comenzar",
     "contact": "Contactar",
-    "goBack": "Volver"
+    "goBack": "Volver",
+    "next": "Siguiente"
   },
   "actions": {
     "save": "Guardar",
     "cancel": "Cancelar",
     "delete": "Eliminar",
+    "deleting": "Eliminando...",
     "edit": "Editar",
     "update": "Actualizar",
     "create": "Crear",
@@ -92,6 +94,9 @@
     "preview": "Vista Previa",
     "verify": "Verificar",
     "test": "Probar",
+    "dropImagesHere": "Arrastra y suelta imágenes aquí",
+    "clickToSelect": "Haz clic para seleccionar o arrastra y suelta",
+    "acceptedFileTypes": "Formatos aceptados: {types}",
     "loading": "Cargando...",
     "saving": "Guardando...",
     "uploading": "Subiendo...",
@@ -456,9 +461,11 @@
       "keywordsPlaceholder": "Ingresa una palabra clave y presiona +",
       "createEvent": "Crear Evento",
       "creating": "Creando...",
+      "missingRequiredParameters": "Faltan Parámetros Requeridos",
+      "missingRequiredParametersDescription": "Por favor, vuelve al paso anterior y completa la configuración del evento.",
       "errorCreating": "Error al crear el evento",
-      "updateEvent": "Actualizar Evento",
       "updating": "Actualizando...",
+      "updateSuccess": "Evento actualizado exitosamente",
       "errorUpdating": "Error al actualizar el evento",
       "endDateMustBeAfterStart": "La fecha y hora de fin deben ser posteriores a la fecha y hora de inicio"
     }
@@ -472,6 +479,10 @@
     "title": "Error al cargar los eventos",
     "description": "Ocurrió un error al cargar los eventos. Esto puede ser debido a un problema de red o un problema del servidor."
   },
+  "EventError": {
+    "title": "Error al cargar el evento",
+    "description": "Ocurrió un error al cargar el evento. Esto puede ser debido a un problema de red o un problema del servidor."
+  },
   "EventCard": {
     "minorsAllowed": "Apto para menores",
     "onlyForAdults": "Solo para adultos 🔞",
@@ -482,5 +493,33 @@
     "visitors": "{count, plural, =1 {visitante} other {visitantes}}",
     "start": "inicio",
     "end": "fin"
+  },
+  "EventImagesManager": {
+    "currentEventImages": "{count, plural, =1 {Imagen actual del evento} other {Imágenes actuales del evento}}",
+    "uploadImages": "Cargar imágenes",
+    "deletedSuccessfully": "Imagen eliminada exitosamente",
+    "uploadImagesDescription": "Cargar imágenes para tu evento. Recomendadas dimensiones: 1200x800px o similar aspecto.",
+    "uploadImagesSuccess": "¡Imágen{count, plural, one {} other {es}} subidas exitosamente! {count} imagen{count, plural, one {} other {s}}",
+    "uploadImagesError": "Error al subir las imágenes",
+    "eventPosters": "Posters del evento",
+    "eventPostersDescription": "Cargar imágenes para tu evento. Recomendadas dimensiones: 1200x800px o similar aspecto."
+  },
+  "EventPublish": {
+    "publishTitle": "Publicar Evento",
+    "publishDescription": "Haz tu evento visible al público. Una vez publicado, tu evento estará disponible para que todos lo vean.",
+    "publishWarningTitle": "Importante",
+    "publishWarningDescription": "Una vez publicado, tu evento será visible al público. Asegúrate de que toda la información sea correcta antes de publicar.",
+    "beforePublishing": "Antes de publicar, por favor verifica:",
+    "checklistBasicInfo": "La información básica del evento está completa y es precisa",
+    "checklistImages": "Las imágenes del evento están cargadas y se ven bien",
+    "checklistContent": "Todos los detalles del evento están correctamente completados",
+    "publishEvent": "Publicar Evento",
+    "publishing": "Publicando...",
+    "publishSuccess": "¡Evento publicado exitosamente!",
+    "publishError": "Error al publicar el evento",
+    "publishedTitle": "¡Evento Publicado!",
+    "publishedDescription": "Tu evento ha sido publicado exitosamente y ahora es visible al público.",
+    "viewEvent": "Ver Evento",
+    "details": "Detalles"
   }
 }
