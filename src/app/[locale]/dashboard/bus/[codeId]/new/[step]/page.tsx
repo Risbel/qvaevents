@@ -1,8 +1,13 @@
 import { getLanguages } from "@/queries/language/getLanguages";
 import { getBusinessByCodeId } from "@/queries/business/getBusinessByCodeId";
-import { CreateBasicInfo } from "./components/CreateBasicInfo";
-import { EditBasicInfoWrapper } from "./components/EditBasicInfoWrapper";
+import { LoadBasicInfo } from "./components/basic-info/LoadBasicInfo";
+import LoadEventWithImages from "./components/upload-files/LoadEventWithImages";
+import { LoadPublishForm } from "./components/publish-event/LoadPublishForm";
 import { Suspense } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { CreateBasicInfo } from "./components/basic-info/CreateBasicInfo";
 
 const NewStepPage = async ({
   params,
@@ -14,7 +19,7 @@ const NewStepPage = async ({
   const { step, codeId } = await params;
   const searchParamsData = await searchParams;
   const eventSlug = searchParamsData.slug as string;
-
+  const t = await getTranslations("EventError");
   // Fetch required data
   const [languagesResult, businessResult] = await Promise.all([getLanguages(), getBusinessByCodeId(codeId)]);
 
@@ -47,30 +52,51 @@ const NewStepPage = async ({
       case "0":
         return <CreateBasicInfo languages={languages} businessId={business.id} />;
       case "1":
-        if (eventSlug) {
-          return (
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center h-64">
-                  <p className="text-muted-foreground">Loading event...</p>
-                </div>
-              }
-            >
-              <EditBasicInfoWrapper eventSlug={eventSlug} languages={languages} businessId={business.id} />
-            </Suspense>
-          );
-        } else {
-          return (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-destructive">Event slug is required</p>
-            </div>
-          );
-        }
+        return (
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-64">
+                <p className="text-muted-foreground">Loading event...</p>
+              </div>
+            }
+          >
+            <LoadBasicInfo eventSlug={eventSlug} languages={languages} businessId={business.id} />
+          </Suspense>
+        );
+
+      case "2":
+        return (
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-64">
+                <p className="text-muted-foreground">Loading event images...</p>
+              </div>
+            }
+          >
+            <LoadEventWithImages eventSlug={eventSlug} />
+          </Suspense>
+        );
+
+      case "3":
+        return (
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-64">
+                <p className="text-muted-foreground">Loading publish form...</p>
+              </div>
+            }
+          >
+            <LoadPublishForm eventSlug={eventSlug} />
+          </Suspense>
+        );
+
       default:
         return (
-          <div className="flex items-center justify-center h-64">
-            <p className="text-destructive">Invalid step</p>
-          </div>
+          <Alert variant="destructive" className="max-w-md">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>{t("title")}</AlertTitle>
+            <AlertDescription>{t("description")}</AlertDescription>
+          </Alert>
         );
     }
   };

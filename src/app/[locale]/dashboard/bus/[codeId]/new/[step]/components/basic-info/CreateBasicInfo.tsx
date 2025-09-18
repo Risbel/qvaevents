@@ -1,109 +1,140 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
-import { updateEventBasicInfo } from "@/actions/event/updateEventBasicInfo";
+import { createEventBasicInfo } from "@/actions/event/createEventBasicInfo";
 import { MetaTagsInput } from "./MetaTagsInput";
-import { LanguageSelector } from "./LanguageSelector";
-import { DateTimePicker } from "./DateTimePicker";
 import { Language } from "@/queries/language/getLanguages";
 import { State } from "@/types/state";
-import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
-import { EventWithTexts } from "@/queries/event/getEventBySlug";
-import { format, parseISO } from "date-fns";
-import { convertUTCToLocal, formatDateRange } from "@/utils/dateTime";
+import { AlertTriangle, ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { validateEventParams } from "../validations/event-params";
+import { DateTimePicker } from "./DateTimePicker";
+import { LanguageSelector } from "./LanguageSelector";
 
-interface EditBasicInfoProps {
-  languages: Language[];
-  businessId: number;
-  event: EventWithTexts;
+interface EventText {
+  title: string;
+  description: string;
+  locationText: string;
 }
 
-export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoProps) => {
+export const CreateBasicInfo = ({ languages, businessId }: { languages: Language[]; businessId: number }) => {
   const t = useTranslations("EventCreation");
-  const router = useRouter();
+  const tNavigation = useTranslations("navigation");
+  const searchParams = useSearchParams();
   const params = useParams();
-  const locale = params.locale;
-  const codeId = params.codeId;
 
-  // Initialize form state with existing event data
-  const [keywords, setKeywords] = useState<string[]>(event.keywords || []);
+  const { codeId } = params as { codeId: string };
+  const router = useRouter();
 
-  // Get existing event texts and organize by language
-  const existingEventTexts = event.EventText.reduce((acc, text) => {
-    acc[text.languageId] = {
-      id: text.id,
-      title: text.title,
-      description: text.description,
-      locationText: text.locationText || "",
-    };
-    return acc;
-  }, {} as { [languageId: number]: { id: number; title: string; description: string; locationText: string } });
+  // Get URL parameters from the previous step
+  const urlParams = {
+    type: searchParams.get("type"),
+    subType: searchParams.get("subType"),
+    customSubType: searchParams.get("customSubType"),
+    isForMinors: searchParams.get("isForMinors"),
+    isPublic: searchParams.get("isPublic"),
+    spaceType: searchParams.get("spaceType"),
+    accessType: searchParams.get("accessType"),
+    languages: searchParams.get("languages"),
+  };
 
-  // Get language IDs from existing texts
-  const existingLanguageIds = event.EventText.map((text) => text.languageId);
-  const hasMultipleLanguages = existingLanguageIds.length > 1;
+  // Validate parameters using Zod schema
+  const validationResult = validateEventParams(urlParams, languages);
 
-  // Determine default language
-  const defaultLanguageId = languages.find((lang) => lang.code === event.defaultLocale)?.id || existingLanguageIds[0];
+  if (!validationResult.success) {
+    return (
+      <div>
+        <Alert variant="destructive" className="max-w-md mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>{t("basicInfo.missingRequiredParameters")}</AlertTitle>
 
+          <AlertDescription>{t("basicInfo.missingRequiredParametersDescription")}</AlertDescription>
+        </Alert>
+
+        <Button variant="outline" onClick={() => router.push(`/dashboard/bus/${codeId}/new`)}>
+          <ArrowLeft className="h-4 w-4" /> {tNavigation("goBack")}
+        </Button>
+      </div>
+    );
+  }
+
+  // Parse validated parameters
+  const validatedParams = validationResult.data!;
+  const isForMinors = validatedParams.isForMinors === "yes";
+  const isPublic = validatedParams.isPublic === "true";
+  const selectedLanguageCodes = validatedParams.languages?.split(/%2C|,/) || [];
+  const customSubType = urlParams.customSubType;
+
+  // Map language codes to IDs for initial selection
+  const initialLanguageIds = languages
+    .filter((lang) => selectedLanguageCodes.includes(lang.code))
+    .map((lang) => lang.id);
+
+  // Determine default language logic
+  const hasMultipleLanguages = initialLanguageIds.length > 1;
+  let defaultLanguageId: number | null = null;
+
+  if (hasMultipleLanguages) {
+    // If multiple languages, prioritize Spanish (es) or English (en) as default
+    const spanishLanguage = languages.find((lang) => lang.code === "es");
+    const englishLanguage = languages.find((lang) => lang.code === "en");
+
+    if (spanishLanguage && initialLanguageIds.includes(spanishLanguage.id)) {
+      defaultLanguageId = spanishLanguage.id;
+    } else if (englishLanguage && initialLanguageIds.includes(englishLanguage.id)) {
+      defaultLanguageId = englishLanguage.id;
+    } else {
+      defaultLanguageId = initialLanguageIds[0];
+    }
+  } else if (initialLanguageIds.length === 1) {
+    // If only one language, use it as current language
+    defaultLanguageId = initialLanguageIds[0];
+  }
+
+  // Local state for form
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [selectedLanguageIds, setSelectedLanguageIds] = useState<number[]>(
-    hasMultipleLanguages ? [defaultLanguageId] : existingLanguageIds
+    hasMultipleLanguages ? [defaultLanguageId!] : initialLanguageIds
   );
   const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(defaultLanguageId);
-  const [eventTexts, setEventTexts] = useState<{
-    [languageId: number]: { id: number; title: string; description: string; locationText: string };
-  }>(existingEventTexts);
 
-  // Date and time state - parse from existing event (UTC) and convert to local
-  const startDateLocal = convertUTCToLocal(event.startDate);
-  const endDateLocal = convertUTCToLocal(event.endDate);
+  // Date and time state
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState<string>("");
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [endTime, setEndTime] = useState<string>("");
 
-  // Extract date and time components from local time
-  const startDateOnly = new Date(startDateLocal.getFullYear(), startDateLocal.getMonth(), startDateLocal.getDate());
-  const endDateOnly = new Date(endDateLocal.getFullYear(), endDateLocal.getMonth(), endDateLocal.getDate());
-
-  // Extract time components from local time
-  const startTimeOnly = format(startDateLocal, "HH:mm");
-  const endTimeOnly = format(endDateLocal, "HH:mm");
-
-  const [startDateState, setStartDateState] = useState<Date | undefined>(startDateOnly);
-  const [startTime, setStartTime] = useState<string>(startTimeOnly);
-  const [endDateState, setEndDateState] = useState<Date | undefined>(endDateOnly);
-  const [endTime, setEndTime] = useState<string>(endTimeOnly);
+  // Event texts for each language - only for the languages in the URL
+  const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
 
   const initialState: State = { status: undefined };
-  const [state, formAction, isPending] = useActionState(updateEventBasicInfo, initialState);
+  const [state, formAction, isPending] = useActionState(createEventBasicInfo, initialState);
 
   // Handle successful form submission
   useEffect(() => {
     if (state?.status === "success") {
-      router.refresh();
-      // router.push(`/dashboard/bus/${codeId}/new/2?slug=${state.data?.slug}`);
+      router.push(`/dashboard/bus/${codeId}/new/1?slug=${state.data?.slug}`);
     }
   }, [state?.status, state?.data?.slug, router, codeId]);
 
   const handleLanguageChange = (languageIds: number[]) => {
     setSelectedLanguageIds(languageIds);
+    // Don't change currentLanguageId - default language selector only affects defaultLocale
   };
 
-  const handleEventTextChange = (
-    field: keyof { id: number; title: string; description: string; locationText: string },
-    value: string | number
-  ) => {
+  const handleEventTextChange = (field: keyof EventText, value: string) => {
     if (!currentLanguageId) return;
 
     setEventTexts((prev) => ({
       ...prev,
       [currentLanguageId]: {
-        id: prev[currentLanguageId]?.id || 0,
         title: prev[currentLanguageId]?.title || "",
         description: prev[currentLanguageId]?.description || "",
         locationText: prev[currentLanguageId]?.locationText || "",
@@ -114,10 +145,9 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
   const handleGenerateWithAI = () => {
     // TODO: Implement AI generation logic
-    console.log("Generate with AI for languages:", existingLanguageIds);
+    console.log("Generate with AI for languages:", initialLanguageIds);
   };
 
-  // Check if at least one form is complete
   const isAnyFormComplete = () => {
     return Object.values(eventTexts).some(
       (text) =>
@@ -131,17 +161,17 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
   // Check if date/time fields are valid
   const isDateTimeValid = () => {
-    if (!startDateState || !startTime || !endDateState || !endTime) return false;
+    if (!startDate || !startTime || !endDate || !endTime) return false;
 
-    const startDateTime = new Date(`${startDateState.toISOString().split("T")[0]}T${startTime}`);
-    const endDateTime = new Date(`${endDateState.toISOString().split("T")[0]}T${endTime}`);
+    const startDateTime = new Date(`${startDate.toISOString().split("T")[0]}T${startTime}`);
+    const endDateTime = new Date(`${endDate.toISOString().split("T")[0]}T${endTime}`);
 
     return startDateTime < endDateTime;
   };
 
   // Get the selected language code for defaultLocale
   const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageIds[0]);
-  const defaultLocale = selectedLanguage?.code || event.defaultLocale;
+  const defaultLocale = selectedLanguage?.code || "es";
 
   // Prepare event texts array for submission - only include texts with content
   const eventTextsArray = Object.entries(eventTexts)
@@ -153,10 +183,7 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
         (text.title.trim() !== "" || text.description.trim() !== "")
     )
     .map(([languageId, text]) => ({
-      id: text.id,
-      title: text.title,
-      description: text.description,
-      locationText: text.locationText,
+      ...text,
       languageId: parseInt(languageId),
     }));
 
@@ -169,15 +196,14 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
       <form action={formAction} className="space-y-4 md:space-y-6">
         {/* Hidden inputs for form data */}
-        <input type="hidden" name="eventId" value={event.id} />
-        <input type="hidden" name="type" value={event.type} />
-        <input type="hidden" name="subType" value={event.subType} />
-        <input type="hidden" name="isForMinors" value={event.isForMinors?.toString() || "false"} />
-        <input type="hidden" name="isPublic" value={event.isPublic?.toString() || "false"} />
-        <input type="hidden" name="spaceType" value={event.spaceType || ""} />
-        <input type="hidden" name="accessType" value={event.accessType || ""} />
+        <input type="hidden" name="type" value={validatedParams.type || ""} />
+        <input type="hidden" name="subType" value={customSubType || validatedParams.subType || ""} />
+        <input type="hidden" name="isForMinors" value={isForMinors.toString()} />
+        <input type="hidden" name="isPublic" value={isPublic.toString()} />
+        <input type="hidden" name="spaceType" value={validatedParams.spaceType || ""} />
+        <input type="hidden" name="accessType" value={validatedParams.accessType || ""} />
         <input type="hidden" name="businessId" value={businessId.toString()} />
-        <input type="hidden" name="defaultLocale" value={defaultLocale || ""} />
+        <input type="hidden" name="defaultLocale" value={defaultLocale} />
         <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
 
         {/* Hidden inputs for keywords */}
@@ -185,33 +211,25 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
           <input key={index} type="hidden" name="keywords" value={keyword} />
         ))}
 
-        {/* Hidden inputs for date/time - send current form state */}
-        <input type="hidden" name="startDate" value={startDateState ? startDateState.toISOString() : ""} />
+        {/* Hidden inputs for date/time */}
+        <input type="hidden" name="startDate" value={startDate ? startDate.toISOString() : ""} />
         <input type="hidden" name="startTime" value={startTime} />
-        <input type="hidden" name="endDate" value={endDateState ? endDateState.toISOString() : ""} />
+        <input type="hidden" name="endDate" value={endDate ? endDate.toISOString() : ""} />
         <input type="hidden" name="endTime" value={endTime} />
 
         {/* Event Date and Time */}
         <Card>
           <CardHeader>
             <CardTitle>{t("basicInfo.eventDateTime")}</CardTitle>
-            <CardDescription>
-              {t("basicInfo.eventDateTimeDescription")}
-              <br />
-              <span className="text-sm font-medium">
-                {startDateState &&
-                  endDateState &&
-                  formatDateRange(startDateState, startTime, endDateState, endTime, locale as string)}
-              </span>
-            </CardDescription>
+            <CardDescription>{t("basicInfo.eventDateTimeDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <DateTimePicker
                 label={t("basicInfo.startDateTime")}
-                date={startDateState}
+                date={startDate}
                 time={startTime}
-                onDateChange={setStartDateState}
+                onDateChange={setStartDate}
                 onTimeChange={setStartTime}
                 required={true}
                 minDate={new Date(new Date().setHours(0, 0, 0, 0))}
@@ -219,14 +237,14 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
               <div className="space-y-2">
                 <DateTimePicker
                   label={t("basicInfo.endDateTime")}
-                  date={endDateState}
+                  date={endDate}
                   time={endTime}
-                  onDateChange={setEndDateState}
+                  onDateChange={setEndDate}
                   onTimeChange={setEndTime}
                   required={true}
-                  minDate={startDateState || new Date(new Date().setHours(0, 0, 0, 0))}
+                  minDate={startDate || new Date(new Date().setHours(0, 0, 0, 0))}
                 />
-                {startDateState && startTime && endDateState && endTime && !isDateTimeValid() && (
+                {startDate && startTime && endDate && endTime && !isDateTimeValid() && (
                   <p className="text-xs text-destructive">{t("basicInfo.endDateMustBeAfterStart")}</p>
                 )}
               </div>
@@ -251,7 +269,7 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
         )}
 
         {/* Event Texts */}
-        {existingLanguageIds.length > 0 && (
+        {selectedLanguageIds.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -261,6 +279,7 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
                 </div>
                 {isAnyFormComplete() && hasMultipleLanguages && (
                   <Button
+                    title="Generate languages with AI"
                     type="button"
                     variant="outline"
                     size="sm"
@@ -268,7 +287,6 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
                     className="flex items-center cursor-pointer font-light"
                   >
                     <Sparkles className="h-4 w-4 text-primary" />
-                    Generate other languages with<span className="font-semibold">AI</span>
                   </Button>
                 )}
               </CardTitle>
@@ -276,10 +294,10 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
             </CardHeader>
 
             <CardContent className="space-y-2 md:space-y-4">
-              {/* Language Switcher - only for multiple languages */}
+              {/* Language Switcher - only for multiple languages from URL */}
               {hasMultipleLanguages && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {existingLanguageIds.map((languageId) => {
+                  {initialLanguageIds.map((languageId) => {
                     const language = languages.find((lang) => lang.id === languageId);
                     const isActive = currentLanguageId === languageId;
                     const hasContent =
@@ -358,7 +376,6 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
                   name="visitsLimit"
                   type="number"
                   min={10}
-                  defaultValue={event.visitsLimit || ""}
                   placeholder={t("basicInfo.visitsLimitPlaceholder")}
                 />
               </div>
@@ -379,15 +396,15 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
         {/* Submit Button */}
         <div className="flex justify-end">
-          <Button type="submit" disabled={existingLanguageIds.length === 0 || !isDateTimeValid() || isPending}>
-            {t("basicInfo.updateEvent")} {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+          <Button type="submit" disabled={selectedLanguageIds.length === 0 || !isDateTimeValid() || isPending}>
+            {t("basicInfo.createEvent")} {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
           </Button>
         </div>
 
         {/* Error Display */}
         {state?.status === "error" && (
           <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-            <p className="text-destructive">{t("basicInfo.errorUpdating")}</p>
+            <p className="text-destructive">{t("basicInfo.errorCreating")}</p>
           </div>
         )}
       </form>

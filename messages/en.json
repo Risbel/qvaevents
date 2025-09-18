@@ -6,12 +6,14 @@
     "pricing": "Pricing",
     "getStarted": "Get Started",
     "contact": "Contact",
-    "goBack": "Go Back"
+    "goBack": "Go Back",
+    "next": "Next"
   },
   "actions": {
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "edit": "Edit",
     "update": "Update",
     "create": "Create",
@@ -92,6 +94,9 @@
     "preview": "Preview",
     "verify": "Verify",
     "test": "Test",
+    "dropImagesHere": "Drop images here",
+    "clickToSelect": "Click to select or drag and drop",
+    "acceptedFileTypes": "Accepted file types: {types}",
     "loading": "Loading...",
     "saving": "Saving...",
     "uploading": "Uploading...",
@@ -456,9 +461,11 @@
       "keywordsPlaceholder": "Enter a keyword and press +",
       "createEvent": "Create Event",
       "creating": "Creating...",
+      "missingRequiredParameters": "Missing Required Parameters",
+      "missingRequiredParametersDescription": "Please go back to the previous step and complete the event configuration.",
       "errorCreating": "Error creating event",
-      "updateEvent": "Update Event",
       "updating": "Updating...",
+      "updateSuccess": "Event updated successfully",
       "errorUpdating": "Error updating event",
       "endDateMustBeAfterStart": "End date and time must be after start date and time"
     }
@@ -472,6 +479,10 @@
     "title": "Failed to load events",
     "description": "We encountered an error while loading the events. This could be due to a network issue or a server problem."
   },
+  "EventError": {
+    "title": "Failed to load event",
+    "description": "We encountered an error while loading the event. This could be due to a network issue or a server problem."
+  },
   "EventCard": {
     "minorsAllowed": "Minors allowed",
     "onlyForAdults": "Only for adults 🔞",
@@ -482,5 +493,33 @@
     "visitors": "{count, plural, =1 {visitor} other {visitors}}",
     "start": "start",
     "end": "end"
+  },
+  "EventImagesManager": {
+    "currentEventImages": "{count, plural, =1 {Current event image} other {Current event images}}",
+    "uploadImages": "Upload images",
+    "deletedSuccessfully": "Image deleted successfully",
+    "uploadImagesDescription": "Upload images for your event. Recommended dimensions: 1200x800px or similar aspect ratio.",
+    "uploadImagesSuccess": "Successfully uploaded {count} image{count, plural, one {} other {es}}",
+    "uploadImagesError": "Failed to save images",
+    "eventPosters": "Event Posters",
+    "eventPostersDescription": "Upload images for your event. Recommended dimensions: 1200x800px or similar aspect ratio."
+  },
+  "EventPublish": {
+    "publishTitle": "Publish Event",
+    "publishDescription": "Make your event visible to the public. Once published, your event will be available for everyone to see.",
+    "publishWarningTitle": "Important",
+    "publishWarningDescription": "Once published, your event will be visible to the public. Make sure all information is correct before publishing.",
+    "beforePublishing": "Before publishing, please verify:",
+    "checklistBasicInfo": "Event basic information is complete and accurate",
+    "checklistImages": "Event images are uploaded and look good",
+    "checklistContent": "All event details are properly filled out",
+    "publishEvent": "Publish Event",
+    "publishing": "Publishing...",
+    "publishSuccess": "Event published successfully!",
+    "publishError": "Failed to publish event",
+    "publishedTitle": "Event Published!",
+    "publishedDescription": "Your event has been successfully published and is now visible to the public.",
+    "viewEvent": "View Event",
+    "details": "Details"
   }
 }
