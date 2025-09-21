@@ -26,6 +26,16 @@ export async function saveEventImages(eventId: number, imageUrls: string[], file
       };
     }
 
+    const { error: updateError } = await supabase.from("Event").update({ step: 2 }).eq("id", eventId).lt("step", 2); // Only update if current step is less than 2
+
+    if (updateError) {
+      return {
+        status: "error" as const,
+        error: updateError.message,
+        data: null,
+      };
+    }
+
     // Revalidate the page to show updated images
     revalidatePath("/dashboard");
 

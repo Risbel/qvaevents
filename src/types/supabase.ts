@@ -203,7 +203,7 @@ export type Database = {
       };
       EventImage: {
         Row: {
-          created_at: string;
+          createdAt: string;
           eventId: number | null;
           id: number;
           size: number | null;
@@ -211,7 +211,7 @@ export type Database = {
           url: string;
         };
         Insert: {
-          created_at?: string;
+          createdAt?: string;
           eventId?: number | null;
           id?: number;
           size?: number | null;
@@ -219,7 +219,7 @@ export type Database = {
           url: string;
         };
         Update: {
-          created_at?: string;
+          createdAt?: string;
           eventId?: number | null;
           id?: number;
           size?: number | null;

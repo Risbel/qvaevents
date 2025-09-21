@@ -7,10 +7,10 @@ export async function publishEvent(eventId: number) {
   try {
     const supabase = await createClient();
 
-    // Update the event to set isPublished to true
+    // Update the event to set isPublished to true and step to 3
     const { data, error } = await supabase
       .from("Event")
-      .update({ isPublished: true })
+      .update({ isPublished: true, step: 3 })
       .eq("id", eventId)
       .select()
       .single();

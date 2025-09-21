@@ -9,6 +9,11 @@
     "goBack": "Go Back",
     "next": "Next"
   },
+  "StepBar": {
+    "basicInfo": "Basic Info",
+    "uploadImages": "Upload Images",
+    "publishEvent": "Publish Event"
+  },
   "actions": {
     "save": "Save",
     "cancel": "Cancel",

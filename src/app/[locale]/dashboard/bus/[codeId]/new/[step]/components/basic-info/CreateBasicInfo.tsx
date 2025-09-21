@@ -120,7 +120,7 @@ export const CreateBasicInfo = ({ languages, businessId }: { languages: Language
   // Handle successful form submission
   useEffect(() => {
     if (state?.status === "success") {
-      router.push(`/dashboard/bus/${codeId}/new/1?slug=${state.data?.slug}`);
+      router.push(`/dashboard/bus/${codeId}/new/2?slug=${state.data?.slug}`);
     }
   }, [state?.status, state?.data?.slug, router, codeId]);
 

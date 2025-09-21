@@ -1,5 +1,6 @@
 import { getLanguages } from "@/queries/language/getLanguages";
 import { getBusinessByCodeId } from "@/queries/business/getBusinessByCodeId";
+import { getEventBySlug } from "@/queries/event/getEventBySlug";
 import { LoadBasicInfo } from "./components/basic-info/LoadBasicInfo";
 import LoadEventWithImages from "./components/upload-files/LoadEventWithImages";
 import { LoadPublishForm } from "./components/publish-event/LoadPublishForm";
@@ -8,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { CreateBasicInfo } from "./components/basic-info/CreateBasicInfo";
+import { StepBar } from "./components/StepBar";
 
 const NewStepPage = async ({
   params,
@@ -20,8 +22,22 @@ const NewStepPage = async ({
   const searchParamsData = await searchParams;
   const eventSlug = searchParamsData.slug as string;
   const t = await getTranslations("EventError");
+
+  // Parse step as number for step bar
+  // URL step 0 (Create Basic Info) -> Step bar 1
+  // URL step 1 (Edit Basic Info) -> Step bar 1
+  // URL step 2 (Upload Images) -> Step bar 2
+  // URL step 3 (Publish Event) -> Step bar 3
+  const currentStep = parseInt(step) === 0 ? 1 : parseInt(step);
+
   // Fetch required data
   const [languagesResult, businessResult] = await Promise.all([getLanguages(), getBusinessByCodeId(codeId)]);
+
+  // Fetch event data if we have a slug (for existing events)
+  let eventResult = null;
+  if (eventSlug) {
+    eventResult = await getEventBySlug(eventSlug);
+  }
 
   if (
     languagesResult.status !== "success" ||
@@ -45,6 +61,18 @@ const NewStepPage = async ({
 
   const languages = languagesResult.data.languages;
   const business = businessResult.data.business;
+
+  // Determine completed steps from event data
+  let completedSteps = 0;
+  if (eventResult?.status === "success" && eventResult.data?.event) {
+    const event = eventResult.data.event;
+    completedSteps = event.step || 0;
+
+    // If event is published, all steps are completed
+    if (event.isPublished) {
+      completedSteps = 3;
+    }
+  }
 
   // Dynamic form rendering based on step
   const renderForm = () => {
@@ -101,7 +129,21 @@ const NewStepPage = async ({
     }
   };
 
-  return <div className="flex justify-center py-6 w-full">{renderForm()}</div>;
+  return (
+    <div className="w-full">
+      {/* Step Progress Bar */}
+      <StepBar
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        businessCodeId={codeId}
+        eventSlug={eventSlug}
+        allowNavigation={step !== "0"}
+      />
+
+      {/* Form Content */}
+      <div className="flex justify-center py-6 w-full">{renderForm()}</div>
+    </div>
+  );
 };
 
 export default NewStepPage;

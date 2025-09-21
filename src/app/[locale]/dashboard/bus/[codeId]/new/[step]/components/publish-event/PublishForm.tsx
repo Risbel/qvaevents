@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertTriangle, Globe, Eye, BarChart, ArrowLeft } from "lucide-react";
+import { CheckCircle, AlertTriangle, Globe, Eye, BarChart, ArrowLeft, Loader2 } from "lucide-react";
 import { publishEvent } from "@/actions/event/publishEvent";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -33,6 +33,7 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
         if (result.status === "success") {
           setIsPublishedState(true);
           toast.success(t("publishSuccess"));
+          router.refresh();
         } else {
           toast.error(result.error || t("publishError"));
         }
@@ -102,8 +103,10 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
         </CardHeader>
         <CardContent className="space-y-6">
           <Alert>
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>{t("publishWarningTitle")}</AlertTitle>
+            <AlertTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-600" />
+              {t("publishWarningTitle")}
+            </AlertTitle>
             <AlertDescription>{t("publishWarningDescription")}</AlertDescription>
           </Alert>
 
@@ -125,9 +128,14 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
             </ul>
           </div>
 
-          <div className="flex justify-start pt-4">
-            <Button onClick={handlePublish} disabled={isPending} size="lg" className="flex items-center gap-2">
-              <Globe className="h-4 w-4" />
+          <div className="flex justify-center pt-4">
+            <Button
+              onClick={handlePublish}
+              disabled={isPending}
+              size="lg"
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
               {isPending ? t("publishing") : t("publishEvent")}
             </Button>
           </div>
