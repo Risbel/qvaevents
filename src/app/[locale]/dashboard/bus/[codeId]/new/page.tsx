@@ -15,7 +15,7 @@ import { useTranslations } from "next-intl";
 import useGetUser from "@/hooks/user/useGetUser";
 import useGetTypesAndSubtypes from "@/hooks/eventTypes/useGetTypesAndSubtypes";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import NewEventConfigSkeleton from "./components/Skeleton";
 
 const NewBusPage = () => {
   const { codeId, locale } = useParams();
@@ -32,11 +32,7 @@ const NewBusPage = () => {
   // Fetch Types and SubTypes
   const { data: types, isLoading: typesLoading, isError: typesError } = useGetTypesAndSubtypes();
   if (typesLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
+    return <NewEventConfigSkeleton />;
   }
 
   if (typesError || !types) {

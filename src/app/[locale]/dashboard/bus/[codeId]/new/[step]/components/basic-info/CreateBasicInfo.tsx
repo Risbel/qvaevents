@@ -15,6 +15,8 @@ import { validateEventParams } from "../validations/event-params";
 import { DateTimePicker } from "./DateTimePicker";
 import { LanguageSelector } from "./LanguageSelector";
 import useGetLanguages from "@/hooks/languages/useGetLanguages";
+import { CreateBasicInfoSkeleton } from "../Skeletons";
+import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
 
 interface EventText {
   title: string;
@@ -22,43 +24,10 @@ interface EventText {
   locationText: string;
 }
 
-export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
+export const CreateBasicInfo = () => {
   const t = useTranslations("EventCreation");
   const tNavigation = useTranslations("navigation");
   const searchParams = useSearchParams();
-  const params = useParams();
-
-  const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
-
-  if (languagesError) {
-    return (
-      <div className="flex items-center justify-center">
-        <Alert variant="destructive">Error loading languages</Alert>
-      </div>
-    );
-  }
-
-  if (languagesLoading) {
-    return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="h-4 w-4 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!languagesResult) {
-    return (
-      <div className="flex items-center justify-center">
-        <Alert variant="destructive">Error loading languages</Alert>
-      </div>
-    );
-  }
-
-  const languages = languagesResult;
-
-  const { codeId } = params as { codeId: string };
-  const router = useRouter();
-
   // Get URL parameters from the previous step
   const urlParams = {
     type: searchParams.get("type"),
@@ -70,9 +39,103 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
     accessType: searchParams.get("accessType"),
     languages: searchParams.get("languages"),
   };
+  // Pre-validated language codes from URL for initial UI state
+  const preSelectedLanguageCodes = (urlParams.languages?.split(/%2C|,/) || []).filter(Boolean);
+  const params = useParams();
+  const { codeId } = params as { codeId: string };
+  const router = useRouter();
+  // Local state for form - these need to be called before any conditional returns
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [selectedLanguageIds, setSelectedLanguageIds] = useState<number[]>([]);
+  const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(null);
+  // Date and time state
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState<string>("");
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [endTime, setEndTime] = useState<string>("");
+  // Event texts for each language - only for the languages in the URL
+  const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
+  const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
+  const { data: businessResult, isError, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
+
+  const initialState: State = { status: undefined };
+  const [state, formAction, isPending] = useActionState(createEventBasicInfo, initialState);
+
+  // Map language codes to IDs for initial selection
+  const initialLanguageIds = languagesResult
+    ? languagesResult.filter((lang) => preSelectedLanguageCodes.includes(lang.code)).map((lang) => lang.id)
+    : [];
+
+  // Determine default language logic
+  const hasMultipleLanguages = initialLanguageIds.length > 1;
+  // Handle successful form submission
+  useEffect(() => {
+    if (state?.status === "success") {
+      router.push(`/dashboard/bus/${codeId}/new/2?slug=${state.data?.slug}`);
+    }
+  }, [state?.status, state?.data?.slug, router, codeId]);
+
+  // Initialize state values based on calculated values
+  useEffect(() => {
+    if (languagesResult && initialLanguageIds.length > 0) {
+      const hasMultipleLanguages = initialLanguageIds.length > 1;
+      let defaultLanguageId: number | null = null;
+
+      if (hasMultipleLanguages) {
+        // If multiple languages, prioritize Spanish (es) or English (en) as default
+        const spanishLanguage = languagesResult.find((lang) => lang.code === "es");
+        const englishLanguage = languagesResult.find((lang) => lang.code === "en");
+
+        if (spanishLanguage && initialLanguageIds.includes(spanishLanguage.id)) {
+          defaultLanguageId = spanishLanguage.id;
+        } else if (englishLanguage && initialLanguageIds.includes(englishLanguage.id)) {
+          defaultLanguageId = englishLanguage.id;
+        } else {
+          defaultLanguageId = initialLanguageIds[0];
+        }
+      } else if (initialLanguageIds.length === 1) {
+        // If only one language, use it as current language
+        defaultLanguageId = initialLanguageIds[0];
+      }
+
+      if (selectedLanguageIds.length === 0) {
+        setSelectedLanguageIds(hasMultipleLanguages ? [defaultLanguageId!] : initialLanguageIds);
+      }
+      if (currentLanguageId === null) {
+        setCurrentLanguageId(defaultLanguageId);
+      }
+    }
+  }, [languagesResult, initialLanguageIds, selectedLanguageIds.length, currentLanguageId]);
+
+  if (languagesLoading || businessLoading) {
+    return <CreateBasicInfoSkeleton />;
+  }
+
+  // Early returns for loading and error states
+  if (languagesError || isError) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Error loading Create Basic Info</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!languagesResult || !businessResult) {
+    return (
+      <div className="flex items-center justify-center">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Error loading Create Basic Info</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   // Validate parameters using Zod schema
-  const validationResult = validateEventParams(urlParams, languages);
+  const validationResult = validateEventParams(urlParams, languagesResult);
 
   if (!validationResult.success) {
     return (
@@ -97,58 +160,6 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
   const isPublic = validatedParams.isPublic === "true";
   const selectedLanguageCodes = validatedParams.languages?.split(/%2C|,/) || [];
   const customSubType = urlParams.customSubType;
-
-  // Map language codes to IDs for initial selection
-  const initialLanguageIds = languages
-    .filter((lang) => selectedLanguageCodes.includes(lang.code))
-    .map((lang) => lang.id);
-
-  // Determine default language logic
-  const hasMultipleLanguages = initialLanguageIds.length > 1;
-  let defaultLanguageId: number | null = null;
-
-  if (hasMultipleLanguages) {
-    // If multiple languages, prioritize Spanish (es) or English (en) as default
-    const spanishLanguage = languages.find((lang) => lang.code === "es");
-    const englishLanguage = languages.find((lang) => lang.code === "en");
-
-    if (spanishLanguage && initialLanguageIds.includes(spanishLanguage.id)) {
-      defaultLanguageId = spanishLanguage.id;
-    } else if (englishLanguage && initialLanguageIds.includes(englishLanguage.id)) {
-      defaultLanguageId = englishLanguage.id;
-    } else {
-      defaultLanguageId = initialLanguageIds[0];
-    }
-  } else if (initialLanguageIds.length === 1) {
-    // If only one language, use it as current language
-    defaultLanguageId = initialLanguageIds[0];
-  }
-
-  // Local state for form
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [selectedLanguageIds, setSelectedLanguageIds] = useState<number[]>(
-    hasMultipleLanguages ? [defaultLanguageId!] : initialLanguageIds
-  );
-  const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(defaultLanguageId);
-
-  // Date and time state
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [startTime, setStartTime] = useState<string>("");
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [endTime, setEndTime] = useState<string>("");
-
-  // Event texts for each language - only for the languages in the URL
-  const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
-
-  const initialState: State = { status: undefined };
-  const [state, formAction, isPending] = useActionState(createEventBasicInfo, initialState);
-
-  // Handle successful form submission
-  useEffect(() => {
-    if (state?.status === "success") {
-      router.push(`/dashboard/bus/${codeId}/new/2?slug=${state.data?.slug}`);
-    }
-  }, [state?.status, state?.data?.slug, router, codeId]);
 
   const handleLanguageChange = (languageIds: number[]) => {
     setSelectedLanguageIds(languageIds);
@@ -196,7 +207,7 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
   };
 
   // Get the selected language code for defaultLocale
-  const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageIds[0]);
+  const selectedLanguage = languagesResult.find((lang) => lang.id === selectedLanguageIds[0]);
   const defaultLocale = selectedLanguage?.code || "es";
 
   // Prepare event texts array for submission - only include texts with content
@@ -222,7 +233,7 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
       <input type="hidden" name="isPublic" value={isPublic.toString()} />
       <input type="hidden" name="spaceType" value={validatedParams.spaceType || ""} />
       <input type="hidden" name="accessType" value={validatedParams.accessType || ""} />
-      <input type="hidden" name="businessId" value={businessId.toString()} />
+      <input type="hidden" name="businessId" value={businessResult.id.toString()} />
       <input type="hidden" name="defaultLocale" value={defaultLocale} />
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
 
@@ -280,7 +291,7 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
           </CardHeader>
           <CardContent>
             <LanguageSelector
-              languages={languages}
+              languages={languagesResult}
               selectedLanguages={selectedLanguageIds}
               onLanguageChange={handleLanguageChange}
             />
@@ -294,8 +305,8 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span>{languages.find((lang) => lang.id === currentLanguageId)?.icon || "🌐"}</span>
-                {t("basicInfo.eventTexts")} - {languages.find((lang) => lang.id === currentLanguageId)?.native}
+                <span>{languagesResult.find((lang) => lang.id === currentLanguageId)?.icon || "🌐"}</span>
+                {t("basicInfo.eventTexts")} - {languagesResult.find((lang) => lang.id === currentLanguageId)?.native}
               </div>
               {isAnyFormComplete() && hasMultipleLanguages && (
                 <Button
@@ -318,7 +329,7 @@ export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
             {hasMultipleLanguages && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {initialLanguageIds.map((languageId) => {
-                  const language = languages.find((lang) => lang.id === languageId);
+                  const language = languagesResult.find((lang) => lang.id === languageId);
                   const isActive = currentLanguageId === languageId;
                   const hasContent =
                     eventTexts[languageId] &&

@@ -4,18 +4,24 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import useGetEventBySlug from "@/hooks/events/useGetEventBySlug";
 import { useTranslations } from "next-intl";
 import useGetLanguages from "@/hooks/languages/useGetLanguages";
+import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import { useParams } from "next/navigation";
+import { CreateBasicInfoSkeleton } from "../Skeletons";
 
 interface LoadBasicInfoProps {
   eventSlug: string;
-  businessId: number;
 }
 
-export function LoadBasicInfo({ eventSlug, businessId }: LoadBasicInfoProps) {
+export function LoadBasicInfo({ eventSlug }: LoadBasicInfoProps) {
+  const params = useParams();
+  const { codeId } = params as { codeId: string };
   const { data: eventResult, isLoading: eventLoading, isError: eventError } = useGetEventBySlug(eventSlug);
   const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
+  const { data: businessResult, isError, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
+
   const t = useTranslations("EventError");
 
-  if (eventError || languagesError) {
+  if (eventError || languagesError || isError) {
     return (
       <div className="flex items-center justify-center">
         <Alert variant="destructive" className="max-w-md">
@@ -32,15 +38,11 @@ export function LoadBasicInfo({ eventSlug, businessId }: LoadBasicInfoProps) {
     );
   }
 
-  if (eventLoading || languagesLoading) {
-    return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="h-4 w-4 animate-spin" />
-      </div>
-    );
+  if (eventLoading || languagesLoading || businessLoading) {
+    return <CreateBasicInfoSkeleton />;
   }
 
-  if (!eventResult || !languagesResult) {
+  if (!eventResult || !languagesResult || !businessResult) {
     return (
       <div className="flex items-center justify-center">
         <Alert variant="destructive" className="max-w-md">
@@ -56,5 +58,5 @@ export function LoadBasicInfo({ eventSlug, businessId }: LoadBasicInfoProps) {
     );
   }
 
-  return <EditBasicInfo languages={languagesResult} businessId={businessId} event={eventResult} />;
+  return <EditBasicInfo languages={languagesResult} businessId={businessResult.id} event={eventResult} />;
 }

@@ -1,12 +1,14 @@
-"use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Trash2 } from "lucide-react";
+import { ImageOff } from "lucide-react";
 import { deleteEventImage } from "@/actions/event/deleteEventImage";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 interface EventImageCardProps {
   image: {
@@ -20,8 +22,13 @@ interface EventImageCardProps {
 
 export function EventImageCard({ image, onDelete }: EventImageCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const t = useTranslations("actions");
   const tEventImagesManager = useTranslations("EventImagesManager");
+  const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const slug = searchParams.get("slug") as string;
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -30,6 +37,7 @@ export function EventImageCard({ image, onDelete }: EventImageCardProps) {
 
       if (result.status === "success") {
         toast.success(tEventImagesManager("deletedSuccessfully"));
+        queryClient.invalidateQueries({ queryKey: ["event", slug] });
         onDelete?.();
       } else {
         toast.error(result.error || tEventImagesManager("uploadImagesError"));
@@ -43,13 +51,32 @@ export function EventImageCard({ image, onDelete }: EventImageCardProps) {
 
   return (
     <div className="relative group">
+      {/* Image */}
       <Image
         src={image.url}
         alt={`Event image ${image.id}`}
         width={200}
         height={200}
-        className="w-full h-32 object-cover rounded-lg border"
+        className={`w-full h-32 object-cover rounded-lg border transition-opacity duration-300 ${
+          isLoading || isError ? "opacity-0" : "opacity-100"
+        }`}
+        onLoadingComplete={() => setIsLoading(false)}
+        onError={() => {
+          setIsError(true);
+          setIsLoading(false);
+        }}
+        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 200px"
       />
+
+      {/* Loading skeleton */}
+      {isLoading && !isError && <Skeleton className="absolute inset-0 rounded-lg" />}
+
+      {/* Error fallback */}
+      {isError && (
+        <div className="absolute inset-0 rounded-lg border flex items-center justify-center bg-muted/40">
+          <ImageOff className="h-6 w-6 text-muted-foreground" />
+        </div>
+      )}
 
       {/* Delete Button */}
       <Button

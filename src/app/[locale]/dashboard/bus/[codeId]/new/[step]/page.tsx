@@ -17,33 +17,13 @@ const NewStepPage = () => {
   const eventSlug = searchParams.get("slug") as string;
   const t = useTranslations("EventError");
 
-  const { data: businessResult, isError, isLoading } = useGetBusinessByCodeId(codeId as string);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-4 w-4 animate-spin" />
-      </div>
-    );
-  }
-  if (isError || !businessResult) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Error loading Business</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
   // Dynamic form rendering based on step
   const renderForm = () => {
     switch (step) {
       case "0":
-        return <CreateBasicInfo businessId={businessResult?.id} />;
+        return <CreateBasicInfo />;
       case "1":
-        return <LoadBasicInfo eventSlug={eventSlug} businessId={businessResult?.id} />;
+        return <LoadBasicInfo eventSlug={eventSlug} />;
 
       case "2":
         return <LoadEventWithImages eventSlug={eventSlug} />;

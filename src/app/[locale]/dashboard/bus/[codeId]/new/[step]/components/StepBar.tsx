@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import useGetEventBySlug from "@/hooks/events/useGetEventBySlug";
+import { StepBarSkeleton } from "./Skeletons";
 
 export function StepBar() {
   const router = useRouter();
@@ -13,6 +14,11 @@ export function StepBar() {
   const t = useTranslations("StepBar");
 
   const { data: eventResult, isLoading: eventLoading, isError: eventError } = useGetEventBySlug(slug as string);
+
+  // Show skeleton while loading
+  if (eventLoading) {
+    return <StepBarSkeleton />;
+  }
 
   // Parse step as number for step bar
   // URL step 0 (Create Basic Info) -> Step bar 1
@@ -119,7 +125,7 @@ export function StepBar() {
 
                 {/* Step Label */}
                 <span
-                  className={cn("mt-2 text-xs text-center max-w-20 transition-all duration-200", {
+                  className={cn("mt-2 text-xs text-nowrap text-center max-w-20 transition-all duration-200", {
                     "text-primary": isCurrent, // Current step: larger and bolder
                     "text-muted-foreground": !isCurrent && !isCompleted, // Pending steps
                   })}
