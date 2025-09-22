@@ -1,28 +1,12 @@
-import { Suspense } from "react";
-import { BusinessWithOrganizer, getBusinessByCodeId } from "@/queries/business/getBusinessByCodeId";
+"use client";
+
 import { SavedConfigSelector } from "./SavedConfigSelector";
+import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import { useParams } from "next/navigation";
 
-interface SavedConfigSelectorWrapperProps {
-  codeId: string;
-}
+export function SavedConfigSelectorWrapper() {
+  const { codeId } = useParams();
+  const { data: business } = useGetBusinessByCodeId(codeId as string);
 
-async function SavedConfigSelectorServer({ codeId }: SavedConfigSelectorWrapperProps) {
-  const businessResult = await getBusinessByCodeId(codeId);
-
-  if (businessResult.status !== "success" || !businessResult.data?.business) {
-    return <SavedConfigSelector customEventConfigs={[]} />;
-  }
-
-  const business = businessResult.data.business as BusinessWithOrganizer;
-  const customEventConfigs = business.CustomEventConfig || [];
-
-  return <SavedConfigSelector customEventConfigs={customEventConfigs} />;
-}
-
-export function SavedConfigSelectorWrapper({ codeId }: SavedConfigSelectorWrapperProps) {
-  return (
-    <Suspense fallback={<SavedConfigSelector customEventConfigs={[]} />}>
-      <SavedConfigSelectorServer codeId={codeId} />
-    </Suspense>
-  );
+  return <SavedConfigSelector customEventConfigs={business?.CustomEventConfig || []} />;
 }

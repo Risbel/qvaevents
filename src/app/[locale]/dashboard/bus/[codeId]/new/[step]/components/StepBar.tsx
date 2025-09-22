@@ -1,41 +1,45 @@
-"use client";
-
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import useGetEventBySlug from "@/hooks/events/useGetEventBySlug";
 
-export interface StepBarProps {
-  currentStep: number; // The step from URL (1, 2, 3, 4)
-  completedSteps: number; // The step from DB (1, 2, 3)
-  totalSteps?: number;
-  stepLabels?: string[]; // Optional custom labels, will use translations if not provided
-  className?: string;
-  businessCodeId?: string; // For navigation
-  eventSlug?: string; // For navigation
-  allowNavigation?: boolean; // Whether to allow clicking on steps
-}
-
-export function StepBar({
-  currentStep,
-  completedSteps,
-  totalSteps = 3,
-  stepLabels,
-  className,
-  businessCodeId,
-  eventSlug,
-  allowNavigation = false,
-}: StepBarProps) {
+export function StepBar() {
   const router = useRouter();
+  const params = useParams();
+  const { step, codeId } = params as { step: string; codeId: string };
   const searchParams = useSearchParams();
+  const slug = searchParams.get("slug") as string;
   const t = useTranslations("StepBar");
-  const steps = Array.from({ length: totalSteps }, (_, index) => index + 1);
+
+  const { data: eventResult, isLoading: eventLoading, isError: eventError } = useGetEventBySlug(slug as string);
+
+  // Parse step as number for step bar
+  // URL step 0 (Create Basic Info) -> Step bar 1
+  // URL step 1 (Edit Basic Info) -> Step bar 1
+  // URL step 2 (Upload Images) -> Step bar 2
+  // URL step 3 (Publish Event) -> Step bar 3
+  const currentStep = parseInt(step as string) === 0 ? 1 : parseInt(step as string);
+  const allowNavigation = step !== "0";
+
+  // Determine completed steps from event data
+  let completedSteps = 0;
+  if (eventResult) {
+    completedSteps = eventResult.step || 0;
+
+    // If event is published, all steps are completed
+    if (eventResult.isPublished) {
+      completedSteps = 3;
+    }
+  }
+
+  const steps = Array.from({ length: 3 }, (_, index) => index + 1);
 
   // Use provided labels or fall back to translations
-  const labels = stepLabels || [t("basicInfo"), t("uploadImages"), t("publishEvent")];
+  const labels = [t("basicInfo"), t("uploadImages"), t("publishEvent")];
 
   const handleStepClick = (step: number) => {
-    if (!allowNavigation || !businessCodeId) return;
+    if (!allowNavigation || !codeId) return;
 
     // Convert step bar number to URL format:
     // Step bar 1 -> URL step 1 (Edit Basic Info)
@@ -57,16 +61,16 @@ export function StepBar({
 
     // Build the URL with current search params
     const params = new URLSearchParams(searchParams.toString());
-    if (eventSlug) {
-      params.set("slug", eventSlug);
+    if (slug) {
+      params.set("slug", slug);
     }
 
-    const url = `/dashboard/bus/${businessCodeId}/new/${urlStep}?${params.toString()}`;
+    const url = `/dashboard/bus/${codeId}/new/${urlStep}?${params.toString()}`;
     router.push(url);
   };
 
   return (
-    <div className={cn("w-full max-w-2xl mx-auto", className)}>
+    <div className={cn("w-full max-w-2xl mx-auto")}>
       <div className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isCompleted = step <= completedSteps;
@@ -78,7 +82,7 @@ export function StepBar({
           // - Step 3: Clickable if step 2 is completed (images uploaded)
           const isClickable =
             allowNavigation &&
-            ((step === 1 && eventSlug) || // Step 1: only if editing existing event
+            ((step === 1 && slug) || // Step 1: only if editing existing event
               (step === 2 && completedSteps >= 1) || // Step 2: if step 1 is completed
               (step === 3 && completedSteps >= 2)); // Step 3: if step 2 is completed
 

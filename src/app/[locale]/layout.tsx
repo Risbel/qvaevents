@@ -8,6 +8,7 @@ import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,15 +41,17 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {children}
-            <Toaster position="bottom-center" richColors />
-          </ThemeProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <ReactQueryClientProvider>
+      <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className="scroll-smooth">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              {children}
+              <Toaster position="bottom-center" richColors />
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }

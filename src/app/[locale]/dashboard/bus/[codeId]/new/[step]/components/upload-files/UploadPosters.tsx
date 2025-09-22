@@ -1,11 +1,11 @@
-"use client";
-
 import { ImageDropzone } from "@/components/ui/image-dropzone";
 import { useState } from "react";
 import { toast } from "sonner";
 import { saveEventImages } from "@/actions/event/saveEventImages";
 import { useTranslations } from "next-intl";
 import { useUploadContext } from "./UploadProvider";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 interface UploadPostersProps {
   eventId: number;
@@ -15,8 +15,11 @@ interface UploadPostersProps {
 // This component will be used within the UploadProvider context
 const UploadPosters = ({ eventId, currentImageCount = 0 }: UploadPostersProps) => {
   const t = useTranslations("EventImagesManager");
+  const searchParams = useSearchParams();
+  const slug = searchParams.get("slug") as string;
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
   const { setUploading, isUploading } = useUploadContext();
+  const queryClient = useQueryClient();
 
   const maxImages = 2;
   const remainingSlots = maxImages - currentImageCount;
@@ -28,6 +31,7 @@ const UploadPosters = ({ eventId, currentImageCount = 0 }: UploadPostersProps) =
       if (result.status === "success") {
         setUploadedUrls((prev) => [...prev, ...urls]);
         toast.success(t("uploadImagesSuccess", { count: urls.length }));
+        queryClient.invalidateQueries({ queryKey: ["event", slug] });
       } else {
         toast.error(result.error || t("uploadImagesError"));
       }

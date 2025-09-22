@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { EventWithTexts } from "@/queries/event/getEventsByBusinessCodeId";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,6 +11,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { EventWithTexts } from "@/hooks/events/getEventsByBusinessCodeId";
 
 interface EventCardProps {
   event: EventWithTexts;

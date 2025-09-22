@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import UploadPosters from "./UploadPosters";
 import { EventImageCard } from "./EventImageCard";

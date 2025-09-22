@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export async function publishEvent(eventId: number) {
   try {
@@ -21,9 +20,6 @@ export async function publishEvent(eventId: number) {
         error: error.message,
       };
     }
-
-    // Revalidate the dashboard to show updated event status
-    revalidatePath("/dashboard");
 
     return {
       status: "success" as const,

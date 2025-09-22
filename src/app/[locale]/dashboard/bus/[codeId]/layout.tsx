@@ -1,3 +1,5 @@
+"use client";
+
 import { BusSidebar } from "../components/BusSidebar";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -9,40 +11,47 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { DynamicBreadcrumb } from "./components/DynamicBreadcrumb";
-import { getBusinessByCodeId, BusinessWithOrganizer } from "@/queries/business/getBusinessByCodeId";
+
 import ModeToggle from "@/app/components/ModeToggle";
 import UserDropdown from "@/app/components/UserDropdown";
-import { createClient } from "@/utils/supabase/server";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
-import { redirect, notFound } from "next/navigation";
+import { useParams } from "next/navigation";
+import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import useGetUser from "@/hooks/user/useGetUser";
+import { BusinessWithOrganizer } from "@/hooks/business/getBusinessByCodeId";
+import { User as SupabaseUser } from "@supabase/supabase-js";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-interface LayoutProps {
-  children: React.ReactNode;
-  params: Promise<{ locale: string; codeId: string }>;
-}
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const params = useParams();
+  const { locale, codeId } = params;
+  const t = useTranslations("Business");
 
-export default async function Layout({ children, params }: LayoutProps) {
-  const { locale, codeId } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user, isLoading: userLoading } = useGetUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/org/login`);
+  const { data: business, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
+
+  if (userLoading || businessLoading) {
+    return <div>Loading...</div>;
   }
 
-  const businessResult = await getBusinessByCodeId(codeId);
-
-  if (businessResult.status === "error") {
-    notFound();
+  if (!user || !business) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Alert variant="destructive" className="max-w-md">
+          <Building2 className="h-4 w-4" />
+          <AlertTitle>{t("businessNotFound")}</AlertTitle>
+          <AlertDescription>{t("businessNotFoundDescription")}</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
-
-  const business = businessResult.data?.business as BusinessWithOrganizer;
 
   return (
     <SidebarProvider>
-      <BusSidebar locale={locale} codeId={codeId} business={business} />
+      <BusSidebar locale={locale as string} codeId={codeId as string} business={business as BusinessWithOrganizer} />
       <SidebarInset className="flex flex-col h-screen">
         <header className="flex h-16 w-full items-center gap-2 border-b px-4 bg-background/50 backdrop-blur-sm border-b-border flex-shrink-0">
           <SidebarTrigger className="-ml-1 cursor-pointer" />
@@ -53,17 +62,19 @@ export default async function Layout({ children, params }: LayoutProps) {
                 <BreadcrumbLink>Dashboard</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
-              <DynamicBreadcrumb locale={locale} codeId={codeId} />
+              <DynamicBreadcrumb locale={locale as string} codeId={codeId as string} />
             </BreadcrumbList>
           </Breadcrumb>
           <div className="flex items-center justify-end gap-2 w-full">
             <LocaleSwitcher />
             <ModeToggle />
-            {user && <UserDropdown user={user} />}
+            {user && <UserDropdown user={user as SupabaseUser} />}
           </div>
         </header>
         <main className="flex-1 overflow-y-auto">
-          <div className="flex flex-col items-center gap-4 p-4 w-full bg-background min-h-full">{children}</div>
+          <div className="flex flex-col items-center gap-4 p-4 w-full bg-background min-h-full">
+            {children as React.ReactNode}
+          </div>
         </main>
       </SidebarInset>
     </SidebarProvider>

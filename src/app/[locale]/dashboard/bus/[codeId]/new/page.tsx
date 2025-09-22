@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import { getTypesAndSubtypes, TypeWithSubTypes } from "@/queries/types/getTypesAndSubtypes";
+"use client";
+
+import { TypeWithSubTypes } from "@/hooks/eventTypes/getTypesAndSubtypes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypeSelector } from "./components/TypeSelector";
 import { MinorsSuitabilitySelector } from "./components/MinorsSuitabilitySelector";
@@ -9,28 +9,47 @@ import { LanguageSelector } from "./components/LanguageSelector";
 import { SpaceTypeSelector } from "./components/SpaceTypeSelector";
 import { AccessTypeSelector } from "./components/AccessTypeSelector";
 import { SavedConfigSelectorWrapper } from "./components/SavedConfigSelectorWrapper";
-import { SaveConfigButton } from "./components/SaveConfigButton";
 import { EventConfigProvider } from "./components/EventConfigProvider";
 import { NextButton } from "./components/NextButton";
-import { getTranslations } from "next-intl/server";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import useGetUser from "@/hooks/user/useGetUser";
+import useGetTypesAndSubtypes from "@/hooks/eventTypes/useGetTypesAndSubtypes";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
-const NewBusPage = async ({ params }: { params: Promise<{ codeId: string; locale: string }> }) => {
-  const { codeId, locale } = await params;
-  const supabase = await createClient();
-  const t = await getTranslations("EventCreation");
+const NewBusPage = () => {
+  const { codeId, locale } = useParams();
+  const router = useRouter();
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  const t = useTranslations("EventCreation");
+
+  const { data: user, isLoading: userLoading, isError: userError } = useGetUser();
+
   if (userError || !user) {
-    redirect(`/${locale}/auth/org/login`);
+    router.push(`/${locale}/auth/org/login`);
   }
 
   // Fetch Types and SubTypes
-  const typesResult = await getTypesAndSubtypes();
-  const types: TypeWithSubTypes[] =
-    typesResult.status === "success" && Array.isArray(typesResult.data?.types) ? typesResult.data.types : [];
+  const { data: types, isLoading: typesLoading, isError: typesError } = useGetTypesAndSubtypes();
+  if (typesLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  }
+
+  if (typesError || !types) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Error loading types and subtypes</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <EventConfigProvider>
@@ -41,7 +60,7 @@ const NewBusPage = async ({ params }: { params: Promise<{ codeId: string; locale
         </div>
 
         <div className="flex justify-between">
-          <SavedConfigSelectorWrapper codeId={codeId} />
+          <SavedConfigSelectorWrapper />
 
           {/* <SaveConfigButton /> NFMVP*/}
         </div>

@@ -1,21 +1,21 @@
+"use client";
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, TrendingUp, Plus, Eye } from "lucide-react";
 import Link from "next/link";
-import { getBusinessByCodeId, BusinessWithOrganizer } from "@/queries/business/getBusinessByCodeId";
+import { useParams } from "next/navigation";
+import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import { useTranslations } from "next-intl";
 
-interface PageProps {
-  params: Promise<{ codeId: string; locale: string }>;
-}
+export default function BusDashboard() {
+  const params = useParams();
+  const { codeId, locale } = params;
+  const t = useTranslations("Business");
 
-export default async function BusDashboard({ params }: PageProps) {
-  const { codeId, locale } = await params;
-
-  // Get business data (layout already validates existence)
-  const businessResult = await getBusinessByCodeId(codeId);
-  const business = businessResult.data?.business as BusinessWithOrganizer;
+  const { data: business } = useGetBusinessByCodeId(codeId as string);
 
   const stats = [
     {
@@ -60,9 +60,9 @@ export default async function BusDashboard({ params }: PageProps) {
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <div>
-          <h1 className="text-3xl font-bold">{business.name || "Business Dashboard"}</h1>
+          <h1 className="text-3xl font-bold">{business?.name || "Business Dashboard"}</h1>
           <p className="text-muted-foreground">
-            {business.description || "Manage your business events and activities"}
+            {business?.description || "Manage your business events and activities"}
           </p>
         </div>
       </div>

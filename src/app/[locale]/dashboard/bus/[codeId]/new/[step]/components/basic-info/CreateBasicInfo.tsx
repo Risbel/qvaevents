@@ -1,5 +1,3 @@
-"use client";
-
 import { useActionState, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,13 +8,13 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { createEventBasicInfo } from "@/actions/event/createEventBasicInfo";
 import { MetaTagsInput } from "./MetaTagsInput";
-import { Language } from "@/queries/language/getLanguages";
 import { State } from "@/types/state";
 import { AlertTriangle, ArrowLeft, Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { validateEventParams } from "../validations/event-params";
 import { DateTimePicker } from "./DateTimePicker";
 import { LanguageSelector } from "./LanguageSelector";
+import useGetLanguages from "@/hooks/languages/useGetLanguages";
 
 interface EventText {
   title: string;
@@ -24,11 +22,39 @@ interface EventText {
   locationText: string;
 }
 
-export const CreateBasicInfo = ({ languages, businessId }: { languages: Language[]; businessId: number }) => {
+export const CreateBasicInfo = ({ businessId }: { businessId: number }) => {
   const t = useTranslations("EventCreation");
   const tNavigation = useTranslations("navigation");
   const searchParams = useSearchParams();
   const params = useParams();
+
+  const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
+
+  if (languagesError) {
+    return (
+      <div className="flex items-center justify-center">
+        <Alert variant="destructive">Error loading languages</Alert>
+      </div>
+    );
+  }
+
+  if (languagesLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2 className="h-4 w-4 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!languagesResult) {
+    return (
+      <div className="flex items-center justify-center">
+        <Alert variant="destructive">Error loading languages</Alert>
+      </div>
+    );
+  }
+
+  const languages = languagesResult;
 
   const { codeId } = params as { codeId: string };
   const router = useRouter();
@@ -188,226 +214,219 @@ export const CreateBasicInfo = ({ languages, businessId }: { languages: Language
     }));
 
   return (
-    <div className="space-y-6 w-full md:w-auto lg:w-5xl">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t("basicInfo.title")}</h1>
-        <p className="text-muted-foreground">{t("basicInfo.description")}</p>
+    <form action={formAction} className="space-y-4 md:space-y-6 w-full md:w-auto lg:w-5xl">
+      {/* Hidden inputs for form data */}
+      <input type="hidden" name="type" value={validatedParams.type || ""} />
+      <input type="hidden" name="subType" value={customSubType || validatedParams.subType || ""} />
+      <input type="hidden" name="isForMinors" value={isForMinors.toString()} />
+      <input type="hidden" name="isPublic" value={isPublic.toString()} />
+      <input type="hidden" name="spaceType" value={validatedParams.spaceType || ""} />
+      <input type="hidden" name="accessType" value={validatedParams.accessType || ""} />
+      <input type="hidden" name="businessId" value={businessId.toString()} />
+      <input type="hidden" name="defaultLocale" value={defaultLocale} />
+      <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
+
+      {/* Hidden inputs for keywords */}
+      {keywords.map((keyword, index) => (
+        <input key={index} type="hidden" name="keywords" value={keyword} />
+      ))}
+
+      {/* Hidden inputs for date/time */}
+      <input type="hidden" name="startDate" value={startDate ? startDate.toISOString() : ""} />
+      <input type="hidden" name="startTime" value={startTime} />
+      <input type="hidden" name="endDate" value={endDate ? endDate.toISOString() : ""} />
+      <input type="hidden" name="endTime" value={endTime} />
+
+      {/* Event Date and Time */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("basicInfo.eventDateTime")}</CardTitle>
+          <CardDescription>{t("basicInfo.eventDateTimeDescription")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DateTimePicker
+              label={t("basicInfo.startDateTime")}
+              date={startDate}
+              time={startTime}
+              onDateChange={setStartDate}
+              onTimeChange={setStartTime}
+              required={true}
+              minDate={new Date(new Date().setHours(0, 0, 0, 0))}
+            />
+            <div className="space-y-2">
+              <DateTimePicker
+                label={t("basicInfo.endDateTime")}
+                date={endDate}
+                time={endTime}
+                onDateChange={setEndDate}
+                onTimeChange={setEndTime}
+                required={true}
+                minDate={startDate || new Date(new Date().setHours(0, 0, 0, 0))}
+              />
+              {startDate && startTime && endDate && endTime && !isDateTimeValid() && (
+                <p className="text-xs text-destructive">{t("basicInfo.endDateMustBeAfterStart")}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Default Language Selector - for setting defaultLocale in Event table */}
+      {hasMultipleLanguages && (
+        <Card className="gap-2">
+          <CardHeader>
+            <CardTitle>{t("basicInfo.defaultLanguage")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <LanguageSelector
+              languages={languages}
+              selectedLanguages={selectedLanguageIds}
+              onLanguageChange={handleLanguageChange}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Event Texts */}
+      {selectedLanguageIds.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span>{languages.find((lang) => lang.id === currentLanguageId)?.icon || "🌐"}</span>
+                {t("basicInfo.eventTexts")} - {languages.find((lang) => lang.id === currentLanguageId)?.native}
+              </div>
+              {isAnyFormComplete() && hasMultipleLanguages && (
+                <Button
+                  title="Generate languages with AI"
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerateWithAI}
+                  className="flex items-center cursor-pointer font-light"
+                >
+                  <Sparkles className="h-4 w-4 text-primary" />
+                </Button>
+              )}
+            </CardTitle>
+            <CardDescription>{t("basicInfo.eventTextsDescription")}</CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-2 md:space-y-4">
+            {/* Language Switcher - only for multiple languages from URL */}
+            {hasMultipleLanguages && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {initialLanguageIds.map((languageId) => {
+                  const language = languages.find((lang) => lang.id === languageId);
+                  const isActive = currentLanguageId === languageId;
+                  const hasContent =
+                    eventTexts[languageId] &&
+                    typeof eventTexts[languageId].title === "string" &&
+                    typeof eventTexts[languageId].description === "string" &&
+                    (eventTexts[languageId].title.trim() !== "" || eventTexts[languageId].description.trim() !== "");
+
+                  return (
+                    <Button
+                      key={languageId}
+                      type="button"
+                      variant={isActive ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentLanguageId(languageId)}
+                      className="flex items-center gap-2"
+                    >
+                      <span>{language?.icon || "🌐"}</span>
+                      {language?.native}
+                      {hasContent && <span className="w-2 h-2 bg-green-500 rounded-full"></span>}
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Text Inputs */}
+            {currentLanguageId && (
+              <div className="space-y-2 md:space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">{t("basicInfo.eventTitle")}</Label>
+                  <Input
+                    id="title"
+                    value={eventTexts[currentLanguageId]?.title || ""}
+                    onChange={(e) => handleEventTextChange("title", e.target.value)}
+                    placeholder={t("basicInfo.titlePlaceholder")}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">{t("basicInfo.eventDescription")}</Label>
+                  <Textarea
+                    id="description"
+                    value={eventTexts[currentLanguageId]?.description || ""}
+                    onChange={(e) => handleEventTextChange("description", e.target.value)}
+                    placeholder={t("basicInfo.descriptionPlaceholder")}
+                    rows={4}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="locationText">{t("basicInfo.locationText")}</Label>
+                  <Input
+                    id="locationText"
+                    value={eventTexts[currentLanguageId]?.locationText || ""}
+                    onChange={(e) => handleEventTextChange("locationText", e.target.value)}
+                    placeholder={t("basicInfo.locationTextPlaceholder")}
+                  />
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Basic Event Info */}
+      <Card>
+        <CardContent className="space-y-4 md:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="visitsLimit">{t("basicInfo.visitsLimit")}</Label>
+              <Input
+                id="visitsLimit"
+                name="visitsLimit"
+                type="number"
+                min={10}
+                placeholder={t("basicInfo.visitsLimitPlaceholder")}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Keywords */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("basicInfo.keywords")}</CardTitle>
+          <CardDescription>{t("basicInfo.keywordsDescription")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 md:space-y-6">
+          <MetaTagsInput value={keywords} onChange={setKeywords} />
+        </CardContent>
+      </Card>
+
+      {/* Submit Button */}
+      <div className="flex justify-end">
+        <Button type="submit" disabled={selectedLanguageIds.length === 0 || !isDateTimeValid() || isPending}>
+          {t("basicInfo.createEvent")} {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+        </Button>
       </div>
 
-      <form action={formAction} className="space-y-4 md:space-y-6">
-        {/* Hidden inputs for form data */}
-        <input type="hidden" name="type" value={validatedParams.type || ""} />
-        <input type="hidden" name="subType" value={customSubType || validatedParams.subType || ""} />
-        <input type="hidden" name="isForMinors" value={isForMinors.toString()} />
-        <input type="hidden" name="isPublic" value={isPublic.toString()} />
-        <input type="hidden" name="spaceType" value={validatedParams.spaceType || ""} />
-        <input type="hidden" name="accessType" value={validatedParams.accessType || ""} />
-        <input type="hidden" name="businessId" value={businessId.toString()} />
-        <input type="hidden" name="defaultLocale" value={defaultLocale} />
-        <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
-
-        {/* Hidden inputs for keywords */}
-        {keywords.map((keyword, index) => (
-          <input key={index} type="hidden" name="keywords" value={keyword} />
-        ))}
-
-        {/* Hidden inputs for date/time */}
-        <input type="hidden" name="startDate" value={startDate ? startDate.toISOString() : ""} />
-        <input type="hidden" name="startTime" value={startTime} />
-        <input type="hidden" name="endDate" value={endDate ? endDate.toISOString() : ""} />
-        <input type="hidden" name="endTime" value={endTime} />
-
-        {/* Event Date and Time */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("basicInfo.eventDateTime")}</CardTitle>
-            <CardDescription>{t("basicInfo.eventDateTimeDescription")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <DateTimePicker
-                label={t("basicInfo.startDateTime")}
-                date={startDate}
-                time={startTime}
-                onDateChange={setStartDate}
-                onTimeChange={setStartTime}
-                required={true}
-                minDate={new Date(new Date().setHours(0, 0, 0, 0))}
-              />
-              <div className="space-y-2">
-                <DateTimePicker
-                  label={t("basicInfo.endDateTime")}
-                  date={endDate}
-                  time={endTime}
-                  onDateChange={setEndDate}
-                  onTimeChange={setEndTime}
-                  required={true}
-                  minDate={startDate || new Date(new Date().setHours(0, 0, 0, 0))}
-                />
-                {startDate && startTime && endDate && endTime && !isDateTimeValid() && (
-                  <p className="text-xs text-destructive">{t("basicInfo.endDateMustBeAfterStart")}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Default Language Selector - for setting defaultLocale in Event table */}
-        {hasMultipleLanguages && (
-          <Card className="gap-2">
-            <CardHeader>
-              <CardTitle>{t("basicInfo.defaultLanguage")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <LanguageSelector
-                languages={languages}
-                selectedLanguages={selectedLanguageIds}
-                onLanguageChange={handleLanguageChange}
-              />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Event Texts */}
-        {selectedLanguageIds.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span>{languages.find((lang) => lang.id === currentLanguageId)?.icon || "🌐"}</span>
-                  {t("basicInfo.eventTexts")} - {languages.find((lang) => lang.id === currentLanguageId)?.native}
-                </div>
-                {isAnyFormComplete() && hasMultipleLanguages && (
-                  <Button
-                    title="Generate languages with AI"
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleGenerateWithAI}
-                    className="flex items-center cursor-pointer font-light"
-                  >
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  </Button>
-                )}
-              </CardTitle>
-              <CardDescription>{t("basicInfo.eventTextsDescription")}</CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-2 md:space-y-4">
-              {/* Language Switcher - only for multiple languages from URL */}
-              {hasMultipleLanguages && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {initialLanguageIds.map((languageId) => {
-                    const language = languages.find((lang) => lang.id === languageId);
-                    const isActive = currentLanguageId === languageId;
-                    const hasContent =
-                      eventTexts[languageId] &&
-                      typeof eventTexts[languageId].title === "string" &&
-                      typeof eventTexts[languageId].description === "string" &&
-                      (eventTexts[languageId].title.trim() !== "" || eventTexts[languageId].description.trim() !== "");
-
-                    return (
-                      <Button
-                        key={languageId}
-                        type="button"
-                        variant={isActive ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setCurrentLanguageId(languageId)}
-                        className="flex items-center gap-2"
-                      >
-                        <span>{language?.icon || "🌐"}</span>
-                        {language?.native}
-                        {hasContent && <span className="w-2 h-2 bg-green-500 rounded-full"></span>}
-                      </Button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Text Inputs */}
-              {currentLanguageId && (
-                <div className="space-y-2 md:space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">{t("basicInfo.eventTitle")}</Label>
-                    <Input
-                      id="title"
-                      value={eventTexts[currentLanguageId]?.title || ""}
-                      onChange={(e) => handleEventTextChange("title", e.target.value)}
-                      placeholder={t("basicInfo.titlePlaceholder")}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="description">{t("basicInfo.eventDescription")}</Label>
-                    <Textarea
-                      id="description"
-                      value={eventTexts[currentLanguageId]?.description || ""}
-                      onChange={(e) => handleEventTextChange("description", e.target.value)}
-                      placeholder={t("basicInfo.descriptionPlaceholder")}
-                      rows={4}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="locationText">{t("basicInfo.locationText")}</Label>
-                    <Input
-                      id="locationText"
-                      value={eventTexts[currentLanguageId]?.locationText || ""}
-                      onChange={(e) => handleEventTextChange("locationText", e.target.value)}
-                      placeholder={t("basicInfo.locationTextPlaceholder")}
-                    />
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Basic Event Info */}
-        <Card>
-          <CardContent className="space-y-4 md:space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="visitsLimit">{t("basicInfo.visitsLimit")}</Label>
-                <Input
-                  id="visitsLimit"
-                  name="visitsLimit"
-                  type="number"
-                  min={10}
-                  placeholder={t("basicInfo.visitsLimitPlaceholder")}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Keywords */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("basicInfo.keywords")}</CardTitle>
-            <CardDescription>{t("basicInfo.keywordsDescription")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 md:space-y-6">
-            <MetaTagsInput value={keywords} onChange={setKeywords} />
-          </CardContent>
-        </Card>
-
-        {/* Submit Button */}
-        <div className="flex justify-end">
-          <Button type="submit" disabled={selectedLanguageIds.length === 0 || !isDateTimeValid() || isPending}>
-            {t("basicInfo.createEvent")} {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-          </Button>
+      {/* Error Display */}
+      {state?.status === "error" && (
+        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+          <p className="text-destructive">{t("basicInfo.errorCreating")}</p>
         </div>
-
-        {/* Error Display */}
-        {state?.status === "error" && (
-          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-            <p className="text-destructive">{t("basicInfo.errorCreating")}</p>
-          </div>
-        )}
-      </form>
-    </div>
+      )}
+    </form>
   );
 };

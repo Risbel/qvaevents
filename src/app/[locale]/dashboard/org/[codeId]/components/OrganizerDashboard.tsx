@@ -3,18 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Building2 } from "lucide-react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import BusinessList from "./BusinessList";
 import { OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
+import { useParams } from "next/navigation";
 
 interface OrganizerDashboardProps {
   codeId: string;
   organizer: OrganizerProfile;
-  locale: string;
 }
 
-export default async function OrganizerDashboard({ codeId, organizer, locale }: OrganizerDashboardProps) {
-  const t = await getTranslations("Dashboard");
+export default function OrganizerDashboard({ codeId, organizer }: OrganizerDashboardProps) {
+  const t = useTranslations("Dashboard");
+  const { locale } = useParams();
 
   const getInitials = (name: string) => {
     return name
@@ -60,7 +61,7 @@ export default async function OrganizerDashboard({ codeId, organizer, locale }: 
           <CardDescription>{t("businessesDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <BusinessList codeId={codeId} organizerId={organizer.id} locale={locale} />
+          <BusinessList codeId={codeId} organizerId={organizer.id} locale={locale as string} />
         </CardContent>
       </Card>
     </div>

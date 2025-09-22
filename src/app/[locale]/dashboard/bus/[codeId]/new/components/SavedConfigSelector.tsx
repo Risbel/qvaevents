@@ -3,7 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
-import { CustomEventConfig } from "@/queries/business/getBusinessByCodeId";
+import { CustomEventConfig } from "@/hooks/business/getBusinessByCodeId";
 
 export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs: CustomEventConfig[] }) => {
   const { config, updateConfig } = useEventConfig();

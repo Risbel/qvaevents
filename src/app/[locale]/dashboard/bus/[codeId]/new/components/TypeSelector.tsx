@@ -4,17 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { TypeWithSubTypes } from "@/queries/types/getTypesAndSubtypes";
+
 import { PlusCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
+import { TypeWithSubTypes } from "@/hooks/eventTypes/getTypesAndSubtypes";
 
-interface TypeSelectorProps {
-  types: TypeWithSubTypes[];
-}
-
-export function TypeSelector({ types }: TypeSelectorProps) {
+export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
   const params = useParams();
   const locale = params.locale as string;
   const { config, updateConfig } = useEventConfig();

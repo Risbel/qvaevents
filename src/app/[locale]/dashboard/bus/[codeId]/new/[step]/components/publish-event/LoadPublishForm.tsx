@@ -1,18 +1,22 @@
-import { getEventBySlug } from "@/queries/event/getEventBySlug";
 import { PublishForm } from "./PublishForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import useGetEventBySlug from "@/hooks/events/useGetEventBySlug";
 
-interface LoadPublishFormProps {
-  eventSlug: string;
-}
+export function LoadPublishForm({ eventSlug }: { eventSlug: string }) {
+  const { data: eventResult, isLoading: eventLoading, isError: eventError } = useGetEventBySlug(eventSlug);
+  const t = useTranslations("EventError");
 
-export async function LoadPublishForm({ eventSlug }: LoadPublishFormProps) {
-  const eventResult = await getEventBySlug(eventSlug);
-  const t = await getTranslations("EventError");
+  if (eventLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2 className="h-4 w-4 animate-spin" />
+      </div>
+    );
+  }
 
-  if (eventResult.status !== "success" || !eventResult.data?.event) {
+  if (eventError || !eventResult) {
     return (
       <div className="flex items-center justify-center h-64">
         <Alert variant="destructive" className="max-w-md">
@@ -28,7 +32,7 @@ export async function LoadPublishForm({ eventSlug }: LoadPublishFormProps) {
     );
   }
 
-  const event = eventResult.data.event;
-
-  return <PublishForm eventId={event.id} eventSlug={event.slug} isPublished={event.isPublished || false} />;
+  return (
+    <PublishForm eventId={eventResult.id} eventSlug={eventResult.slug} isPublished={eventResult.isPublished || false} />
+  );
 }

@@ -1,44 +1,37 @@
+"use client";
+
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import { getTranslations } from "next-intl/server";
 import OrganizerDashboard from "./components/OrganizerDashboard";
+import { useParams } from "next/navigation";
+import useGetUser from "@/hooks/user/useGetUser";
+import useGetOrganizerProfile from "@/hooks/organizers/useGetOrganizerProfile";
+import { OrganizerDashboardSkeleton } from "./components/Skeletons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default async function OrganizerDashboardPage({
-  params,
-}: {
-  params: Promise<{ codeId: string; locale: string }>;
-}) {
-  const { codeId, locale } = await params;
+export default function OrganizerDashboardPage() {
+  const { codeId, locale } = useParams();
 
-  const supabase = await createClient();
-  const t = await getTranslations("Dashboard");
-
+  const { data: user, isLoading: userLoading, isError: userError } = useGetUser();
   const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+    data: organizer,
+    isLoading: organizerLoading,
+    isError: organizerError,
+  } = useGetOrganizerProfile(user?.id || "");
 
-  if (userError || !user) {
-    redirect(`/${locale}/auth/login`);
+  if (userLoading || organizerLoading) {
+    return <OrganizerDashboardSkeleton />;
   }
 
-  // Check if organizer exists and user has access
-  const { data: organizer, error: organizerError } = await supabase
-    .from("OrganizerProfile")
-    .select("*")
-    .eq("codeId", codeId)
-    .eq("isDeleted", false)
-    .single();
-
-  if (organizerError || !organizer) {
-    console.error(organizerError);
-    notFound();
+  if (userError || organizerError || !organizer || user?.id !== organizer.user_id) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Error loading organization</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
-  // Check if user owns this organizer
-  if (organizer.user_id !== user.id) {
-    redirect(`/${locale}/profile`);
-  }
-
-  return <OrganizerDashboard codeId={codeId} organizer={organizer} locale={locale} />;
+  return <OrganizerDashboard codeId={codeId as string} organizer={organizer} />;
 }

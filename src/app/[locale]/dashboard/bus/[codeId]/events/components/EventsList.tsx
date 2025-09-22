@@ -1,15 +1,14 @@
-import React from "react";
-import { EventWithTexts } from "@/queries/event/getEventsByBusinessCodeId";
 import { Calendar } from "lucide-react";
 import EventCard from "./EventCard";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
+import { EventWithTexts } from "@/hooks/events/getEventsByBusinessCodeId";
 
 interface EventsListProps {
   events: EventWithTexts[];
 }
 
-const EventsList: React.FC<EventsListProps> = async ({ events }) => {
-  const t = await getTranslations("EventsList");
+const EventsList: React.FC<EventsListProps> = ({ events }) => {
+  const t = useTranslations("EventsList");
 
   if (events.length === 0) {
     return (

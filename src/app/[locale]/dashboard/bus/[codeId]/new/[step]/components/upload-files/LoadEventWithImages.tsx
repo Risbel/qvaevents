@@ -1,14 +1,22 @@
-import { getEventBySlug } from "@/queries/event/getEventBySlug";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import EventImagesManager from "./EventImagesManager";
+import useGetEventBySlug from "@/hooks/events/useGetEventBySlug";
 
-export const LoadEventWithImages = async ({ eventSlug }: { eventSlug: string }) => {
-  const eventResult = await getEventBySlug(eventSlug);
-  const t = await getTranslations("EventError");
+export const LoadEventWithImages = ({ eventSlug }: { eventSlug: string }) => {
+  const { data: eventResult, isLoading: eventLoading, isError: eventError } = useGetEventBySlug(eventSlug);
+  const t = useTranslations("EventError");
 
-  if (eventResult.status !== "success" || !eventResult.data?.event) {
+  if (eventLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2 className="h-4 w-4 animate-spin" />
+      </div>
+    );
+  }
+
+  if (eventError || !eventResult) {
     return (
       <div className="flex items-center justify-center h-64">
         <Alert variant="destructive" className="max-w-md">
@@ -24,12 +32,13 @@ export const LoadEventWithImages = async ({ eventSlug }: { eventSlug: string }) 
     );
   }
 
-  const event = eventResult.data.event;
-  const images = event.EventImage || [];
+  const images = eventResult.EventImage || [];
   const maxImages = 2;
   const canUploadMore = images.length < maxImages;
 
-  return <EventImagesManager eventId={event.id} images={images} maxImages={maxImages} canUploadMore={canUploadMore} />;
+  return (
+    <EventImagesManager eventId={eventResult?.id} images={images} maxImages={maxImages} canUploadMore={canUploadMore} />
+  );
 };
 
 export default LoadEventWithImages;

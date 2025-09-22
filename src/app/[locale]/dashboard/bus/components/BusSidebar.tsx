@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/sidebar";
 import { Calendar, Users, BarChart3, Building2, Globe, Plus, QrCode } from "lucide-react";
 import Link from "next/link";
-import { BusinessWithOrganizer } from "@/queries/business/getBusinessByCodeId";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { BusinessWithOrganizer } from "@/hooks/business/getBusinessByCodeId";
 
 // Navigation data structure
 const navigationData = {

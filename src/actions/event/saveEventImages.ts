@@ -36,9 +36,6 @@ export async function saveEventImages(eventId: number, imageUrls: string[], file
       };
     }
 
-    // Revalidate the page to show updated images
-    revalidatePath("/dashboard");
-
     return {
       status: "success" as const,
       data: { images: data },

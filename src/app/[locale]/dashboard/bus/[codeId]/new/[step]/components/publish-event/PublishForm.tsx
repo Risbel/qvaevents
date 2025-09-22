@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,6 +7,7 @@ import { CheckCircle, AlertTriangle, Globe, Eye, BarChart, ArrowLeft, Loader2 } 
 import { publishEvent } from "@/actions/event/publishEvent";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PublishFormProps {
   eventId: number;
@@ -24,7 +23,7 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
   const router = useRouter();
   const t = useTranslations("EventPublish");
   const tNavigation = useTranslations("navigation");
-
+  const queryClient = useQueryClient();
   const handlePublish = () => {
     startTransition(async () => {
       try {
@@ -33,7 +32,7 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
         if (result.status === "success") {
           setIsPublishedState(true);
           toast.success(t("publishSuccess"));
-          router.refresh();
+          queryClient.invalidateQueries({ queryKey: ["event", eventSlug] });
         } else {
           toast.error(result.error || t("publishError"));
         }

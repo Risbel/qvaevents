@@ -1,4 +1,4 @@
-import { EventWithTexts } from "@/queries/event/getEventsByBusinessCodeId";
+import { EventWithTexts } from "@/hooks/events/getEventsByBusinessCodeId";
 
 /**
  * Extracts the event title in the specified language
