@@ -18,7 +18,7 @@ import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import { useParams } from "next/navigation";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
 import useGetUser from "@/hooks/user/useGetUser";
-import { BusinessWithOrganizer } from "@/hooks/business/getBusinessByCodeId";
+import { BusinessWithOrganizer } from "@/queries/client/business/getBusinessByCodeId";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Building2 } from "lucide-react";

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import useSupabase from "../use-supabase";
-import { getEventBySlug } from "./getEventBySlug";
+import { getEventBySlug } from "@/queries/client/events/getEventBySlug";
 
 const useGetEventBySlug = (slug: string) => {
   const client = useSupabase();

@@ -1,6 +1,6 @@
 import useSupabase from "../use-supabase";
 import { useQuery } from "@tanstack/react-query";
-import { getOrganizerProfile } from "./getOrganizerProfile";
+import { getOrganizerProfile } from "@/queries/client/organizers/getOrganizerProfile";
 
 const useGetOrganizerProfile = (userId: string) => {
   const client = useSupabase();

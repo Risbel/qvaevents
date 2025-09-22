@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useSupabase from "../use-supabase";
-import { getEventsByBusinessCodeId } from "./getEventsByBusinessCodeId";
+import { getEventsByBusinessCodeId } from "@/queries/client/events/getEventsByBusinessCodeId";
 
 const useGetEventsByBusinessCodeId = (codeId: string) => {
   const client = useSupabase();

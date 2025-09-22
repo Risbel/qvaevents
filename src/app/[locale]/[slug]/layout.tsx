@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/business/getBusinessBySlug";
+import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/server/business/getBusinessBySlug";
 
 interface LayoutProps {
   children: React.ReactNode;

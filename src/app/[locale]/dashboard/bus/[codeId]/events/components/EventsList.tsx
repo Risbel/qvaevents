@@ -1,7 +1,7 @@
 import { Calendar } from "lucide-react";
 import EventCard from "./EventCard";
 import { useTranslations } from "next-intl";
-import { EventWithTexts } from "@/hooks/events/getEventsByBusinessCodeId";
+import { EventWithTexts } from "@/queries/client/events/getEventsByBusinessCodeId";
 
 interface EventsListProps {
   events: EventWithTexts[];

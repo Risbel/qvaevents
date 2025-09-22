@@ -1,6 +1,5 @@
 "use client";
 
-import { notFound, redirect } from "next/navigation";
 import OrganizerDashboard from "./components/OrganizerDashboard";
 import { useParams } from "next/navigation";
 import useGetUser from "@/hooks/user/useGetUser";

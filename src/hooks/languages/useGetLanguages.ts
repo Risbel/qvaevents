@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getLanguages } from "./getLanguages";
+
 import useSupabase from "../use-supabase";
+import { getLanguages } from "@/queries/client/languages/getLanguages";
 
 const useGetLanguages = () => {
   const client = useSupabase();

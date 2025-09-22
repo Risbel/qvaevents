@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOrganizerBusinesses } from "./getOrganizerBusinesses";
+import { getOrganizerBusinesses } from "@/queries/client/business/getOrganizerBusinesses";
 import useSupabase from "../use-supabase";
 
 const useGetOrganizerBusinesses = (organizerId: number) => {

@@ -17,7 +17,7 @@ import { Calendar, Users, BarChart3, Building2, Globe, Plus, QrCode } from "luci
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { BusinessWithOrganizer } from "@/hooks/business/getBusinessByCodeId";
+import { BusinessWithOrganizer } from "@/queries/client/business/getBusinessByCodeId";
 
 // Navigation data structure
 const navigationData = {

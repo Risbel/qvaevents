@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTypesAndSubtypes } from "./getTypesAndSubtypes";
 import useSupabase from "../use-supabase";
+import { getTypesAndSubtypes } from "@/queries/client/eventTypes/getTypesAndSubtypes";
 
 const useGetTypesAndSubtypes = () => {
   const client = useSupabase();

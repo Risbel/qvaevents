@@ -11,11 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { Loader2, Building, Plus, UserCheck2Icon } from "lucide-react";
+import { Loader2, Plus, UserCheck2Icon } from "lucide-react";
 import { createOrganizerProfile } from "@/actions/auth/createOrganizerProfile";
 import { State } from "@/types/state";
 import { useParams } from "next/navigation";
-import { Plan } from "@/queries/getPlans";
+import { Plan } from "@/queries/server/getPlans";
 
 export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] }) {
   const t = useTranslations("Profile");

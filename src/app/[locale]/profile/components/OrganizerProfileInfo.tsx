@@ -1,11 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Building, Image, Plus, LayoutDashboard, UserCheck2 } from "lucide-react";
+import { LayoutDashboard, UserCheck2 } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
-import { getOrganizerProfile, OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
+import { getOrganizerProfile, OrganizerProfile } from "@/queries/server/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import EmptyState from "./EmptyState";
 import Link from "next/link";

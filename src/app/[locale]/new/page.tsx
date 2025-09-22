@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import CreateOrganizerProfileForm from "./components/CreateOrganizerProfileForm";
-import { getActivePlans, Plan } from "@/queries/getPlans";
+import { getActivePlans, Plan } from "@/queries/server/getPlans";
 import GoBackButton from "../components/GoBackButton";
 import { getTranslations } from "next-intl/server";
 

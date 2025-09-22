@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useSupabase from "../use-supabase";
-import getUser from "./getUser";
+import getUser from "@/queries/client/user/getUser";
 
 const useGetUser = () => {
   const client = useSupabase();

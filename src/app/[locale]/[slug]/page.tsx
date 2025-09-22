@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/business/getBusinessBySlug";
+import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/server/business/getBusinessBySlug";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Building, Calendar, MapPin, Phone, Globe, Mail } from "lucide-react";
+import { Building, Calendar } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;

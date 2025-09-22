@@ -1,6 +1,5 @@
 "use client";
 
-import { TypeWithSubTypes } from "@/hooks/eventTypes/getTypesAndSubtypes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypeSelector } from "./components/TypeSelector";
 import { MinorsSuitabilitySelector } from "./components/MinorsSuitabilitySelector";

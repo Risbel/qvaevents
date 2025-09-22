@@ -9,7 +9,7 @@ import { PlusCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
-import { TypeWithSubTypes } from "@/hooks/eventTypes/getTypesAndSubtypes";
+import { TypeWithSubTypes } from "@/queries/client/eventTypes/getTypesAndSubtypes";
 
 export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
   const params = useParams();

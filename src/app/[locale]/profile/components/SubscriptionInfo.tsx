@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { getOrganizerProfile, OrganizerProfile, Subscription } from "@/queries/organizer/getOrganizerProfile";
+import { getOrganizerProfile, OrganizerProfile, Subscription } from "@/queries/server/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import SubscriptionStatusBadge from "@/app/components/SubscriptionStatusBadge";
-import { getOrganizerSubscription, SubscriptionWithPlan } from "@/queries/organizer/getOrganizerSubscription";
+import { getOrganizerSubscription, SubscriptionWithPlan } from "@/queries/server/organizer/getOrganizerSubscription";
 
 interface SubscriptionInfoProps {
   user: SupabaseUser;

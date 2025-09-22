@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { EventWithTexts } from "@/hooks/events/getEventsByBusinessCodeId";
+import { EventWithTexts } from "@/queries/client/events/getEventsByBusinessCodeId";
 
 interface EventCardProps {
   event: EventWithTexts;

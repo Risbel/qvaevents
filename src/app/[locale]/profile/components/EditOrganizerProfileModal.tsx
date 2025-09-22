@@ -15,11 +15,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Building, Edit, UserCheck2 } from "lucide-react";
+import { Loader2, Edit, UserCheck2 } from "lucide-react";
 import { updateOrganizerProfile } from "@/actions/auth/updateOrganizerProfile";
 import { State } from "@/types/state";
 import { useRouter } from "next/navigation";
-import { OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
+import { OrganizerProfile } from "@/queries/server/organizer/getOrganizerProfile";
 
 export default function EditOrganizerProfileModal({ profile }: { profile: OrganizerProfile }) {
   const t = useTranslations("Profile");

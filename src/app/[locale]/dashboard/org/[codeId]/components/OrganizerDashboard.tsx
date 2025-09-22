@@ -5,7 +5,7 @@ import { Building2 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import BusinessList from "./BusinessList";
-import { OrganizerProfile } from "@/queries/organizer/getOrganizerProfile";
+import { OrganizerProfile } from "@/queries/server/organizer/getOrganizerProfile";
 import { useParams } from "next/navigation";
 
 interface OrganizerDashboardProps {

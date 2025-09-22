@@ -10,17 +10,17 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { updateEventBasicInfo } from "@/actions/event/updateEventBasicInfo";
 import { MetaTagsInput } from "./MetaTagsInput";
-import { Language } from "@/hooks/events/getEventsByBusinessCodeId";
+import { EventText, Language } from "@/queries/client/events/getEventsByBusinessCodeId";
 import { State } from "@/types/state";
 import { useState } from "react";
 import { ArrowRight, Loader2, Save, Sparkles } from "lucide-react";
-import { EventText, EventWithTextsAndImages } from "@/queries/event/getEventBySlug";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { convertUTCToLocal, formatDateRange } from "@/utils/dateTime";
 import { LanguageSelector } from "./LanguageSelector";
 import { DateTimePicker } from "./DateTimePicker";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { EventWithTextsAndImages } from "@/queries/client/events/getEventBySlug";
 
 interface EditBasicInfoProps {
   languages: Language[];
