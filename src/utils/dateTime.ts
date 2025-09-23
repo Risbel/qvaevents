@@ -51,6 +51,22 @@ export function formatDateForDisplay(date: Date, includeTime: boolean = false, l
 }
 
 /**
+ * Formats time with consistent AM/PM format across all locales
+ * @param date - Date object
+ * @returns Formatted time string with standard AM/PM format
+ */
+export function formatTimeWithStandardAMPM(date: Date): string {
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  // Always use English locale for time formatting to get standard AM/PM
+  return date.toLocaleTimeString("en", timeOptions);
+}
+
+/**
  * Formats a date range for display
  * @param startDate - Start date object
  * @param startTime - Start time string

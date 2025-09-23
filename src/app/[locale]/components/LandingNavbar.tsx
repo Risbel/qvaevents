@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const MainNav = async () => {
+const LandingNavbar = async () => {
   const t = await getTranslations("navigation");
   const tAuth = await getTranslations("Auth");
   const supabase = await createClient();
@@ -50,4 +50,4 @@ const MainNav = async () => {
   );
 };
 
-export default MainNav;
+export default LandingNavbar;

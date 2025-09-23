@@ -72,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <main className="flex-1 overflow-y-auto">
-          <div className="flex flex-col items-center gap-4 p-4 w-full bg-background min-h-full">
+          <div className="flex flex-col items-center gap-4 p-4 w-full bg-background min-h-full pb-16">
             {children as React.ReactNode}
           </div>
         </main>

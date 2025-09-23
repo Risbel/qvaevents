@@ -1,13 +1,14 @@
 import { useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertTriangle, Globe, Eye, BarChart, ArrowLeft, Loader2 } from "lucide-react";
+import { CheckCircle, AlertTriangle, Globe, BarChart, ArrowLeft, Loader2, ExternalLinkIcon } from "lucide-react";
 import { publishEvent } from "@/actions/event/publishEvent";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 
 interface PublishFormProps {
   eventId: number;
@@ -54,15 +55,15 @@ export function PublishForm({ eventId, eventSlug, isPublished = false }: Publish
             <CardDescription>{t("publishedDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center gap-4">
-            <Button
-              className="cursor-pointer"
-              variant="outline"
-              onClick={() => router.push(`/${locale}/event/${eventSlug}`)}
-              disabled={isPending}
+            <a
+              className={cn(buttonVariants({ variant: "outline" }), "cursor-pointer", isPending && "opacity-50")}
+              href={`/${locale}/event/${eventSlug}`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Eye className="h-4 w-4" />
+              <ExternalLinkIcon className="h-4 w-4" />
               {t("viewEvent")}
-            </Button>
+            </a>
             <Button
               className="cursor-pointer"
               variant="outline"

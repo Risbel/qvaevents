@@ -3,7 +3,18 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Calendar, Users, Pencil, BarChart } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Pencil,
+  BarChart,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  CheckCircle,
+  CheckCircleIcon,
+  EyeOffIcon,
+} from "lucide-react";
 import { convertUTCToLocal, formatDateForDisplay } from "@/utils/dateTime";
 import { toNormalCase } from "@/utils/textFormating";
 import { getEventTitle, getEventDescription } from "@/utils/eventTextExtraction";
@@ -51,6 +62,21 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           ) : (
             <Badge variant="outline">{tEventCard("onlyForAdults")}</Badge>
           )}
+
+          {/* Published Status Indicator */}
+          <Badge variant="outline" className={event.isPublished ? "border-green-500" : "border-yellow-500"}>
+            {event.isPublished ? (
+              <>
+                <CheckCircleIcon className="h-3 w-3 mr-1 " />
+                Published
+              </>
+            ) : (
+              <>
+                <EyeOffIcon className="h-3 w-3 mr-1" />
+                Draft
+              </>
+            )}
+          </Badge>
         </div>
       </CardHeader>
       <CardContent className="relative">
@@ -75,11 +101,24 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" size="default" className="cursor-pointer">
+          <Button variant="outline" size="sm" className="cursor-pointer">
             <BarChart /> {t("viewDetails")}
           </Button>
+
+          {/* View Event Button - Only show if published */}
+          {event.isPublished && (
+            <Link
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              href={`/${locale}/event/${event.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="h-4 w-4" /> View Event
+            </Link>
+          )}
+
           <Link
-            className={cn(buttonVariants({ variant: "default", size: "default" }))}
+            className={cn(buttonVariants({ variant: "default", size: "sm" }))}
             href={`/${locale}/dashboard/bus/${codeId}/new/1?slug=${event.slug}`}
           >
             <Pencil /> {t("edit")}
