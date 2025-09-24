@@ -3,13 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Shield, Ticket } from "lucide-react";
 import { notFound } from "next/navigation";
-import { formatDateForDisplay, convertUTCToLocal, formatTimeWithStandardAMPM } from "@/utils/dateTime";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { ImageCarousel } from "@/app/components/ImageCarousel";
 import { EventTextProvider } from "./components/EventTextProvider";
 import { EventTitle } from "./components/EventTitle";
 import { EventDescription } from "./components/EventDescription";
 import { EventLocation } from "./components/EventLocation";
+import { EventDateTime } from "@/app/components/EventDateTime";
 import ClientsNavbar from "../../components/ClientsNavbar";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
@@ -22,17 +22,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
   }
 
   const event = eventResult.data.event;
-
-  // Convert UTC dates from database to local time for display
-  const startDate = convertUTCToLocal(event.startDate);
-  const endDate = convertUTCToLocal(event.endDate);
-
-  // Format dates using the utility functions
-  const formattedStartDate = formatDateForDisplay(startDate, false, locale);
-
-  // Format times using the utility function for consistent AM/PM format
-  const formattedStartTime = formatTimeWithStandardAMPM(startDate);
-  const formattedEndTime = formatTimeWithStandardAMPM(endDate);
 
   // Get event type and subtype translations
   const eventTypeMap: Record<string, string> = {
@@ -74,10 +63,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               <EventTitle />
 
               <div className="flex items-center gap-2 flex-wrap justify-center">
-                <p className="font-medium">{formattedStartDate}</p> |
-                <p className="text-sm">
-                  {formattedStartTime} - {formattedEndTime}
-                </p>
+                <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale} variant="full" />
               </div>
             </div>
 
@@ -112,12 +98,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 {/* Date & Time */}
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Calendar className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">{formattedStartDate}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formattedStartTime} - {formattedEndTime}
-                    </p>
-                  </div>
+                  <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale} variant="full" />
                 </div>
 
                 {/* Event Type */}

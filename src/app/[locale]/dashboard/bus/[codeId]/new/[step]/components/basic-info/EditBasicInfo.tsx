@@ -15,12 +15,12 @@ import { State } from "@/types/state";
 import { useState } from "react";
 import { ArrowRight, Loader2, Save, Sparkles } from "lucide-react";
 import { format } from "date-fns";
-import { convertUTCToLocal, formatDateRange } from "@/utils/dateTime";
 import { LanguageSelector } from "./LanguageSelector";
 import { DateTimePicker } from "./DateTimePicker";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { EventWithTextsAndImages } from "@/queries/client/events/getEventBySlug";
+import { EventDateTime } from "@/app/components/EventDateTime";
 
 interface EditBasicInfoProps {
   languages: Language[];
@@ -71,15 +71,15 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     [languageId: number]: { id: number; title: string; description: string; locationText: string };
   }>(existingEventTexts);
 
-  // Date and time state - parse from existing event (UTC) and convert to local
-  const startDateLocal = convertUTCToLocal(event.startDate);
-  const endDateLocal = convertUTCToLocal(event.endDate);
+  // date objects in local time (e.g Florida, UTC-4)
+  const startDateLocal = new Date(event.startDate);
+  const endDateLocal = new Date(event.endDate);
 
   // Extract date and time components from local time
   const startDateOnly = new Date(startDateLocal.getFullYear(), startDateLocal.getMonth(), startDateLocal.getDate());
   const endDateOnly = new Date(endDateLocal.getFullYear(), endDateLocal.getMonth(), endDateLocal.getDate());
 
-  // Extract time components from local time
+  // Extract time components from local time (e.g "12:00" or "00:00" or "12:00:00")
   const startTimeOnly = format(startDateLocal, "HH:mm");
   const endTimeOnly = format(endDateLocal, "HH:mm");
 
@@ -189,22 +189,37 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
         <input key={index} type="hidden" name="keywords" value={keyword} />
       ))}
 
-      {/* Hidden inputs for date/time - send current form state */}
-      <input type="hidden" name="startDate" value={startDateState ? startDateState.toISOString() : ""} />
-      <input type="hidden" name="startTime" value={startTime} />
-      <input type="hidden" name="endDate" value={endDateState ? endDateState.toISOString() : ""} />
-      <input type="hidden" name="endTime" value={endTime} />
+      {/* Hidden inputs for date/time - send updated UTC dates */}
+      <input
+        type="hidden"
+        name="startDate"
+        value={
+          startDateState && startTime
+            ? new Date(`${format(startDateState, "yyyy-MM-dd")}T${startTime}`).toISOString()
+            : event.startDate
+        }
+      />
+      <input
+        type="hidden"
+        name="endDate"
+        value={
+          endDateState && endTime
+            ? new Date(`${format(endDateState, "yyyy-MM-dd")}T${endTime}`).toISOString()
+            : event.endDate
+        }
+      />
 
       {/* Event Date and Time */}
       <Card>
         <CardHeader>
           <CardTitle>{t("basicInfo.eventDateTime")}</CardTitle>
           <CardDescription>
-            <span className="text-sm font-medium">
-              {startDateState &&
-                endDateState &&
-                formatDateRange(startDateState, startTime, endDateState, endTime, locale as string)}
-            </span>
+            <EventDateTime
+              startDate={event.startDate}
+              endDate={event.endDate}
+              locale={locale as string}
+              variant="full"
+            />
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

@@ -15,7 +15,7 @@ import {
   CheckCircleIcon,
   EyeOffIcon,
 } from "lucide-react";
-import { convertUTCToLocal, formatDateForDisplay } from "@/utils/dateTime";
+
 import { toNormalCase } from "@/utils/textFormating";
 import { getEventTitle, getEventDescription } from "@/utils/eventTextExtraction";
 import { useParams } from "next/navigation";
@@ -23,6 +23,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { EventWithTexts } from "@/queries/client/events/getEventsByBusinessCodeId";
+import { EventDateTime } from "@/app/components/EventDateTime";
 
 interface EventCardProps {
   event: EventWithTexts;
@@ -33,15 +34,6 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const { codeId } = useParams();
   const t = useTranslations("actions");
   const tEventCard = useTranslations("EventCard");
-
-  const formatEventDate = (utcDateString: string) => {
-    try {
-      const localDate = convertUTCToLocal(utcDateString);
-      return formatDateForDisplay(localDate, true, locale as string);
-    } catch {
-      return "Invalid date";
-    }
-  };
 
   return (
     <Card className="shadow-md border-primary/40 transition-shadow gap-4">
@@ -81,14 +73,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       </CardHeader>
       <CardContent className="relative">
         <div className="space-y-2 text-xs">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" /> {formatEventDate(event.startDate)} (
-            {tEventCard("start")})
-          </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" /> {formatEventDate(event.endDate)} ({tEventCard("end")}
-            )
-          </div>
+          <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale as string} variant="full" />
 
           {event.visitsLimit && (
             <div className="flex items-center gap-2">

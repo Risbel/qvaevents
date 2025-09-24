@@ -20,7 +20,7 @@ export function EventLocation() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">{currentText.locationText}</p>
+        <p className="text-muted-foreground whitespace-break-spaces">{currentText.locationText}</p>
       </CardContent>
     </Card>
   );

@@ -242,11 +242,19 @@ export const CreateBasicInfo = () => {
         <input key={index} type="hidden" name="keywords" value={keyword} />
       ))}
 
-      {/* Hidden inputs for date/time */}
-      <input type="hidden" name="startDate" value={startDate ? startDate.toISOString() : ""} />
-      <input type="hidden" name="startTime" value={startTime} />
-      <input type="hidden" name="endDate" value={endDate ? endDate.toISOString() : ""} />
-      <input type="hidden" name="endTime" value={endTime} />
+      {/* Hidden inputs for date/time - send updated UTC dates */}
+      <input
+        type="hidden"
+        name="startDate"
+        value={
+          startDate && startTime ? new Date(`${startDate.toISOString().split("T")[0]}T${startTime}`).toISOString() : ""
+        }
+      />
+      <input
+        type="hidden"
+        name="endDate"
+        value={endDate && endTime ? new Date(`${endDate.toISOString().split("T")[0]}T${endTime}`).toISOString() : ""}
+      />
 
       {/* Event Date and Time */}
       <Card>

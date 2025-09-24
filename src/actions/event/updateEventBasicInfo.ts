@@ -3,7 +3,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { State } from "@/types/state";
 import { z } from "zod";
-import { convertLocalToUTC } from "@/utils/dateTime";
 
 const updateEventBasicInfoSchema = z
   .object({
@@ -19,9 +18,7 @@ const updateEventBasicInfoSchema = z
     defaultLocale: z.string().default("es"),
     keywords: z.array(z.string()).optional(),
     startDate: z.string().min(1, "Start date is required"),
-    startTime: z.string().min(1, "Start time is required"),
     endDate: z.string().min(1, "End date is required"),
-    endTime: z.string().min(1, "End time is required"),
     eventTexts: z.array(
       z.object({
         id: z.number().min(1, "Text ID is required"),
@@ -34,13 +31,13 @@ const updateEventBasicInfoSchema = z
   })
   .refine(
     (data) => {
-      // Validate that end date/time is after start date/time
-      const startDateTime = new Date(`${data.startDate.split("T")[0]}T${data.startTime}`);
-      const endDateTime = new Date(`${data.endDate.split("T")[0]}T${data.endTime}`);
+      // Validate that end date is after start date
+      const startDateTime = new Date(data.startDate);
+      const endDateTime = new Date(data.endDate);
       return startDateTime < endDateTime;
     },
     {
-      message: "End date/time must be after start date/time",
+      message: "End date must be after start date",
       path: ["endDate"],
     }
   );
@@ -66,20 +63,11 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         .map((keyword) => keyword as string)
         .filter((keyword) => keyword.trim() !== ""),
       startDate: formData.get("startDate") as string,
-      startTime: formData.get("startTime") as string,
       endDate: formData.get("endDate") as string,
-      endTime: formData.get("endTime") as string,
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
     };
 
     const validatedData = updateEventBasicInfoSchema.parse(rawData);
-
-    // Convert local dates to UTC for storage
-    const startDate = new Date(validatedData.startDate);
-    const endDate = new Date(validatedData.endDate);
-
-    const startDateTime = convertLocalToUTC(startDate, validatedData.startTime);
-    const endDateTime = convertLocalToUTC(endDate, validatedData.endTime);
 
     // Update the event
     const { data: event, error: eventError } = await supabase
@@ -95,8 +83,8 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         businessId: validatedData.businessId,
         defaultLocale: validatedData.defaultLocale,
         keywords: validatedData.keywords || [],
-        startDate: startDateTime.toISOString(),
-        endDate: endDateTime.toISOString(),
+        startDate: validatedData.startDate,
+        endDate: validatedData.endDate,
       })
       .eq("id", validatedData.eventId)
       .select("id, slug")

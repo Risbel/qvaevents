@@ -16,7 +16,7 @@ export function EventDescription() {
         <CardTitle>About</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground leading-relaxed">{currentText.description}</p>
+        <p className="text-muted-foreground whitespace-break-spaces">{currentText.description}</p>
       </CardContent>
     </Card>
   );
