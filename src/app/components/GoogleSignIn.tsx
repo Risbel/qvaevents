@@ -24,12 +24,20 @@ export default function GoogleSignIn({ mode, redirectTo }: GoogleSignInProps) {
     try {
       setIsLoading(true);
 
+      // Construct the redirect URL
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+          : window.location.origin;
+
+      const callbackUrl = `${baseUrl}/${locale}/auth/callback${
+        redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ""
+      }`;
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/${locale}/auth/callback${
-            redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ""
-          }`,
+          redirectTo: callbackUrl,
         },
       });
 
