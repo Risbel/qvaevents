@@ -31,37 +31,36 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [userEmail, setUserEmail] = useState("");
-
   const initialState: State = { status: undefined };
   const [loginState, loginFormAction, isLoginPending] = useActionState(emailLogin, initialState);
   const [signupState, signupFormAction, isSignupPending] = useActionState(emailSignup, initialState);
 
-  // Handle login success
   useEffect(() => {
     if (loginState.status === "success") {
       toast.success(t("loginSuccess"));
       onClose();
       setIsLoginMode(true);
       setUserEmail("");
+      window.location.reload();
     }
 
     if (loginState.status === "error") {
       toast.error(t("loginError"));
     }
-  }, [loginState, t, onClose]);
+  }, [loginState]);
 
-  // Handle signup success
   useEffect(() => {
     if (signupState.status === "success") {
       toast.success(tSignup("signupSuccess"));
       setIsLoginMode(true);
       setUserEmail("");
+      window.location.reload();
     }
 
     if (signupState.status === "error") {
       toast.error(tSignup("signupError"));
     }
-  }, [signupState, tSignup]);
+  }, [signupState]);
 
   const handleClose = () => {
     onClose();

@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import AuthModal from "./AuthModal";
 
 const ClientsUserDropdown = ({ user }: { user: User | null }) => {
@@ -23,16 +23,16 @@ const ClientsUserDropdown = ({ user }: { user: User | null }) => {
   const tProfile = useTranslations("Profile");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
 
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    // The page will automatically refresh due to auth state change
     router.refresh();
   };
 
   if (user) {
-    // Show user dropdown when logged in
     const getUserName = () => {
       return user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
     };
@@ -68,7 +68,7 @@ const ClientsUserDropdown = ({ user }: { user: User | null }) => {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer" onClick={() => router.push(`/${locale}/me`)}>
             <UserIcon className="mr-2 h-4 w-4" />
             <span>{tProfile("title")}</span>
           </DropdownMenuItem>
@@ -82,7 +82,6 @@ const ClientsUserDropdown = ({ user }: { user: User | null }) => {
     );
   }
 
-  // Show login button when not logged in
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setIsLoginModalOpen(true)} className="flex items-center gap-2">

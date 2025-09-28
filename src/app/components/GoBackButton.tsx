@@ -14,7 +14,7 @@ const GoBackButton = ({ text, className, url }: { text?: string; className?: str
     <Button
       onClick={() => (url ? router.push(url) : router.back())}
       variant="outline"
-      className={cn("mb-4 gap-2 flex items-center cursor-pointer", className)}
+      className={cn("gap-2 flex items-center cursor-pointer", className)}
     >
       <ArrowLeft className="w-4 h-4" />
       <span className="text-sm font-medium">{text || t("goBack")}</span>

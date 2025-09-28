@@ -7,6 +7,7 @@
     "getStarted": "Get Started",
     "contact": "Contact",
     "goBack": "Go Back",
+    "goHome": "Go Home",
     "next": "Next"
   },
   "StepBar": {
@@ -90,6 +91,7 @@
     "comment": "Comment",
     "reply": "Reply",
     "report": "Report",
+    "tryAgain": "Try Again",
     "block": "Block",
     "unblock": "Unblock",
     "mute": "Mute",

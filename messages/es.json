@@ -7,6 +7,7 @@
     "getStarted": "Comenzar",
     "contact": "Contactar",
     "goBack": "Volver",
+    "goHome": "Ir a Inicio",
     "next": "Siguiente"
   },
   "StepBar": {
@@ -90,6 +91,7 @@
     "comment": "Comentar",
     "reply": "Responder",
     "report": "Reportar",
+    "tryAgain": "Intentar de Nuevo",
     "block": "Bloquear",
     "unblock": "Desbloquear",
     "mute": "Silenciar",
