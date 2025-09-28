@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { EventWithTextsAndImages } from "@/queries/client/events/getEventBySlug";
 import { EventDateTime } from "@/app/components/EventDateTime";
-import LeafletMapPreviewForm from "@/app/components/LeafletMapPreviewForm";
+import InteractiveMap from "./InteractiveMap";
 
 interface EditBasicInfoProps {
   languages: Language[];
@@ -377,7 +377,7 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
                 {/* Interactive Map */}
                 <div className="mt-4">
-                  <LeafletMapPreviewForm
+                  <InteractiveMap
                     lat={coordinates.lat || 22.144932}
                     lng={coordinates.lng || -80.448374}
                     zoom={coordinates.lat && coordinates.lng ? 15 : 14}

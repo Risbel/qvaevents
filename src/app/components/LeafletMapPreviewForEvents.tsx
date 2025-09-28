@@ -57,6 +57,7 @@ export default function LeafletMapPreviewForEvents({
         doubleClickZoom={true}
         dragging={true}
         touchZoom={true}
+        maxZoom={18}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -75,7 +76,7 @@ export default function LeafletMapPreviewForEvents({
     <div>
       {mapComponent}
       {showDirectionsButton && (
-        <div className="mt-3 text-center">
+        <div className="mt-3 flex justify-end">
           <Button variant="outline" size="sm" className="cursor-pointer" onClick={handleDirectionsClick}>
             {t("howToGetThere")}
             <LucideRoute className="h-4 w-4" />

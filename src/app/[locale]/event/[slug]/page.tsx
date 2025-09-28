@@ -11,6 +11,7 @@ import { EventDescription } from "./components/EventDescription";
 import { EventLocation } from "./components/EventLocation";
 import { EventDateTime } from "@/app/components/EventDateTime";
 import ClientsNavbar from "../../components/ClientsNavbar";
+import EventMap from "./components/EventMap";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
@@ -86,9 +87,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
             {/* Event Description */}
             <EventDescription />
 
-            {/* Location */}
-            <EventLocation />
-
             {/* Event Details */}
             <Card className="gap-2">
               <CardHeader>
@@ -135,6 +133,12 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 </div>
               </CardContent>
             </Card>
+
+            {/* Location */}
+            <EventLocation />
+
+            {/* Map */}
+            <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
             {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-3">

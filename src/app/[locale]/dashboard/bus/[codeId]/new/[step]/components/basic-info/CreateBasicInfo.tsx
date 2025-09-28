@@ -17,8 +17,7 @@ import { LanguageSelector } from "./LanguageSelector";
 import useGetLanguages from "@/hooks/languages/useGetLanguages";
 import { CreateBasicInfoSkeleton } from "../Skeletons";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
-import LeafletMapPreviewForm from "@/app/components/LeafletMapPreviewForm";
-import LeafletMapPreviewForEvents from "@/app/components/LeafletMapPreviewForEvents";
+import InteractiveMap from "./InteractiveMap";
 
 interface EventText {
   title: string;
@@ -418,7 +417,7 @@ export const CreateBasicInfo = () => {
 
                 {/* Interactive Map */}
                 <div className="mt-4">
-                  <LeafletMapPreviewForm
+                  <InteractiveMap
                     lat={coordinates.lat || 22.144932}
                     lng={coordinates.lng || -80.448374}
                     zoom={coordinates.lat && coordinates.lng ? 15 : 14}
