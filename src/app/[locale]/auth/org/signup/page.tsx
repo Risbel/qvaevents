@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import EmailConfirmationModal from "./components/EmailConfirmationModal";
-import GoogleSignIn from "@/app/[locale]/components/GoogleSignIn";
+import GoogleSignIn from "@/app/components/GoogleSignIn";
 
 export default function SignUpPage() {
   const t = useTranslations("Auth.signup");

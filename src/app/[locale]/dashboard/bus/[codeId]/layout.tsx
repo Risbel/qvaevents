@@ -13,7 +13,7 @@ import {
 import { DynamicBreadcrumb } from "./components/DynamicBreadcrumb";
 
 import ModeToggle from "@/app/components/ModeToggle";
-import UserDropdown from "@/app/components/UserDropdown";
+import UserDropdown from "@/app/components/OrganizerUserDropdown";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import { useParams } from "next/navigation";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";

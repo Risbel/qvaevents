@@ -12,7 +12,7 @@ import { State } from "@/types/state";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import GoogleSignIn from "@/app/[locale]/components/GoogleSignIn";
+import GoogleSignIn from "@/app/components/GoogleSignIn";
 
 export default function LoginPage() {
   const t = useTranslations("Auth.login");
@@ -91,7 +91,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <GoogleSignIn mode="login" />
+        <GoogleSignIn mode="login" redirectTo={`/${locale}/new`} />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <Button variant="link" className="w-full" asChild>

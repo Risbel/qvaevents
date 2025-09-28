@@ -58,6 +58,7 @@ export default function LeafletMapPreviewForEvents({
         dragging={true}
         touchZoom={true}
         maxZoom={18}
+        className="z-30"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

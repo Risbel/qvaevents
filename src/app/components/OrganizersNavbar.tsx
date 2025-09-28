@@ -1,12 +1,12 @@
 import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
-import UserDropdown from "@/app/components/UserDropdown";
+import UserDropdown from "@/app/components/OrganizerUserDropdown";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const LandingNavbar = async () => {
+const OrganizersNavbar = async () => {
   const t = await getTranslations("navigation");
   const tAuth = await getTranslations("Auth");
   const supabase = await createClient();
@@ -50,4 +50,4 @@ const LandingNavbar = async () => {
   );
 };
 
-export default LandingNavbar;
+export default OrganizersNavbar;

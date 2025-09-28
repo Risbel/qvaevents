@@ -2,10 +2,10 @@ import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
+import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 
 const ClientsNavbar = async () => {
   const t = await getTranslations("navigation");
-  const tAuth = await getTranslations("Auth");
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,6 +22,7 @@ const ClientsNavbar = async () => {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
+          <ClientsUserDropdown user={user} />
         </div>
       </nav>
     </header>

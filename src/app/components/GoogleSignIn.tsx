@@ -6,14 +6,18 @@ import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 interface GoogleSignInProps {
   mode: "login" | "signup";
+  redirectTo?: string;
 }
 
-export default function GoogleSignIn({ mode }: GoogleSignInProps) {
+export default function GoogleSignIn({ mode, redirectTo }: GoogleSignInProps) {
   const t = useTranslations("Auth");
   const [isLoading, setIsLoading] = useState(false);
+  const params = useParams();
+  const locale = params.locale as string;
   const supabase = createClient();
 
   const handleGoogleSignIn = async () => {
@@ -23,7 +27,9 @@ export default function GoogleSignIn({ mode }: GoogleSignInProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/${locale}/auth/callback${
+            redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ""
+          }`,
         },
       });
 

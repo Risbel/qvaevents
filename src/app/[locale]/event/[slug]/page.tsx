@@ -10,8 +10,8 @@ import { EventTitle } from "./components/EventTitle";
 import { EventDescription } from "./components/EventDescription";
 import { EventLocation } from "./components/EventLocation";
 import { EventDateTime } from "@/app/components/EventDateTime";
-import ClientsNavbar from "../../components/ClientsNavbar";
 import EventMap from "./components/EventMap";
+import ClientsNavbar from "@/app/components/ClientsNavbar";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
@@ -53,8 +53,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
       <ClientsNavbar />
       <main className="min-h-screen bg-background">
         <div className="container mx-auto px-4 pb-24 pt-6 max-w-2xl">
-          {/* Header Section */}
-
           <div className="flex items-center justify-end mb-2">
             <LanguageSelector />
           </div>
@@ -68,7 +66,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               </div>
             </div>
 
-            {/* Event Images */}
             {event.EventImage && event.EventImage.length > 0 && (
               <ImageCarousel
                 images={event.EventImage}
@@ -84,22 +81,18 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               <Button variant="outline">Share Event</Button>
             </div>
 
-            {/* Event Description */}
             <EventDescription />
 
-            {/* Event Details */}
             <Card className="gap-2">
               <CardHeader>
                 <CardTitle>Event Details</CardTitle>
               </CardHeader>
               <CardContent className="px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Date & Time */}
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Calendar className="h-5 w-5 text-primary" />
                   <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale} variant="full" />
                 </div>
 
-                {/* Event Type */}
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Ticket className="h-5 w-5 text-primary" />
                   <div>
@@ -110,7 +103,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   </div>
                 </div>
 
-                {/* Capacity */}
                 {event.visitsLimit && (
                   <div className="flex items-center gap-3 p-2 border rounded-md">
                     <Users className="h-5 w-5 text-primary" />
@@ -121,7 +113,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   </div>
                 )}
 
-                {/* Minors Policy */}
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Shield className="h-5 w-5 text-primary" />
                   <div>
@@ -134,13 +125,10 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               </CardContent>
             </Card>
 
-            {/* Location */}
             <EventLocation />
 
-            {/* Map */}
             <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
-            {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-3">
               <Button>Reserve</Button>
               <Button variant="outline">Share Event</Button>

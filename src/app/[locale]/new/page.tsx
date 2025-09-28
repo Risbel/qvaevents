@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import CreateOrganizerProfileForm from "./components/CreateOrganizerProfileForm";
 import { getActivePlans, Plan } from "@/queries/server/getPlans";
-import GoBackButton from "../components/GoBackButton";
+import GoBackButton from "../../components/GoBackButton";
 import { getTranslations } from "next-intl/server";
 
 export default async function NewOrganizerProfilePage({ params }: { params: Promise<{ locale: string }> }) {

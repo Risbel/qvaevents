@@ -1,6 +1,6 @@
 import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
-import UserDropdown from "@/app/components/UserDropdown";
+import UserDropdown from "@/app/components/OrganizerUserDropdown";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";

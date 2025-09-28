@@ -1,6 +1,6 @@
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import ModeToggle from "@/app/components/ModeToggle";
-import UserDropdown from "@/app/components/UserDropdown";
+import UserDropdown from "@/app/components/OrganizerUserDropdown";
 import { Button } from "@/components/ui/button";
 
 import { Home } from "lucide-react";

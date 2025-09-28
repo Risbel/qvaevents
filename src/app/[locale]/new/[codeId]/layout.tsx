@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import GoBackButton from "../../components/GoBackButton";
+import GoBackButton from "../../../components/GoBackButton";
 import { getTranslations } from "next-intl/server";
 
 const NewOrganizerProfileLayout = async ({

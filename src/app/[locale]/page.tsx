@@ -1,4 +1,4 @@
-import LandingNavbar from "./components/LandingNavbar";
+import OrganizersNavbar from "@/app/components/OrganizersNavbar";
 import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
@@ -6,7 +6,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen">
-      <LandingNavbar />
+      <OrganizersNavbar />
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center bg-gradient-to-b from-background to-background/50">
         <div className="absolute inset-0 grid grid-cols-2 -z-10 opacity-10">

@@ -92,7 +92,6 @@ export default function LeafletMapPreviewForm({
   };
 
   const handleViewInGoogleMaps = () => {
-    // Open Google Maps to show the place with a marker
     const googleMapsUrl = `https://www.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}`;
     window.open(googleMapsUrl, "_blank", "noopener,noreferrer");
   };
@@ -127,26 +126,23 @@ export default function LeafletMapPreviewForm({
           doubleClickZoom={true}
           dragging={true}
           touchZoom={true}
+          className="z-30"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {/* Default marker for the original location */}
           <Marker position={[mapCenter.lat, mapCenter.lng]} icon={defaultIcon} />
 
-          {/* Interactive marker for clicked location */}
           {isInteractive && selectedPosition && (
             <Marker position={[selectedPosition.lat, selectedPosition.lng]} icon={selectedIcon} />
           )}
 
-          {/* Map click handler */}
           <MapClickHandler onLocationSelect={handleLocationSelect} isInteractive={isInteractive} />
         </MapContainer>
       </div>
 
-      {/* Interactive controls */}
       {isInteractive && selectedPosition && (
         <div className="flex gap-4 flex-col md:flex-row justify-between items-center p-3 bg-muted rounded-lg">
           <div className="text-sm">

@@ -12,13 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, LogOut, Loader2, Building } from "lucide-react";
+import { User, LogOut, Loader2 } from "lucide-react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { signOut } from "@/actions/auth/signOut";
 import Link from "next/link";
-import { startTransition, useTransition } from "react";
+import { useTransition } from "react";
 
-export default function UserDropdown({ user }: { user: SupabaseUser }) {
+export default function OrganizerUserDropdown({ user }: { user: SupabaseUser }) {
   const t = useTranslations("Auth");
   const tProfile = useTranslations("Profile");
   const params = useParams();
