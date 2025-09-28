@@ -18,6 +18,8 @@ const createEventBasicInfoSchema = z
     keywords: z.array(z.string()).optional(),
     startDate: z.string().min(1, "Start date is required"),
     endDate: z.string().min(1, "End date is required"),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
     eventTexts: z.array(
       z.object({
         title: z.string().min(1, "Title is required"),
@@ -74,6 +76,8 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       startDate: formData.get("startDate") as string,
       endDate: formData.get("endDate") as string,
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
+      lat: formData.get("lat") as unknown as number,
+      lng: formData.get("lng") as unknown as number,
     };
 
     const validatedData = createEventBasicInfoSchema.parse(rawData);
@@ -97,6 +101,8 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         endDate: validatedData.endDate,
         isActive: true,
         isDeleted: false,
+        lat: validatedData.lat,
+        lng: validatedData.lng,
       })
       .select("id, slug")
       .single();

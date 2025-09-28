@@ -33,22 +33,3 @@ export const getEventLocation = (event: EventWithTexts, locale: string): string 
   const defaultText = event.EventText.find((text) => text.Language.code === locale);
   return defaultText?.locationText || event.EventText[0]?.locationText || undefined;
 };
-
-/**
- * Gets all available language codes for an event
- * @param event - The event object with texts
- * @returns Array of language codes
- */
-export const getEventAvailableLanguages = (event: EventWithTexts): string[] => {
-  return event.EventText.map((text) => text.Language.code);
-};
-
-/**
- * Checks if an event has text in a specific language
- * @param event - The event object with texts
- * @param locale - The target locale code
- * @returns True if the event has text in the specified language
- */
-export const hasEventTextInLanguage = (event: EventWithTexts, locale: string): boolean => {
-  return event.EventText.some((text) => text.Language.code === locale);
-};

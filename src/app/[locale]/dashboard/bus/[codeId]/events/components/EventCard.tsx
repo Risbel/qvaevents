@@ -3,21 +3,9 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Calendar,
-  Users,
-  Pencil,
-  BarChart,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  CheckCircleIcon,
-  EyeOffIcon,
-} from "lucide-react";
-
+import { Users, Pencil, BarChart, ExternalLink, CheckCircleIcon, EyeOffIcon } from "lucide-react";
 import { toNormalCase } from "@/utils/textFormating";
-import { getEventTitle, getEventDescription } from "@/utils/eventTextExtraction";
+import { getEventTitle, getEventDescription } from "./eventTextExtraction";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

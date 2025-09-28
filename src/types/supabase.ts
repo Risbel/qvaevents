@@ -140,9 +140,11 @@ export type Database = {
           isActive: boolean | null;
           isDeleted: boolean;
           isForMinors: boolean | null;
-          isPublished: boolean | null;
           isPublic: boolean | null;
+          isPublished: boolean | null;
           keywords: string[] | null;
+          lat: number | null;
+          lng: number | null;
           slug: string;
           spaceType: string | null;
           startDate: string;
@@ -161,9 +163,11 @@ export type Database = {
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
-          isPublished?: boolean | null;
           isPublic?: boolean | null;
+          isPublished?: boolean | null;
           keywords?: string[] | null;
+          lat?: number | null;
+          lng?: number | null;
           slug?: string;
           spaceType?: string | null;
           startDate: string;
@@ -182,9 +186,11 @@ export type Database = {
           isActive?: boolean | null;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
-          isPublished?: boolean | null;
           isPublic?: boolean | null;
+          isPublished?: boolean | null;
           keywords?: string[] | null;
+          lat?: number | null;
+          lng?: number | null;
           slug?: string;
           spaceType?: string | null;
           startDate?: string;
@@ -246,7 +252,6 @@ export type Database = {
           id: number;
           languageId: number;
           locationText: string | null;
-          tiptapText: Json | null;
           title: string;
         };
         Insert: {
@@ -256,7 +261,6 @@ export type Database = {
           id?: number;
           languageId: number;
           locationText?: string | null;
-          tiptapText?: Json | null;
           title: string;
         };
         Update: {
@@ -266,7 +270,6 @@ export type Database = {
           id?: number;
           languageId?: number;
           locationText?: string | null;
-          tiptapText?: Json | null;
           title?: string;
         };
         Relationships: [
@@ -356,7 +359,6 @@ export type Database = {
         Row: {
           billingCycle: number | null;
           createdAt: string;
-          eventLimit: number | null;
           id: number;
           isActive: boolean;
           name: string;
@@ -367,7 +369,6 @@ export type Database = {
         Insert: {
           billingCycle?: number | null;
           createdAt?: string;
-          eventLimit?: number | null;
           id?: number;
           isActive?: boolean;
           name: string;
@@ -378,7 +379,6 @@ export type Database = {
         Update: {
           billingCycle?: number | null;
           createdAt?: string;
-          eventLimit?: number | null;
           id?: number;
           isActive?: boolean;
           name?: string;

@@ -459,7 +459,7 @@
       "titlePlaceholder": "Ingresa el título del evento",
       "eventDescription": "Descripción",
       "descriptionPlaceholder": "Ingresa la descripción del evento",
-      "locationText": "Texto de Ubicación",
+      "locationText": "Texto de Ubicación Custom",
       "locationTextPlaceholder": "Ingresa información de ubicación",
       "keywords": "Palabras Clave (opcional)",
       "keywordsDescription": "Agrega palabras clave para ayudar a las personas a encontrar tu evento",
@@ -526,5 +526,17 @@
     "publishedDescription": "Tu evento ha sido publicado exitosamente y ahora es visible al público.",
     "viewEvent": "Ver Evento",
     "details": "Detalles"
+  },
+  "maps": {
+    "previewForm": {
+      "clickToSelect": "Haz clic en el mapa para seleccionar una ubicación",
+      "selectedLocation": "Ubicación Seleccionada",
+      "useThisLocation": "Usar Esta Ubicación",
+      "cancel": "Cancelar",
+      "seeInGoogleMaps": "Ver en Google Maps"
+    },
+    "previewForEvents": {
+      "howToGetThere": "Cómo llegar"
+    }
   }
 }

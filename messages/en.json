@@ -459,7 +459,7 @@
       "titlePlaceholder": "Enter event title",
       "eventDescription": "Description",
       "descriptionPlaceholder": "Enter event description",
-      "locationText": "Location Text",
+      "locationText": "Custom Location Text",
       "locationTextPlaceholder": "Enter location information",
       "keywords": "Keywords (optional)",
       "keywordsDescription": "Add keywords to help people find your event",
@@ -526,5 +526,17 @@
     "publishedDescription": "Your event has been successfully published and is now visible to the public.",
     "viewEvent": "View Event",
     "details": "Details"
+  },
+  "maps": {
+    "previewForm": {
+      "clickToSelect": "Click on the map to select a location",
+      "selectedLocation": "Selected Location",
+      "useThisLocation": "Use This Location",
+      "cancel": "Cancel",
+      "seeInGoogleMaps": "See in Google Maps"
+    },
+    "previewForEvents": {
+      "howToGetThere": "How to get there"
+    }
   }
 }

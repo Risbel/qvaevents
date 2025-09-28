@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { EventWithTextsAndImages } from "@/queries/client/events/getEventBySlug";
 import { EventDateTime } from "@/app/components/EventDateTime";
+import LeafletMapPreviewForm from "@/app/components/LeafletMapPreviewForm";
 
 interface EditBasicInfoProps {
   languages: Language[];
@@ -88,6 +89,12 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
   const [endDateState, setEndDateState] = useState<Date | undefined>(endDateOnly);
   const [endTime, setEndTime] = useState<string>(endTimeOnly);
 
+  // Coordinates state - initialize with existing event coordinates or default
+  const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
+    lat: (event as any).lat || 22.144932, // Default Cuba coordinates if not set
+    lng: (event as any).lng || -80.448374,
+  });
+
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(updateEventBasicInfo, initialState);
   const queryClient = useQueryClient();
@@ -124,7 +131,12 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
 
   const handleGenerateWithAI = () => {
     // TODO: Implement AI generation logic
-    console.log("Generate with AI for languages:", existingLanguageIds);
+    alert("Generate with AI for languages is not implemented yet, we will implement it soon :)");
+  };
+
+  const handleMapLocationSelect = (lat: number, lng: number) => {
+    // Update coordinates from map click
+    setCoordinates({ lat, lng });
   };
 
   // Check if at least one form is complete
@@ -183,6 +195,10 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
       <input type="hidden" name="businessId" value={businessId.toString()} />
       <input type="hidden" name="defaultLocale" value={defaultLocale || ""} />
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
+
+      {/* Hidden inputs for coordinates */}
+      <input type="hidden" name="lat" value={coordinates.lat || ""} />
+      <input type="hidden" name="lng" value={coordinates.lng || ""} />
 
       {/* Hidden inputs for keywords */}
       {keywords.map((keyword, index) => (
@@ -356,6 +372,17 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
                     value={eventTexts[currentLanguageId]?.locationText || ""}
                     onChange={(e) => handleEventTextChange("locationText", e.target.value)}
                     placeholder={t("basicInfo.locationTextPlaceholder")}
+                  />
+                </div>
+
+                {/* Interactive Map */}
+                <div className="mt-4">
+                  <LeafletMapPreviewForm
+                    lat={coordinates.lat || 22.144932}
+                    lng={coordinates.lng || -80.448374}
+                    zoom={coordinates.lat && coordinates.lng ? 15 : 14}
+                    isInteractive={true}
+                    onLocationSelect={handleMapLocationSelect}
                   />
                 </div>
               </div>

@@ -120,7 +120,6 @@ export default function CreateOrganizerProfileForm({ plans }: { plans: Plan[] })
                   <SelectItem key={plan.id} value={plan.id.toString()}>
                     {plan.name} - ${plan.price}/
                     {billingCycle === "0" ? t("month") : billingCycle === "3" ? t("quarter") : t("year")} -{" "}
-                    {plan.eventLimit} {t("events")}
                   </SelectItem>
                 ))}
               </SelectContent>

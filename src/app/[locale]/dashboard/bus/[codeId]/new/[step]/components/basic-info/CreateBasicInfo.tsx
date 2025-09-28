@@ -17,6 +17,8 @@ import { LanguageSelector } from "./LanguageSelector";
 import useGetLanguages from "@/hooks/languages/useGetLanguages";
 import { CreateBasicInfoSkeleton } from "../Skeletons";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import LeafletMapPreviewForm from "@/app/components/LeafletMapPreviewForm";
+import LeafletMapPreviewForEvents from "@/app/components/LeafletMapPreviewForEvents";
 
 interface EventText {
   title: string;
@@ -55,6 +57,11 @@ export const CreateBasicInfo = () => {
   const [endTime, setEndTime] = useState<string>("");
   // Event texts for each language - only for the languages in the URL
   const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
+  // Coordinates state - separate from eventTexts
+  const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
+    lat: null,
+    lng: null,
+  });
   const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
   const { data: businessResult, isError, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
 
@@ -180,9 +187,14 @@ export const CreateBasicInfo = () => {
     }));
   };
 
+  const handleMapLocationSelect = (lat: number, lng: number) => {
+    // Update coordinates from map click
+    setCoordinates({ lat, lng });
+  };
+
   const handleGenerateWithAI = () => {
     // TODO: Implement AI generation logic
-    console.log("Generate with AI for languages:", initialLanguageIds);
+    alert("Generate with AI for languages is not implemented yet, we will implement it soon :)");
   };
 
   const isAnyFormComplete = () => {
@@ -236,6 +248,10 @@ export const CreateBasicInfo = () => {
       <input type="hidden" name="businessId" value={businessResult.id.toString()} />
       <input type="hidden" name="defaultLocale" value={defaultLocale} />
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
+
+      {/* Hidden inputs for coordinates */}
+      <input type="hidden" name="lat" value={coordinates.lat || ""} />
+      <input type="hidden" name="lng" value={coordinates.lng || ""} />
 
       {/* Hidden inputs for keywords */}
       {keywords.map((keyword, index) => (
@@ -391,11 +407,23 @@ export const CreateBasicInfo = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="locationText">{t("basicInfo.locationText")}</Label>
-                  <Input
+                  <Textarea
                     id="locationText"
                     value={eventTexts[currentLanguageId]?.locationText || ""}
                     onChange={(e) => handleEventTextChange("locationText", e.target.value)}
                     placeholder={t("basicInfo.locationTextPlaceholder")}
+                    rows={3}
+                  />
+                </div>
+
+                {/* Interactive Map */}
+                <div className="mt-4">
+                  <LeafletMapPreviewForm
+                    lat={coordinates.lat || 22.144932}
+                    lng={coordinates.lng || -80.448374}
+                    zoom={coordinates.lat && coordinates.lng ? 15 : 14}
+                    isInteractive={true}
+                    onLocationSelect={handleMapLocationSelect}
                   />
                 </div>
               </div>

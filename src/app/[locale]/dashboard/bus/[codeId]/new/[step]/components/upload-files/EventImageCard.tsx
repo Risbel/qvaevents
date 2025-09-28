@@ -57,10 +57,11 @@ export function EventImageCard({ image, onDelete }: EventImageCardProps) {
         alt={`Event image ${image.id}`}
         width={200}
         height={200}
+        priority={true}
         className={`w-full h-32 object-cover rounded-lg border transition-opacity duration-300 ${
           isLoading || isError ? "opacity-0" : "opacity-100"
         }`}
-        onLoadingComplete={() => setIsLoading(false)}
+        onLoad={() => setIsLoading(false)}
         onError={() => {
           setIsError(true);
           setIsLoading(false);

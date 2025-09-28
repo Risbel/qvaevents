@@ -19,6 +19,8 @@ const updateEventBasicInfoSchema = z
     keywords: z.array(z.string()).optional(),
     startDate: z.string().min(1, "Start date is required"),
     endDate: z.string().min(1, "End date is required"),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
     eventTexts: z.array(
       z.object({
         id: z.number().min(1, "Text ID is required"),
@@ -64,6 +66,8 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         .filter((keyword) => keyword.trim() !== ""),
       startDate: formData.get("startDate") as string,
       endDate: formData.get("endDate") as string,
+      lat: formData.get("lat") ? Number(formData.get("lat")) : null,
+      lng: formData.get("lng") ? Number(formData.get("lng")) : null,
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
     };
 
@@ -85,6 +89,8 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         keywords: validatedData.keywords || [],
         startDate: validatedData.startDate,
         endDate: validatedData.endDate,
+        lat: validatedData.lat,
+        lng: validatedData.lng,
       })
       .eq("id", validatedData.eventId)
       .select("id, slug")
