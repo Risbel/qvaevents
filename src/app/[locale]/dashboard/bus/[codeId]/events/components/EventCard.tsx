@@ -67,7 +67,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             locale={locale as string}
             timeZoneId={event.timeZoneId}
             timeZoneName={event.timeZoneName}
-            variant="full"
+            showTimeZone={false}
           />
 
           {event.visitsLimit && (

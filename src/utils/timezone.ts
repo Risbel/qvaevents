@@ -91,7 +91,9 @@ export async function processEventDates(
  */
 export function getDateInTimezone(utcDateString: string, timeZoneId: string): Date {
   console.log("utcDateString: ", utcDateString);
-  const dateString = new Intl.DateTimeFormat("es-ES", {
+
+  // Use en-US locale to ensure consistent MM/DD/YYYY format
+  const dateString = new Intl.DateTimeFormat("en-US", {
     timeZone: timeZoneId,
     year: "numeric",
     month: "2-digit",

@@ -27,7 +27,7 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
       } satisfies State;
     }
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email: validation.data.email,
       password: validation.data.password,
     });
@@ -39,6 +39,26 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
           auth: [authError.message],
         },
       } satisfies State;
+    }
+
+    // Check if user has a ClientProfile, create one if it doesn't exist
+    if (authData.user) {
+      const { data: existingProfile } = await supabase
+        .from("ClientProfile")
+        .select("id")
+        .eq("user_id", authData.user.id)
+        .single();
+
+      // If no existing profile, create one
+      if (!existingProfile && authData.user.email) {
+        // Extract username from email (part before @)
+        const username = authData.user.email.split("@")[0];
+
+        const { error: profileError } = await supabase.from("ClientProfile").insert({
+          user_id: authData.user.id,
+          username: username,
+        });
+      }
     }
 
     return {

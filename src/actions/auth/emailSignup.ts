@@ -34,7 +34,7 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
       } satisfies State;
     }
 
-    const { error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: validation.data.email,
       password: validation.data.password,
     });
@@ -46,6 +46,15 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
           auth: [authError.message],
         },
       } satisfies State;
+    }
+
+    if (authData.user) {
+      const username = validation.data.email.split("@")[0];
+
+      const { error: profileError } = await supabase.from("ClientProfile").insert({
+        user_id: authData.user.id,
+        username: username,
+      });
     }
 
     return {

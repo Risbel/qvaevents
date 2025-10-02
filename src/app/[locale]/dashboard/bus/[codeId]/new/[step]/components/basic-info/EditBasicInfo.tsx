@@ -226,7 +226,6 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
               locale={locale as string}
               timeZoneId={event.timeZoneId}
               timeZoneName={event.timeZoneName}
-              variant="full"
               twoRows={true}
             />
           </CardDescription>

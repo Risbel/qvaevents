@@ -68,8 +68,8 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   locale={locale}
                   timeZoneId={event.timeZoneId}
                   timeZoneName={event.timeZoneName}
-                  variant="compact"
                   showTimeZone={false}
+                  size="text-md"
                 />
               </div>
             </div>
@@ -104,7 +104,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                     locale={locale}
                     timeZoneId={event.timeZoneId}
                     timeZoneName={event.timeZoneName}
-                    variant="compact"
                     showTimeZone={true}
                     twoRows={true}
                   />

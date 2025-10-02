@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow, isSameDay, isToday, isTomorrow, isYesterday } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 
@@ -9,9 +10,9 @@ interface EventDateTimeProps {
   locale: string;
   timeZoneId?: string | null; // Timezone ID from event (e.g., "America/Havana")
   timeZoneName?: string | null; // Timezone name from event (e.g., "Cuba Standard Time")
-  variant?: "full" | "compact" | "relative" | "time-only" | "date-only";
   twoRows?: boolean; // Show time on a separate line below the date
   showTimeZone?: boolean; // Show time zone
+  size?: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl";
 }
 
 const getDateFnsLocale = (locale: string) => {
@@ -83,177 +84,31 @@ export const EventDateTime = ({
   locale,
   timeZoneId,
   timeZoneName,
-  variant = "full",
   twoRows = false,
   showTimeZone = true,
+  size = "text-xs",
 }: EventDateTimeProps) => {
   // Convert UTC dates to local time for display
   const startDateLocal = new Date(startDate);
   const endDateLocal = new Date(endDate);
   const dateFnsLocale = getDateFnsLocale(locale);
 
-  // Check if it's the same day
+  // Check if it's the same day (using UTC dates for accurate comparison)
   const isSameDayEvent = isSameDay(startDateLocal, endDateLocal);
 
   // Check if event duration is more than 12 hours
-  const durationInHours = (endDateLocal.getTime() - startDateLocal.getTime()) / (1000 * 60 * 60);
+  // Calculate duration using the actual time difference, not timezone conversion
+  const startTime = new Date(startDate).getTime();
+  const endTime = new Date(endDate).getTime();
+  const durationInHours = (endTime - startTime) / (1000 * 60 * 60);
   const isLongEvent = durationInHours > 12;
 
-  if (variant === "time-only") {
-    const startTime = formatTimeOnly(startDate, timeZoneId, locale);
-    const endTime = formatTimeOnly(endDate, timeZoneId, locale);
-    const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
-
-    return (
-      <div className="flex items-center gap-2 text-xs">
-        <span className="font-medium">{startTime}</span>
-        <span>-</span>
-        <span className="font-medium">{endTime}</span>
-        {timezoneDisplay && showTimeZone && (
-          <>
-            <span className="text-muted-foreground">•</span>
-            <span className="text-muted-foreground">{timezoneDisplay}</span>
-          </>
-        )}
-      </div>
-    );
-  }
-
-  if (variant === "date-only") {
-    const startDateFormatted = formatDateToLocal(startDate, timeZoneId, locale, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const endDateFormatted = formatDateToLocal(endDate, timeZoneId, locale, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
-
-    return (
-      <div className="text-xs">
-        <p className="font-medium">
-          {startDateFormatted}
-          {timezoneDisplay && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
-        </p>
-        {!isSameDayEvent && showTimeZone && (
-          <p className="text-muted-foreground">
-            to {endDateFormatted}
-            {timezoneDisplay && <span> • {timezoneDisplay}</span>}
-          </p>
-        )}
-      </div>
-    );
-  }
-
-  if (variant === "relative") {
-    const now = new Date();
-    const isEventToday = isToday(startDateLocal);
-    const isEventTomorrow = isTomorrow(startDateLocal);
-    const isEventYesterday = isYesterday(startDateLocal);
-
-    let relativeText = "";
-    if (isEventToday) {
-      relativeText = "Today";
-    } else if (isEventTomorrow) {
-      relativeText = "Tomorrow";
-    } else if (isEventYesterday) {
-      relativeText = "Yesterday";
-    } else {
-      relativeText = formatDistanceToNow(startDateLocal, { addSuffix: true, locale: dateFnsLocale });
-    }
-
-    const startTime = formatTimeOnly(startDate, timeZoneId, locale);
-    const endTime = formatTimeOnly(endDate, timeZoneId, locale);
-    const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
-
-    return (
-      <div className="text-xs">
-        <p className="font-medium">{relativeText}</p>
-        <p className="text-muted-foreground">
-          {startTime} - {endTime}
-          {timezoneDisplay && showTimeZone && <span> • {timezoneDisplay}</span>}
-        </p>
-      </div>
-    );
-  }
-
-  if (variant === "compact") {
-    if (isSameDayEvent || !isLongEvent) {
-      // Same day event or short duration
-      const dateFormatted = formatDateToLocal(startDate, timeZoneId, locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      const startTime = formatTimeOnly(startDate, timeZoneId, locale);
-      const endTime = formatTimeOnly(endDate, timeZoneId, locale);
-      const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
-
-      if (twoRows) {
-        return (
-          <div className="text-xs">
-            <div className="font-medium">
-              {dateFormatted} • {startTime} - {endTime}
-            </div>
-            {timezoneDisplay && showTimeZone && <div className="text-muted-foreground">({timezoneDisplay})</div>}
-          </div>
-        );
-      }
-
-      return (
-        <div className="text-xs">
-          <p className="font-medium">
-            {dateFormatted} • {startTime} - {endTime}
-            {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
-          </p>
-        </div>
-      );
-    } else {
-      // Multi-day event or long duration - no time shown
-      const startDateFormatted = formatDateToLocal(startDate, timeZoneId, locale, {
-        month: "short",
-        day: "numeric",
-      });
-      const endDateFormatted = formatDateToLocal(endDate, timeZoneId, locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
-
-      if (twoRows) {
-        return (
-          <div className="text-xs">
-            <div className="font-medium">
-              {startDateFormatted} - {endDateFormatted}
-            </div>
-            {timezoneDisplay && showTimeZone && <div className="text-muted-foreground">({timezoneDisplay})</div>}
-          </div>
-        );
-      }
-
-      return (
-        <div className="text-xs">
-          <p className="font-medium">
-            {startDateFormatted} - {endDateFormatted}
-            {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
-          </p>
-        </div>
-      );
-    }
-  }
-
-  // Full variant (default)
+  // Use compact variant logic for all cases
   if (isSameDayEvent || !isLongEvent) {
+    // Same day event OR multi-day event with duration < 12 hours
     const dateFormatted = formatDateToLocal(startDate, timeZoneId, locale, {
-      weekday: "long",
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
     const startTime = formatTimeOnly(startDate, timeZoneId, locale);
@@ -262,47 +117,43 @@ export const EventDateTime = ({
 
     if (twoRows) {
       return (
-        <div className="text-xs">
-          <div className="font-medium">{dateFormatted}</div>
-          <div className="text-muted-foreground">
-            {startTime} - {endTime}
-            {timezoneDisplay && showTimeZone && <span> • ({timezoneDisplay})</span>}
-          </div>
+        <div className={cn("flex flex-wrap", size)}>
+          <p>
+            {dateFormatted} • {startTime} - {endTime}
+          </p>
+          {timezoneDisplay && showTimeZone && <p className="text-muted-foreground">({timezoneDisplay})</p>}
         </div>
       );
     }
 
     return (
-      <div className="text-xs">
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="font-medium">{dateFormatted}</span>
-          <span>•</span>
-          <span className="text-muted-foreground">
-            {startTime} - {endTime}
-            {timezoneDisplay && showTimeZone && <span> • {timezoneDisplay}</span>}
-          </span>
-        </div>
+      <div className={cn("flex items-center gap-2", size)}>
+        <p>
+          {dateFormatted} • {startTime} - {endTime}
+          {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
+        </p>
       </div>
     );
   } else {
+    // Multi-day event with duration >= 12 hours - show date range with time interval
     const startDateFormatted = formatDateToLocal(startDate, timeZoneId, locale, {
-      weekday: "long",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
     const endDateFormatted = formatDateToLocal(endDate, timeZoneId, locale, {
-      weekday: "long",
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
+    const startTime = formatTimeOnly(startDate, timeZoneId, locale);
+    const endTime = formatTimeOnly(endDate, timeZoneId, locale);
     const timezoneDisplay = getTimezoneDisplay(timeZoneId, timeZoneName);
 
     if (twoRows) {
       return (
-        <div className="text-xs">
+        <div className={cn("flex items-center gap-2", size)}>
           <div className="font-medium">
-            {startDateFormatted} - {endDateFormatted}
+            {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
           </div>
           {timezoneDisplay && showTimeZone && <div className="text-muted-foreground">({timezoneDisplay})</div>}
         </div>
@@ -310,13 +161,11 @@ export const EventDateTime = ({
     }
 
     return (
-      <div className="text-xs">
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="font-medium">
-            {startDateFormatted} - {endDateFormatted}
-            {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
-          </span>
-        </div>
+      <div className={cn("flex items-center gap-2", size)}>
+        <p className="font-medium">
+          {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
+          {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
+        </p>
       </div>
     );
   }
