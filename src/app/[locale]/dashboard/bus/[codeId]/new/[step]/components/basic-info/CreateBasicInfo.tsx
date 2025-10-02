@@ -18,6 +18,7 @@ import useGetLanguages from "@/hooks/languages/useGetLanguages";
 import { CreateBasicInfoSkeleton } from "../Skeletons";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
 import InteractiveMap from "./InteractiveMap";
+import { joinDateAndTime } from "./utils/formatersDatePicker";
 
 interface EventText {
   title: string;
@@ -211,8 +212,8 @@ export const CreateBasicInfo = () => {
   const isDateTimeValid = () => {
     if (!startDate || !startTime || !endDate || !endTime) return false;
 
-    const startDateTime = new Date(`${startDate.toISOString().split("T")[0]}T${startTime}`);
-    const endDateTime = new Date(`${endDate.toISOString().split("T")[0]}T${endTime}`);
+    const startDateTime = new Date(joinDateAndTime(startDate, startTime));
+    const endDateTime = new Date(joinDateAndTime(endDate, endTime));
 
     return startDateTime < endDateTime;
   };
@@ -257,19 +258,13 @@ export const CreateBasicInfo = () => {
         <input key={index} type="hidden" name="keywords" value={keyword} />
       ))}
 
-      {/* Hidden inputs for date/time - send updated UTC dates */}
+      {/* Hidden inputs for date/time - send local naive datetimes; server will convert using Google TZ API */}
       <input
         type="hidden"
-        name="startDate"
-        value={
-          startDate && startTime ? new Date(`${startDate.toISOString().split("T")[0]}T${startTime}`).toISOString() : ""
-        }
+        name="startDateTime"
+        value={startDate && startTime ? joinDateAndTime(startDate, startTime) : ""}
       />
-      <input
-        type="hidden"
-        name="endDate"
-        value={endDate && endTime ? new Date(`${endDate.toISOString().split("T")[0]}T${endTime}`).toISOString() : ""}
-      />
+      <input type="hidden" name="endDateTime" value={endDate && endTime ? joinDateAndTime(endDate, endTime) : ""} />
 
       {/* Event Date and Time */}
       <Card>

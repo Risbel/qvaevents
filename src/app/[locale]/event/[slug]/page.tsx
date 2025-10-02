@@ -62,7 +62,15 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               <EventTitle />
 
               <div className="flex items-center gap-2 flex-wrap justify-center">
-                <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale} variant="full" />
+                <EventDateTime
+                  startDate={event.startDate}
+                  endDate={event.endDate}
+                  locale={locale}
+                  timeZoneId={event.timeZoneId}
+                  timeZoneName={event.timeZoneName}
+                  variant="compact"
+                  showTimeZone={false}
+                />
               </div>
             </div>
 
@@ -90,7 +98,16 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               <CardContent className="px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Calendar className="h-5 w-5 text-primary" />
-                  <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale} variant="full" />
+                  <EventDateTime
+                    startDate={event.startDate}
+                    endDate={event.endDate}
+                    locale={locale}
+                    timeZoneId={event.timeZoneId}
+                    timeZoneName={event.timeZoneName}
+                    variant="compact"
+                    showTimeZone={true}
+                    twoRows={true}
+                  />
                 </div>
 
                 <div className="flex items-center gap-3 p-2 border rounded-md">

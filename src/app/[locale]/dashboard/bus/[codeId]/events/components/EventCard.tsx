@@ -61,7 +61,14 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       </CardHeader>
       <CardContent className="relative">
         <div className="space-y-2 text-xs">
-          <EventDateTime startDate={event.startDate} endDate={event.endDate} locale={locale as string} variant="full" />
+          <EventDateTime
+            startDate={event.startDate}
+            endDate={event.endDate}
+            locale={locale as string}
+            timeZoneId={event.timeZoneId}
+            timeZoneName={event.timeZoneName}
+            variant="full"
+          />
 
           {event.visitsLimit && (
             <div className="flex items-center gap-2">

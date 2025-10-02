@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Mail, Shield, User, Clock, CheckCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import GoBackButton from "@/app/components/GoBackButton";
 
 export default async function MePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -20,6 +21,7 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
   }
 
   const t = await getTranslations("Profile");
+  const tnav = await getTranslations("navigation");
 
   const getUserName = () => {
     return user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
@@ -53,8 +55,8 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-muted/20">
+    <div className="space-y-4">
+      <Card className="border-0 shadow-lg shadow-primary/50 bg-gradient-to-br from-background to-muted/20">
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-4">
             <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
@@ -75,7 +77,7 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="default" className="text-xs hidden md:block">
                 {user.email_confirmed_at ? "Verified" : "Unverified"}
               </Badge>
             </div>

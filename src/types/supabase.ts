@@ -79,6 +79,78 @@ export type Database = {
           }
         ];
       };
+      ClientProfile: {
+        Row: {
+          avatar: string | null;
+          birthday: string | null;
+          createdAt: string;
+          id: number;
+          info: string | null;
+          sex: string | null;
+          updatedAt: string;
+          user_id: string;
+          username: string;
+        };
+        Insert: {
+          avatar?: string | null;
+          birthday?: string | null;
+          createdAt?: string;
+          id?: number;
+          info?: string | null;
+          sex?: string | null;
+          updatedAt?: string;
+          user_id: string;
+          username: string;
+        };
+        Update: {
+          avatar?: string | null;
+          birthday?: string | null;
+          createdAt?: string;
+          id?: number;
+          info?: string | null;
+          sex?: string | null;
+          updatedAt?: string;
+          user_id?: string;
+          username?: string;
+        };
+        Relationships: [];
+      };
+      clientVisitAffiliated: {
+        Row: {
+          clientId: number;
+          createdAt: string;
+          id: number;
+          visitId: number;
+        };
+        Insert: {
+          clientId: number;
+          createdAt?: string;
+          id?: number;
+          visitId: number;
+        };
+        Update: {
+          clientId?: number;
+          createdAt?: string;
+          id?: number;
+          visitId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "clientVisitAffiliated_clientId_fkey";
+            columns: ["clientId"];
+            isOneToOne: false;
+            referencedRelation: "ClientProfile";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "clientVisitAffiliated_visitId_fkey";
+            columns: ["visitId"];
+            isOneToOne: false;
+            referencedRelation: "Visit";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       CustomEventConfig: {
         Row: {
           accessType: Database["public"]["Enums"]["custom_event_access_type"];
@@ -150,6 +222,8 @@ export type Database = {
           startDate: string;
           step: number;
           subType: string;
+          timeZoneId: string | null;
+          timeZoneName: string | null;
           type: string;
           visitsLimit: number | null;
         };
@@ -173,6 +247,8 @@ export type Database = {
           startDate: string;
           step?: number;
           subType: string;
+          timeZoneId?: string | null;
+          timeZoneName?: string | null;
           type: string;
           visitsLimit?: number | null;
         };
@@ -196,6 +272,8 @@ export type Database = {
           startDate?: string;
           step?: number;
           subType?: string;
+          timeZoneId?: string | null;
+          timeZoneName?: string | null;
           type?: string;
           visitsLimit?: number | null;
         };
@@ -509,6 +587,54 @@ export type Database = {
           name?: string;
         };
         Relationships: [];
+      };
+      Visit: {
+        Row: {
+          canceledAt: string | null;
+          clientId: number | null;
+          createdAt: string;
+          eventId: number;
+          id: number;
+          isAttended: boolean;
+          isCanceled: boolean;
+          isConfirmed: boolean;
+        };
+        Insert: {
+          canceledAt?: string | null;
+          clientId?: number | null;
+          createdAt?: string;
+          eventId: number;
+          id?: number;
+          isAttended?: boolean;
+          isCanceled?: boolean;
+          isConfirmed?: boolean;
+        };
+        Update: {
+          canceledAt?: string | null;
+          clientId?: number | null;
+          createdAt?: string;
+          eventId?: number;
+          id?: number;
+          isAttended?: boolean;
+          isCanceled?: boolean;
+          isConfirmed?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Visit_clientId_fkey";
+            columns: ["clientId"];
+            isOneToOne: false;
+            referencedRelation: "ClientProfile";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Visit_eventId_fkey";
+            columns: ["eventId"];
+            isOneToOne: false;
+            referencedRelation: "Event";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: {

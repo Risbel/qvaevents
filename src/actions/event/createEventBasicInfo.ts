@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { State } from "@/types/state";
 import { z } from "zod";
+import { processEventDates } from "@/utils/timezone";
 
 const createEventBasicInfoSchema = z
   .object({
@@ -16,8 +17,8 @@ const createEventBasicInfoSchema = z
     businessId: z.number().min(1, "Business ID is required"),
     defaultLocale: z.string().default("es"),
     keywords: z.array(z.string()).optional(),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.string().min(1, "End date is required"),
+    startDateTime: z.string().min(1, "Start local datetime is required"),
+    endDateTime: z.string().min(1, "End local datetime is required"),
     lat: z.number().optional(),
     lng: z.number().optional(),
     eventTexts: z.array(
@@ -31,14 +32,14 @@ const createEventBasicInfoSchema = z
   })
   .refine(
     (data) => {
-      // Validate that end date is after start date
-      const startDateTime = new Date(data.startDate);
-      const endDateTime = new Date(data.endDate);
+      // Validate that end date is after start date (naive local strings)
+      const startDateTime = new Date(data.startDateTime);
+      const endDateTime = new Date(data.endDateTime);
       return startDateTime < endDateTime;
     },
     {
       message: "End date must be after start date",
-      path: ["endDate"],
+      path: ["endDateTime"],
     }
   );
 
@@ -46,7 +47,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
   const supabase = await createClient();
 
   try {
-    // Get user to ensure authentication
     const {
       data: { user },
       error: userError,
@@ -58,7 +58,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       } satisfies State;
     }
 
-    // Parse and validate form data
     const rawData = {
       visitsLimit: formData.get("visitsLimit") ? Number(formData.get("visitsLimit")) : undefined,
       type: formData.get("type") as string,
@@ -73,71 +72,90 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         .getAll("keywords")
         .map((keyword) => keyword as string)
         .filter((keyword) => keyword.trim() !== ""),
-      startDate: formData.get("startDate") as string,
-      endDate: formData.get("endDate") as string,
+      startDateTime: formData.get("startDateTime") as string,
+      endDateTime: formData.get("endDateTime") as string,
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
-      lat: formData.get("lat") as unknown as number,
-      lng: formData.get("lng") as unknown as number,
+      lat: Number(formData.get("lat")),
+      lng: Number(formData.get("lng")),
     };
 
     const validatedData = createEventBasicInfoSchema.parse(rawData);
 
-    // Start a transaction by creating the event first
-    const { data: event, error: eventError } = await supabase
-      .from("Event")
-      .insert({
-        step: 1, // Initially 1 when creating basic info
-        visitsLimit: validatedData.visitsLimit,
-        type: validatedData.type,
-        subType: validatedData.subType,
-        isPublic: validatedData.isPublic,
-        isForMinors: validatedData.isForMinors,
-        spaceType: validatedData.spaceType,
-        accessType: validatedData.accessType,
-        businessId: validatedData.businessId,
-        defaultLocale: validatedData.defaultLocale,
-        keywords: validatedData.keywords || [],
-        startDate: validatedData.startDate,
-        endDate: validatedData.endDate,
-        isActive: true,
-        isDeleted: false,
-        lat: validatedData.lat,
-        lng: validatedData.lng,
-      })
-      .select("id, slug")
-      .single();
+    try {
+      const { timezoneData, startDateUTC, endDateUTC } = await processEventDates(
+        validatedData.lat!,
+        validatedData.lng!,
+        validatedData.startDateTime,
+        validatedData.endDateTime,
+        process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+      );
 
-    if (eventError) {
+      // Start a transaction by creating the event first
+      const { data: event, error: eventError } = await supabase
+        .from("Event")
+        .insert({
+          step: 1, // Initially 1 when creating basic info
+          visitsLimit: validatedData.visitsLimit,
+          type: validatedData.type,
+          subType: validatedData.subType,
+          isPublic: validatedData.isPublic,
+          isForMinors: validatedData.isForMinors,
+          spaceType: validatedData.spaceType,
+          accessType: validatedData.accessType,
+          businessId: validatedData.businessId,
+          defaultLocale: validatedData.defaultLocale,
+          keywords: validatedData.keywords || [],
+          startDate: startDateUTC,
+          endDate: endDateUTC,
+          isActive: true,
+          isDeleted: false,
+          lat: validatedData.lat,
+          lng: validatedData.lng,
+          timeZoneId: timezoneData.timeZoneId,
+          timeZoneName: timezoneData.timeZoneName,
+        })
+        .select("id, slug")
+        .single();
+
+      if (eventError) {
+        return {
+          status: "error",
+          errors: { event: [eventError.message] },
+        } satisfies State;
+      }
+
+      const eventId = event.id;
+
+      // Insert event texts
+      const eventTextsData = validatedData.eventTexts.map((text) => ({
+        title: text.title,
+        description: text.description,
+        locationText: text.locationText || null,
+        languageId: text.languageId,
+        eventId: eventId,
+      }));
+
+      const { error: eventTextsError } = await supabase.from("EventText").insert(eventTextsData);
+
+      if (eventTextsError) {
+        return {
+          status: "error",
+          errors: { eventTexts: [eventTextsError.message] },
+        } satisfies State;
+      }
+
+      return {
+        status: "success",
+        data: { eventId: eventId, slug: event.slug },
+      } satisfies State;
+    } catch (tzError) {
       return {
         status: "error",
-        errors: { event: [eventError.message] },
+        errors: {
+          timezone: [tzError instanceof Error ? tzError.message : "Unexpected error contacting Google Timezone API"],
+        },
       } satisfies State;
     }
-
-    const eventId = event.id;
-
-    // Insert event texts
-    const eventTextsData = validatedData.eventTexts.map((text) => ({
-      title: text.title,
-      description: text.description,
-      locationText: text.locationText || null,
-      languageId: text.languageId,
-      eventId: eventId,
-    }));
-
-    const { error: eventTextsError } = await supabase.from("EventText").insert(eventTextsData);
-
-    if (eventTextsError) {
-      return {
-        status: "error",
-        errors: { eventTexts: [eventTextsError.message] },
-      } satisfies State;
-    }
-
-    return {
-      status: "success",
-      data: { eventId: eventId, slug: event.slug },
-    } satisfies State;
   } catch (error) {
     return {
       status: "error",

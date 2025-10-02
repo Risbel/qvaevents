@@ -22,6 +22,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { EventWithTextsAndImages } from "@/queries/client/events/getEventBySlug";
 import { EventDateTime } from "@/app/components/EventDateTime";
 import InteractiveMap from "./InteractiveMap";
+import { getDateInTimezone } from "@/utils/timezone";
+import { joinDateAndTime } from "./utils/formatersDatePicker";
 
 interface EditBasicInfoProps {
   languages: Language[];
@@ -37,10 +39,8 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
   const locale = params.locale;
   const codeId = params.codeId;
 
-  // Initialize form state with existing event data
   const [keywords, setKeywords] = useState<string[]>(event.keywords || []);
-
-  // Get existing event texts and organize by language
+  // 🔹 Handle existing event texts
   const existingEventTexts = event.EventText.reduce(
     (
       acc: { [languageId: number]: { id: number; title: string; description: string; locationText: string } },
@@ -57,13 +57,9 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     {} as { [languageId: number]: { id: number; title: string; description: string; locationText: string } }
   );
 
-  // Get language IDs from existing texts
   const existingLanguageIds = event.EventText.map((text: EventText) => text.languageId);
   const hasMultipleLanguages = existingLanguageIds.length > 1;
-
-  // Determine default language
   const defaultLanguageId = languages.find((lang) => lang.code === event.defaultLocale)?.id || existingLanguageIds[0];
-
   const [selectedLanguageIds, setSelectedLanguageIds] = useState<number[]>(
     hasMultipleLanguages ? [defaultLanguageId] : existingLanguageIds
   );
@@ -72,34 +68,33 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     [languageId: number]: { id: number; title: string; description: string; locationText: string };
   }>(existingEventTexts);
 
-  // date objects in local time (e.g Florida, UTC-4)
-  const startDateLocal = new Date(event.startDate);
-  const endDateLocal = new Date(event.endDate);
+  // 🔹 Handle event date and time
+  const eventStartDate = getDateInTimezone(event.startDate, event.timeZoneId || "America/New_York");
+  const eventEndDate = getDateInTimezone(event.endDate, event.timeZoneId || "America/New_York");
+  // Extract date and time components from events dates
+  const startDateOnly = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
+  const endDateOnly = new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate());
+  // Extract time components from events dates
+  const startTimeOnly = format(eventStartDate, "HH:mm");
+  const endTimeOnly = format(eventEndDate, "HH:mm");
 
-  // Extract date and time components from local time
-  const startDateOnly = new Date(startDateLocal.getFullYear(), startDateLocal.getMonth(), startDateLocal.getDate());
-  const endDateOnly = new Date(endDateLocal.getFullYear(), endDateLocal.getMonth(), endDateLocal.getDate());
-
-  // Extract time components from local time (e.g "12:00" or "00:00" or "12:00:00")
-  const startTimeOnly = format(startDateLocal, "HH:mm");
-  const endTimeOnly = format(endDateLocal, "HH:mm");
-
-  const [startDateState, setStartDateState] = useState<Date | undefined>(startDateOnly);
+  const [startDate, setStartDate] = useState<Date | undefined>(startDateOnly);
   const [startTime, setStartTime] = useState<string>(startTimeOnly);
-  const [endDateState, setEndDateState] = useState<Date | undefined>(endDateOnly);
+  const [endDate, setEndDate] = useState<Date | undefined>(endDateOnly);
   const [endTime, setEndTime] = useState<string>(endTimeOnly);
 
-  // Coordinates state - initialize with existing event coordinates or default
+  // 🔹 Handle coordinates
   const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
     lat: (event as any).lat || 22.144932, // Default Cuba coordinates if not set
     lng: (event as any).lng || -80.448374,
   });
 
+  // 🔹 Handle form state
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(updateEventBasicInfo, initialState);
   const queryClient = useQueryClient();
 
-  // Handle successful form submission
+  // 🔹 Handle successful form submission
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(t("basicInfo.updateSuccess"));
@@ -107,10 +102,12 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     }
   }, [state?.status, queryClient, event.slug]);
 
+  // 🔹 Handle language change
   const handleLanguageChange = (languageIds: number[]) => {
     setSelectedLanguageIds(languageIds);
   };
 
+  // 🔹 Handle event text change
   const handleEventTextChange = (
     field: keyof { id: number; title: string; description: string; locationText: string },
     value: string | number
@@ -129,17 +126,17 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     }));
   };
 
+  // 🔹 Handle generate with AI
   const handleGenerateWithAI = () => {
-    // TODO: Implement AI generation logic
     alert("Generate with AI for languages is not implemented yet, we will implement it soon :)");
   };
 
+  // 🔹 Handle map location select
   const handleMapLocationSelect = (lat: number, lng: number) => {
-    // Update coordinates from map click
     setCoordinates({ lat, lng });
   };
 
-  // Check if at least one form is complete
+  // 🔹 Check if at least one form is complete
   const isAnyFormComplete = () => {
     return Object.values(eventTexts).some(
       (text) =>
@@ -151,21 +148,21 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     );
   };
 
-  // Check if date/time fields are valid
+  // 🔹 Check if date/time fields are valid
   const isDateTimeValid = () => {
-    if (!startDateState || !startTime || !endDateState || !endTime) return false;
+    if (!startDate || !startTime || !endDate || !endTime) return false;
 
-    const startDateTime = new Date(`${startDateState.toISOString().split("T")[0]}T${startTime}`);
-    const endDateTime = new Date(`${endDateState.toISOString().split("T")[0]}T${endTime}`);
+    const startDateTime = joinDateAndTime(startDate, startTime);
+    const endDateTime = joinDateAndTime(endDate, endTime);
 
     return startDateTime < endDateTime;
   };
 
-  // Get the selected language code for defaultLocale
+  // 🔹 Get the selected language code for defaultLocale
   const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageIds[0]);
   const defaultLocale = selectedLanguage?.code || event.defaultLocale;
 
-  // Prepare event texts array for submission - only include texts with content
+  // 🔹 Prepare event texts array for submission - only include texts with content
   const eventTextsArray = Object.entries(eventTexts)
     .filter(
       ([_, text]) =>
@@ -195,34 +192,27 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
       <input type="hidden" name="businessId" value={businessId.toString()} />
       <input type="hidden" name="defaultLocale" value={defaultLocale || ""} />
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
-
-      {/* Hidden inputs for coordinates */}
       <input type="hidden" name="lat" value={coordinates.lat || ""} />
       <input type="hidden" name="lng" value={coordinates.lng || ""} />
-
-      {/* Hidden inputs for keywords */}
       {keywords.map((keyword, index) => (
         <input key={index} type="hidden" name="keywords" value={keyword} />
       ))}
-
-      {/* Hidden inputs for date/time - send updated UTC dates */}
+      {/* Hidden inputs for date/time - send local naive datetimes; server will convert using Google TZ API */}
       <input
         type="hidden"
-        name="startDate"
-        value={
-          startDateState && startTime
-            ? new Date(`${format(startDateState, "yyyy-MM-dd")}T${startTime}`).toISOString()
-            : event.startDate
-        }
+        name="startDateTime"
+        value={(() => {
+          if (!startDate || !startTime) return "";
+          return joinDateAndTime(startDate, startTime);
+        })()}
       />
       <input
         type="hidden"
-        name="endDate"
-        value={
-          endDateState && endTime
-            ? new Date(`${format(endDateState, "yyyy-MM-dd")}T${endTime}`).toISOString()
-            : event.endDate
-        }
+        name="endDateTime"
+        value={(() => {
+          if (!endDate || !endTime) return "";
+          return joinDateAndTime(endDate, endTime);
+        })()}
       />
 
       {/* Event Date and Time */}
@@ -234,7 +224,10 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
               startDate={event.startDate}
               endDate={event.endDate}
               locale={locale as string}
+              timeZoneId={event.timeZoneId}
+              timeZoneName={event.timeZoneName}
               variant="full"
+              twoRows={true}
             />
           </CardDescription>
         </CardHeader>
@@ -242,9 +235,9 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <DateTimePicker
               label={t("basicInfo.startDateTime")}
-              date={startDateState}
+              date={startDate}
               time={startTime}
-              onDateChange={setStartDateState}
+              onDateChange={setStartDate}
               onTimeChange={setStartTime}
               required={true}
               minDate={new Date(new Date().setHours(0, 0, 0, 0))}
@@ -252,14 +245,14 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
             <div className="space-y-2">
               <DateTimePicker
                 label={t("basicInfo.endDateTime")}
-                date={endDateState}
+                date={endDate}
                 time={endTime}
-                onDateChange={setEndDateState}
+                onDateChange={setEndDate}
                 onTimeChange={setEndTime}
                 required={true}
-                minDate={startDateState || new Date(new Date().setHours(0, 0, 0, 0))}
+                minDate={startDate || new Date(new Date().setHours(0, 0, 0, 0))}
               />
-              {startDateState && startTime && endDateState && endTime && !isDateTimeValid() && (
+              {startDate && startTime && endDate && endTime && !isDateTimeValid() && (
                 <p className="text-xs text-destructive">{t("basicInfo.endDateMustBeAfterStart")}</p>
               )}
             </div>

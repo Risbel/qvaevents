@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { State } from "@/types/state";
 import { z } from "zod";
+import { processEventDates } from "@/utils/timezone";
 
 const updateEventBasicInfoSchema = z
   .object({
@@ -17,8 +18,8 @@ const updateEventBasicInfoSchema = z
     businessId: z.number().min(1, "Business ID is required"),
     defaultLocale: z.string().default("es"),
     keywords: z.array(z.string()).optional(),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.string().min(1, "End date is required"),
+    startDateTime: z.string().min(1, "Start local datetime is required"),
+    endDateTime: z.string().min(1, "End local datetime is required"),
     lat: z.number().optional(),
     lng: z.number().optional(),
     eventTexts: z.array(
@@ -33,14 +34,13 @@ const updateEventBasicInfoSchema = z
   })
   .refine(
     (data) => {
-      // Validate that end date is after start date
-      const startDateTime = new Date(data.startDate);
-      const endDateTime = new Date(data.endDate);
+      const startDateTime = new Date(data.startDateTime);
+      const endDateTime = new Date(data.endDateTime);
       return startDateTime < endDateTime;
     },
     {
       message: "End date must be after start date",
-      path: ["endDate"],
+      path: ["endDateTime"],
     }
   );
 
@@ -48,7 +48,6 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
   const supabase = await createClient();
 
   try {
-    // Parse and validate form data
     const rawData = {
       eventId: Number(formData.get("eventId")),
       visitsLimit: formData.get("visitsLimit") ? Number(formData.get("visitsLimit")) : undefined,
@@ -64,68 +63,85 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         .getAll("keywords")
         .map((keyword) => keyword as string)
         .filter((keyword) => keyword.trim() !== ""),
-      startDate: formData.get("startDate") as string,
-      endDate: formData.get("endDate") as string,
-      lat: formData.get("lat") ? Number(formData.get("lat")) : null,
-      lng: formData.get("lng") ? Number(formData.get("lng")) : null,
+      startDateTime: formData.get("startDateTime") as string,
+      endDateTime: formData.get("endDateTime") as string,
+      lat: Number(formData.get("lat")),
+      lng: Number(formData.get("lng")),
       eventTexts: JSON.parse(formData.get("eventTexts") as string),
     };
 
     const validatedData = updateEventBasicInfoSchema.parse(rawData);
 
-    // Update the event
-    const { data: event, error: eventError } = await supabase
-      .from("Event")
-      .update({
-        visitsLimit: validatedData.visitsLimit,
-        type: validatedData.type,
-        subType: validatedData.subType,
-        isPublic: validatedData.isPublic,
-        isForMinors: validatedData.isForMinors,
-        spaceType: validatedData.spaceType,
-        accessType: validatedData.accessType,
-        businessId: validatedData.businessId,
-        defaultLocale: validatedData.defaultLocale,
-        keywords: validatedData.keywords || [],
-        startDate: validatedData.startDate,
-        endDate: validatedData.endDate,
-        lat: validatedData.lat,
-        lng: validatedData.lng,
-      })
-      .eq("id", validatedData.eventId)
-      .select("id, slug")
-      .single();
+    try {
+      const { timezoneData, startDateUTC, endDateUTC } = await processEventDates(
+        validatedData.lat!,
+        validatedData.lng!,
+        validatedData.startDateTime,
+        validatedData.endDateTime,
+        process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+      );
 
-    if (eventError) {
-      return {
-        status: "error",
-        errors: { event: [eventError.message] },
-      } satisfies State;
-    }
-
-    // Update event texts using their specific IDs
-    for (const text of validatedData.eventTexts) {
-      const { error: updateError } = await supabase
-        .from("EventText")
+      const { data: event, error: eventError } = await supabase
+        .from("Event")
         .update({
-          title: text.title,
-          description: text.description,
-          locationText: text.locationText || null,
+          visitsLimit: validatedData.visitsLimit,
+          type: validatedData.type,
+          subType: validatedData.subType,
+          isPublic: validatedData.isPublic,
+          isForMinors: validatedData.isForMinors,
+          spaceType: validatedData.spaceType,
+          accessType: validatedData.accessType,
+          businessId: validatedData.businessId,
+          defaultLocale: validatedData.defaultLocale,
+          keywords: validatedData.keywords || [],
+          startDate: startDateUTC,
+          endDate: endDateUTC,
+          lat: validatedData.lat,
+          lng: validatedData.lng,
+          timeZoneId: timezoneData.timeZoneId,
+          timeZoneName: timezoneData.timeZoneName,
         })
-        .eq("id", text.id);
+        .eq("id", validatedData.eventId)
+        .select("id, slug")
+        .single();
 
-      if (updateError) {
+      if (eventError) {
         return {
           status: "error",
-          errors: { eventTexts: [updateError.message] },
+          errors: { event: [eventError.message] },
         } satisfies State;
       }
-    }
 
-    return {
-      status: "success",
-      data: { eventId: validatedData.eventId, slug: event.slug },
-    } satisfies State;
+      for (const text of validatedData.eventTexts) {
+        const { error: updateError } = await supabase
+          .from("EventText")
+          .update({
+            title: text.title,
+            description: text.description,
+            locationText: text.locationText || null,
+          })
+          .eq("id", text.id);
+
+        if (updateError) {
+          return {
+            status: "error",
+            errors: { eventTexts: [updateError.message] },
+          } satisfies State;
+        }
+      }
+
+      return {
+        status: "success",
+        data: { eventId: validatedData.eventId, slug: event.slug },
+      } satisfies State;
+    } catch (tzError) {
+      return {
+        status: "error",
+        errors: {
+          timezone: [tzError instanceof Error ? tzError.message : "Unexpected error contacting Google Timezone API"],
+        },
+      } satisfies State;
+    }
   } catch (error) {
     return {
       status: "error",
