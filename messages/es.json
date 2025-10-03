@@ -168,7 +168,8 @@
       "error": "Error al confirmar el correo electrónico. Intenta de nuevo o contacta soporte si el problema persiste."
     },
     "signout": {
-      "signOut": "Cerrar sesión"
+      "signOut": "Cerrar sesión",
+      "signOutSuccess": "Cierre de sesión exitoso!"
     },
     "error": {
       "title": "Error de Autenticación",
@@ -558,6 +559,25 @@
     "publishedDescription": "Tu evento ha sido publicado exitosamente y ahora es visible al público.",
     "viewEvent": "Ver Evento",
     "details": "Detalles"
+  },
+  "EventPage": {
+    "eventDetails": "Detalles del Evento",
+    "shareEvent": "Compartir Evento",
+    "capacity": "Capacidad",
+    "agePolicy": "Política de Edad",
+    "adultsOnly": "Solo para adultos 🔞",
+    "suitableForMinors": "Apto para menores",
+    "location": "Ubicación",
+    "ReservationDialog": {
+      "reserve": "Reservar",
+      "reserveTitle": "Reservar Tu Lugar",
+      "reserveDescription": "Reserva tu lugar para este evento.",
+      "mustBeLoggedIn": "Debes estar logueado y tener un perfil de cliente antes de reservar.",
+      "creating": "Creando...",
+      "reservationCreated": "Reserva creada exitosamente.",
+      "reservationFailed": "Error al crear la reserva.",
+      "confirmReservation": "Confirmar Reserva"
+    }
   },
   "maps": {
     "previewForm": {

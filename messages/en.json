@@ -168,7 +168,8 @@
       "error": "Error confirming email. Try again or contact support if the problem persists."
     },
     "signout": {
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "signOutSuccess": "Sign out successful!"
     },
     "error": {
       "title": "Authentication Error",
@@ -562,6 +563,25 @@
     "publishedDescription": "Your event has been successfully published and is now visible to the public.",
     "viewEvent": "View Event",
     "details": "Details"
+  },
+  "EventPage": {
+    "eventDetails": "Event Details",
+    "shareEvent": "Share Event",
+    "capacity": "Capacity",
+    "agePolicy": "Age Policy",
+    "adultsOnly": "Adults only 🔞",
+    "suitableForMinors": "Suitable for minors",
+    "location": "Location",
+    "ReservationDialog": {
+      "reserve": "Reserve",
+      "reserveTitle": "Reserve Your Spot",
+      "reserveDescription": "Reserve your spot for this event.",
+      "mustBeLoggedIn": "You must be logged in and have a client profile before reserving.",
+      "creating": "Creating...",
+      "reservationCreated": "Reservation created successfully.",
+      "reservationFailed": "Failed to create reservation.",
+      "confirmReservation": "Confirm Reservation"
+    }
   },
   "maps": {
     "previewForm": {

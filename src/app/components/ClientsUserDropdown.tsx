@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { User } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/client";
 import { LogIn, User as UserIcon, LogOut } from "lucide-react";
 import {
@@ -17,19 +16,26 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useParams, useRouter } from "next/navigation";
 import AuthModal from "./AuthModal";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import useGetUser from "@/hooks/user/useGetUser";
 
-const ClientsUserDropdown = ({ user }: { user: User | null }) => {
+const ClientsUserDropdown = () => {
   const t = useTranslations("Auth");
   const tProfile = useTranslations("Profile");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  const queryClient = useQueryClient();
+  const { data: user } = useGetUser();
 
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.refresh();
+    toast.success(t("signout.signOutSuccess"));
+    queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
+    queryClient.invalidateQueries({ queryKey: ["user"] });
   };
 
   if (user) {

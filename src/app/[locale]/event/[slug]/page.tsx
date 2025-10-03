@@ -11,10 +11,13 @@ import { EventDescription } from "./components/EventDescription";
 import { EventLocation } from "./components/EventLocation";
 import { EventDateTime } from "@/app/components/EventDateTime";
 import EventMap from "./components/EventMap";
+import ReservationDialog from "./components/ReservationDialog";
 import ClientsNavbar from "@/app/components/ClientsNavbar";
+import { getTranslations } from "next-intl/server";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
+  const t = await getTranslations("EventPage");
 
   const eventResult = await getEventBySlug(slug);
 
@@ -85,15 +88,15 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
             )}
 
             <div className="grid grid-cols-2 gap-3">
-              <Button>Reserve</Button>
-              <Button variant="outline">Share Event</Button>
+              <ReservationDialog eventId={event.id} />
+              <Button variant="outline">{t("shareEvent")}</Button>
             </div>
 
             <EventDescription />
 
             <Card className="gap-2">
               <CardHeader>
-                <CardTitle>Event Details</CardTitle>
+                <CardTitle>{t("eventDetails")}</CardTitle>
               </CardHeader>
               <CardContent className="px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-2 border rounded-md">
@@ -123,7 +126,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   <div className="flex items-center gap-3 p-2 border rounded-md">
                     <Users className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-medium">Capacity</p>
+                      <p className="font-medium">{t("capacity")}</p>
                       <p className="text-sm text-muted-foreground">{event.visitsLimit.toLocaleString()} people</p>
                     </div>
                   </div>
@@ -132,9 +135,9 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Shield className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Age Policy</p>
+                    <p className="font-medium">{t("agePolicy")}</p>
                     <p className="text-sm text-muted-foreground">
-                      {event.isForMinors ? "Suitable for minors" : "Adults only"}
+                      {event.isForMinors ? t("suitableForMinors") : t("adultsOnly")}
                     </p>
                   </div>
                 </div>
@@ -146,8 +149,8 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
             <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
             <div className="grid grid-cols-2 gap-3">
-              <Button>Reserve</Button>
-              <Button variant="outline">Share Event</Button>
+              <ReservationDialog eventId={event.id} />
+              <Button variant="outline">{t("shareEvent")}</Button>
             </div>
           </div>
         </div>

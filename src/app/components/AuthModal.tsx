@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import GoogleSignIn from "@/app/components/GoogleSignIn";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const t = useTranslations("Auth.login");
   const tSignup = useTranslations("Auth.signup");
   const pathname = usePathname();
+  const queryClient = useQueryClient();
 
   const redirectTo = pathname;
 
@@ -40,7 +42,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       onClose();
       setIsLoginMode(true);
       setUserEmail("");
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
     }
 
     if (loginState.status === "error") {
@@ -53,7 +56,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       toast.success(tSignup("signupSuccess"));
       setIsLoginMode(true);
       setUserEmail("");
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
     }
 
     if (signupState.status === "error") {

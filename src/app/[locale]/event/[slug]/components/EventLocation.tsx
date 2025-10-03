@@ -3,9 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { useEventText } from "./EventTextProvider";
+import { useTranslations } from "next-intl";
 
 export function EventLocation() {
   const { currentText } = useEventText();
+  const t = useTranslations("EventPage");
 
   if (!currentText || !currentText.locationText) {
     return null;
@@ -16,7 +18,7 @@ export function EventLocation() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MapPin className="h-5 w-5" />
-          Location
+          {t("location")}
         </CardTitle>
       </CardHeader>
       <CardContent>

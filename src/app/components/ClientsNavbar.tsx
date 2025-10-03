@@ -1,15 +1,10 @@
 import ModeToggle from "@/app/components/ModeToggle";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/utils/supabase/server";
 import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 
 const ClientsNavbar = async () => {
   const t = await getTranslations("navigation");
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -22,7 +17,7 @@ const ClientsNavbar = async () => {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
-          <ClientsUserDropdown user={user} />
+          <ClientsUserDropdown />
         </div>
       </nav>
     </header>
