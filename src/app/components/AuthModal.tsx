@@ -26,7 +26,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const tSignup = useTranslations("Auth.signup");
   const pathname = usePathname();
 
-  // Generate redirectTo URL from current pathname
   const redirectTo = pathname;
 
   const [isLoginMode, setIsLoginMode] = useState(true);
