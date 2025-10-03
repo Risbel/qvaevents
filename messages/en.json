@@ -256,6 +256,40 @@
     "createBusiness": "Create Business",
     "viewDashboard": "View Dashboard"
   },
+  "ClientProfile": {
+    "title": "Client Profile",
+    "description": "Manage your client profile information",
+    "editProfile": "Edit Profile",
+    "editDescription": "Update your personal and company information",
+    "personalInfo": "Personal Information",
+    "errorLoading": "Error loading profile. Please refresh the page.",
+    "errorLoadingDescription": "An error occurred while loading the profile. This may be due to a network issue or a server problem.",
+    "ClientProfileCard": {
+      "username": "Username",
+      "bio": "Bio",
+      "noBio": "No bio set",
+      "birthday": "Birthday",
+      "noBirthday": "No birthday set",
+      "gender": "Gender",
+      "noGender": "Not specified",
+      "usernamePlaceholder": "Enter your username",
+      "bioPlaceholder": "Tell us about yourself...",
+      "birthdayPlaceholder": "Enter your birthday",
+      "genderPlaceholder": "Select your gender"
+    },
+    "EditProfileModal": {
+      "edit": "Edit Profile",
+      "editDescription": "Update your personal and company information",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell us about yourself...",
+      "birthday": "Birthday",
+      "gender": "Gender",
+      "updateSuccess": "Profile updated successfully!",
+      "updateError": "Failed to update profile. Please try again."
+    }
+  },
   "Business": {
     "createBusiness": "Create Business",
     "createBusinessDescription": "Create a new business for",

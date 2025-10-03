@@ -256,6 +256,36 @@
     "createBusiness": "Crear Negocio",
     "viewDashboard": "Ver Dashboard"
   },
+  "ClientProfile": {
+    "title": "Perfil de Cliente",
+    "description": "Gestiona la información de tu perfil de cliente",
+    "editProfile": "Editar Perfil",
+    "editDescription": "Actualiza tu información personal y de empresa",
+    "personalInfo": "Información Personal",
+    "errorLoading": "Error al cargar el perfil. Por favor actualiza la página.",
+    "errorLoadingDescription": "Ocurrió un error al cargar el perfil. Esto puede ser debido a un problema de red o un problema del servidor.",
+    "ClientProfileCard": {
+      "username": "Nombre de Usuario",
+      "bio": "Biografía",
+      "noBio": "No hay biografía establecida",
+      "birthday": "Fecha de Nacimiento",
+      "noBirthday": "No hay fecha de nacimiento establecida",
+      "gender": "Género",
+      "noGender": "No especificado"
+    },
+    "EditProfileModal": {
+      "edit": "Editar Perfil",
+      "editDescription": "Actualiza tu información personal y de empresa",
+      "username": "Nombre de Usuario",
+      "usernamePlaceholder": "Ingresa tu nombre de usuario",
+      "bio": "Biografía",
+      "bioPlaceholder": "Cuéntanos sobre ti...",
+      "birthday": "Fecha de Nacimiento",
+      "gender": "Género",
+      "updateSuccess": "Perfil actualizado exitosamente!",
+      "updateError": "Error al actualizar el perfil. Por favor intenta de nuevo."
+    }
+  },
   "Business": {
     "createBusiness": "Crear Negocio",
     "createBusinessDescription": "Crear un nuevo negocio para",

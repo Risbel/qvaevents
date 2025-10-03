@@ -5,6 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Mail, Shield, User, Clock, CheckCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import GoBackButton from "@/app/components/GoBackButton";
+import ClientProfileCard from "./components/ClientProfileCard";
+import ClientProfileCardSkeleton from "./components/ClientProfileCardSkeleton";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function MePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -56,6 +60,7 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
 
   return (
     <div className="space-y-4">
+      {/* Auth User Info Card */}
       <Card className="border-0 shadow-lg shadow-primary/50 bg-gradient-to-br from-background to-muted/20">
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-4">
@@ -69,6 +74,10 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
           <CardTitle className="text-2xl font-bold">{getUserName()}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
+          <Suspense fallback={<ClientProfileCardSkeleton />}>
+            <ClientProfileCard userId={user.id} locale={locale} />
+          </Suspense>
+
           <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border">
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div className="flex-1">
@@ -115,17 +124,6 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
                     {provider === "google" ? "Google" : provider}
                   </Badge>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border">
-            <User className="h-5 w-5 text-muted-foreground" />
-            <div className="flex-1">
-              <p className="font-medium">Account Status</p>
-              <div className="flex gap-2 mt-2">
-                <Badge variant="default">{user.role === "authenticated" ? "Active" : user.role}</Badge>
-                <Badge variant="outline">{user.is_anonymous ? "Anonymous" : "Registered"}</Badge>
               </div>
             </div>
           </div>
