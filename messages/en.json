@@ -567,6 +567,10 @@
   "EventPage": {
     "eventDetails": "Event Details",
     "shareEvent": "Share Event",
+    "shareEventFailed": "Failed to share event",
+    "shareEventSuccess": "Event shared successfully",
+    "shareEventCopied": "Link copied to clipboard",
+    "shareEventText": "Join me at {eventTitle}!",
     "capacity": "Capacity",
     "agePolicy": "Age Policy",
     "adultsOnly": "Adults only 🔞",

@@ -563,6 +563,10 @@
   "EventPage": {
     "eventDetails": "Detalles del Evento",
     "shareEvent": "Compartir Evento",
+    "shareEventFailed": "Error al compartir el evento",
+    "shareEventSuccess": "Evento compartido exitosamente",
+    "shareEventCopied": "Link copiado al portapapeles",
+    "shareEventText": "Únete a mí en {eventTitle}!",
     "capacity": "Capacidad",
     "agePolicy": "Política de Edad",
     "adultsOnly": "Solo para adultos 🔞",

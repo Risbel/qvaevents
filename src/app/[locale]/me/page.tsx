@@ -4,11 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Mail, Shield, User, Clock, CheckCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import GoBackButton from "@/app/components/GoBackButton";
 import ClientProfileCard from "./components/ClientProfileCard";
 import ClientProfileCardSkeleton from "./components/ClientProfileCardSkeleton";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function MePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -63,7 +61,6 @@ export default async function MePage({ params }: { params: Promise<{ locale: str
       {/* Auth User Info Card */}
       <Card className="border-0 shadow-lg shadow-primary/50 bg-gradient-to-br from-background to-muted/20">
         <CardHeader className="text-center pb-4">
-          <GoBackButton className="absolute left-4 top-0" />
           <div className="flex justify-center mb-4">
             <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
               <AvatarImage src={getUserAvatar()} alt={getUserName()} />

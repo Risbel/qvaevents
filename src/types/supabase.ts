@@ -46,6 +46,7 @@ export type Database = {
           name: string | null;
           organizerId: number;
           slug: string | null;
+          logo: string | null;
         };
         Insert: {
           codeId?: string;
@@ -57,6 +58,7 @@ export type Database = {
           name?: string | null;
           organizerId: number;
           slug?: string | null;
+          logo?: string | null;
         };
         Update: {
           codeId?: string;
@@ -68,6 +70,7 @@ export type Database = {
           name?: string | null;
           organizerId?: number;
           slug?: string | null;
+          logo?: string | null;
         };
         Relationships: [
           {

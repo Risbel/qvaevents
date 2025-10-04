@@ -54,15 +54,7 @@ export async function generateMetadata({
 
     const eventType = eventTypeMap[event.type] || event.type;
 
-    // Format dates for display
-    const startDate = new Date(event.startDate);
-    const formattedDate = startDate.toLocaleDateString(locale, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    const title = `${currentLocaleText.title} | ${formattedDate}`;
+    const title = `${currentLocaleText.title}`;
     const description =
       currentLocaleText.description.length > 160
         ? `${currentLocaleText.description.substring(0, 157)}...`

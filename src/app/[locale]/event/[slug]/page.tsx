@@ -12,8 +12,13 @@ import { EventLocation } from "./components/EventLocation";
 import { EventDateTime } from "@/app/components/EventDateTime";
 import EventMap from "./components/EventMap";
 import ReservationDialog from "./components/ReservationDialog";
-import ClientsNavbar from "@/app/components/ClientsNavbar";
 import { getTranslations } from "next-intl/server";
+import LocaleSwitcher from "@/app/components/LocaleSwitcher";
+import ModeToggle from "@/app/components/ModeToggle";
+import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
+import Link from "next/link";
+import Image from "next/image";
+import ShareEventButton from "@/app/components/ShareEventButton";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
@@ -53,7 +58,26 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
 
   return (
     <EventTextProvider eventTexts={event.EventText} defaultLocale={event.defaultLocale}>
-      <ClientsNavbar />
+      <nav className="flex flex-1 justify-between items-center space-x-2 px-2 md:px-4 py-2 sticky top-0 z-50 bg-background/50 backdrop-blur-sm border-b">
+        <div className="flex items-center gap-2">
+          {eventResult.data?.event.Business.logo && (
+            <Image
+              src={eventResult.data?.event.Business.logo}
+              alt={eventResult.data?.event.Business.name || "Business Logo"}
+              width={32}
+              height={32}
+            />
+          )}
+          <Link className="font-bold" href={`/${locale}/${eventResult.data?.event.Business.slug}`}>
+            {eventResult.data?.event.Business.name}
+          </Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <LocaleSwitcher />
+          <ModeToggle />
+          <ClientsUserDropdown />
+        </div>
+      </nav>
       <main className="min-h-screen bg-background">
         <div className="container mx-auto px-4 pb-24 pt-6 max-w-2xl">
           <div className="flex items-center justify-end mb-2">
@@ -89,7 +113,12 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
 
             <div className="grid grid-cols-2 gap-3">
               <ReservationDialog eventId={event.id} />
-              <Button variant="outline">{t("shareEvent")}</Button>
+              <ShareEventButton
+                eventTitle={event.EventText[0]?.title || ""}
+                eventDate={event.startDate}
+                eventSlug={event.slug}
+                locale={locale}
+              />
             </div>
 
             <EventDescription />
@@ -109,6 +138,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                     timeZoneName={event.timeZoneName}
                     showTimeZone={true}
                     twoRows={true}
+                    className="text-sm"
                   />
                 </div>
 

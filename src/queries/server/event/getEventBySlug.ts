@@ -5,12 +5,14 @@ export type Event = Tables<"Event">;
 export type EventText = Tables<"EventText">;
 export type Language = Tables<"Language">;
 export type EventImage = Tables<"EventImage">;
+export type Business = Tables<"Business">;
 
-export type EventWithTextsAndImages = Event & {
+export type EventWithTextsAndImagesAndBusiness = Event & {
   EventText: (EventText & {
     Language: Language;
   })[];
   EventImage: EventImage[];
+  Business: Business;
 };
 
 export async function getEventBySlug(slug: string) {
@@ -25,7 +27,7 @@ export async function getEventBySlug(slug: string) {
   try {
     const { data, error } = await supabase
       .from("Event")
-      .select(`*, EventText (*, Language (id, code, name, native, icon)), EventImage (*)`)
+      .select(`*, EventText (*, Language (id, code, name, native, icon)), EventImage (*), Business (*)`)
       .eq("slug", slug)
       .eq("isDeleted", false)
       .single();
@@ -47,7 +49,7 @@ export async function getEventBySlug(slug: string) {
     return {
       status: "success" as const,
       data: {
-        event: data as EventWithTextsAndImages,
+        event: data as EventWithTextsAndImagesAndBusiness,
       },
     };
   } catch (error) {

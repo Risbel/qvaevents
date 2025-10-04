@@ -28,7 +28,8 @@ const ClientsUserDropdown = () => {
   const params = useParams();
   const locale = params.locale as string;
   const queryClient = useQueryClient();
-  const { data: user } = useGetUser();
+
+  const { data: user, isLoading, isFetching } = useGetUser();
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -37,6 +38,17 @@ const ClientsUserDropdown = () => {
     queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
     queryClient.invalidateQueries({ queryKey: ["user"] });
   };
+
+  // Show skeleton loader while loading or fetching
+  if (isLoading || (isFetching && !user)) {
+    return (
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback className="animate-pulse bg-muted">U</AvatarFallback>
+        </Avatar>
+      </Button>
+    );
+  }
 
   if (user) {
     const getUserName = () => {
@@ -93,16 +105,27 @@ const ClientsUserDropdown = () => {
     );
   }
 
-  return (
-    <>
-      <Button variant="outline" size="sm" onClick={() => setIsLoginModalOpen(true)} className="flex items-center gap-2">
-        <LogIn className="h-4 w-4" />
-        {t("login.signIn")}
-      </Button>
+  // Only show login button if we're not loading and there's no user
+  if (!isLoading && !isFetching && !user) {
+    return (
+      <>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsLoginModalOpen(true)}
+          className="flex items-center gap-2"
+        >
+          <LogIn className="h-4 w-4" />
+          {t("login.signIn")}
+        </Button>
 
-      <AuthModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
-    </>
-  );
+        <AuthModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      </>
+    );
+  }
+
+  // Return null as a fallback (shouldn't reach here due to previous conditions)
+  return null;
 };
 
 export default ClientsUserDropdown;
