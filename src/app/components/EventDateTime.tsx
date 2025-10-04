@@ -12,7 +12,7 @@ interface EventDateTimeProps {
   timeZoneName?: string | null; // Timezone name from event (e.g., "Cuba Standard Time")
   twoRows?: boolean; // Show time on a separate line below the date
   showTimeZone?: boolean; // Show time zone
-  size?: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl";
+  className?: string;
 }
 
 const getDateFnsLocale = (locale: string) => {
@@ -86,7 +86,7 @@ export const EventDateTime = ({
   timeZoneName,
   twoRows = false,
   showTimeZone = true,
-  size = "text-xs",
+  className = "",
 }: EventDateTimeProps) => {
   // Convert UTC dates to local time for display
   const startDateLocal = new Date(startDate);
@@ -117,7 +117,7 @@ export const EventDateTime = ({
 
     if (twoRows) {
       return (
-        <div className={cn("flex flex-wrap", size)}>
+        <div className={cn("flex flex-wrap", className)}>
           <p>
             {dateFormatted} • {startTime} - {endTime}
           </p>
@@ -127,7 +127,7 @@ export const EventDateTime = ({
     }
 
     return (
-      <div className={cn("flex items-center gap-2", size)}>
+      <div className={cn("flex items-center gap-2", className)}>
         <p>
           {dateFormatted} • {startTime} - {endTime}
           {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
@@ -151,7 +151,7 @@ export const EventDateTime = ({
 
     if (twoRows) {
       return (
-        <div className={cn("flex items-center gap-2", size)}>
+        <div className={cn("flex items-center gap-2", className)}>
           <div className="font-medium">
             {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
           </div>
@@ -161,7 +161,7 @@ export const EventDateTime = ({
     }
 
     return (
-      <div className={cn("flex items-center gap-2", size)}>
+      <div className={cn("flex items-center gap-2", className)}>
         <p className="font-medium">
           {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
           {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}

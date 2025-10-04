@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
-import { LogIn, User as UserIcon, LogOut } from "lucide-react";
+import { LogIn, User as UserIcon, LogOut, Ticket } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,9 +74,14 @@ const ClientsUserDropdown = () => {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+
           <DropdownMenuItem className="cursor-pointer" onClick={() => router.push(`/${locale}/me`)}>
             <UserIcon className="mr-2 h-4 w-4" />
             <span>{tProfile("title")}</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer" onClick={() => router.push(`/${locale}/tickets`)}>
+            <Ticket className="mr-2 h-4 w-4" />
+            <span>Tickets</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>

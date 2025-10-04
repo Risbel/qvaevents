@@ -72,7 +72,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   timeZoneId={event.timeZoneId}
                   timeZoneName={event.timeZoneName}
                   showTimeZone={false}
-                  size="text-md"
+                  className="text-md"
                 />
               </div>
             </div>

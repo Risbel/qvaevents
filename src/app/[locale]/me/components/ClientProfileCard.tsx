@@ -58,6 +58,7 @@ export default async function ClientProfileCard({ userId, locale }: ClientProfil
 
   return (
     <>
+      <EditProfileModal clientProfile={clientProfile} />
       <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border">
         <User className="h-5 w-5 text-muted-foreground" />
 
@@ -106,8 +107,6 @@ export default async function ClientProfileCard({ userId, locale }: ClientProfil
           </div>
         </div>
       </div>
-
-      <EditProfileModal clientProfile={clientProfile} />
     </>
   );
 }

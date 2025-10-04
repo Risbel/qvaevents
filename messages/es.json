@@ -579,6 +579,24 @@
       "confirmReservation": "Confirmar Reserva"
     }
   },
+  "TicketsPage": {
+    "title": "Mis Tickets",
+    "description": "Gestiona tus reservas y entradas para eventos",
+    "profileNotFound": "Perfil no encontrado",
+    "profileNotFoundDescription": "No se pudo encontrar tu perfil de cliente. Por favor, intenta refrescar la página.",
+    "errorLoading": "Error al cargar los tickets",
+    "errorLoadingDescription": "Ocurrió un error al cargar tus tickets. Por favor, intenta nuevamente.",
+    "noTickets": "No se encontraron tickets",
+    "noTicketsDescription": "No has reservado ningún ticket todavía. Echa un vistazo a nuestros eventos para encontrar algo que te guste!",
+    "loadingMore": "Cargando más tickets",
+    "loadMore": "Cargar más tickets",
+    "canceled": "Cancelado",
+    "attended": "Asistido",
+    "confirmed": "Confirmado",
+    "pending": "Pendiente",
+    "reservedOn": "Reservado el",
+    "canceledOn": "Cancelado el"
+  },
   "maps": {
     "previewForm": {
       "clickToSelect": "Haz clic en el mapa para seleccionar una ubicación",

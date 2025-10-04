@@ -583,6 +583,24 @@
       "confirmReservation": "Confirm Reservation"
     }
   },
+  "TicketsPage": {
+    "title": "My Tickets",
+    "description": "Manage your event reservations and tickets",
+    "profileNotFound": "Profile not found",
+    "profileNotFoundDescription": "Unable to find your client profile. Please try refreshing the page.",
+    "errorLoading": "Error loading tickets",
+    "errorLoadingDescription": "There was a problem loading your tickets. Please try again later.",
+    "noTickets": "No tickets found",
+    "noTicketsDescription": "You haven't reserved any tickets yet. Check out our events to find something you like!",
+    "loadingMore": "Loading more tickets",
+    "loadMore": "Load more tickets",
+    "canceled": "Canceled",
+    "attended": "Attended",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "reservedOn": "Reserved on",
+    "canceledOn": "Canceled on"
+  },
   "maps": {
     "previewForm": {
       "clickToSelect": "Click on the map to select a location",
