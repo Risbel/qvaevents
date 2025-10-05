@@ -93,6 +93,9 @@ export type Database = {
           updatedAt: string;
           user_id: string;
           username: string;
+          name: string;
+          phone: string;
+          email: string;
         };
         Insert: {
           avatar?: string | null;
@@ -104,6 +107,9 @@ export type Database = {
           updatedAt?: string;
           user_id: string;
           username: string;
+          name: string;
+          phone: string;
+          email: string;
         };
         Update: {
           avatar?: string | null;
@@ -115,6 +121,9 @@ export type Database = {
           updatedAt?: string;
           user_id?: string;
           username?: string;
+          name?: string;
+          phone?: string;
+          email?: string;
         };
         Relationships: [];
       };

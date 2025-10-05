@@ -3,8 +3,23 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Users, Pencil, BarChart, ExternalLink, CheckCircleIcon, EyeOffIcon } from "lucide-react";
+import {
+  Users,
+  Pencil,
+  ExternalLink,
+  CheckCircleIcon,
+  EyeOffIcon,
+  MoreVertical,
+  ListChecks,
+  MessageSquare,
+} from "lucide-react";
 import { toNormalCase } from "@/utils/textFormating";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { getEventTitle, getEventDescription } from "./eventTextExtraction";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -48,16 +63,43 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             {event.isPublished ? (
               <>
                 <CheckCircleIcon className="h-3 w-3 mr-1 " />
-                Published
+                {tEventCard("published")}
               </>
             ) : (
               <>
                 <EyeOffIcon className="h-3 w-3 mr-1" />
-                Draft
+                {tEventCard("draft")}
               </>
             )}
           </Badge>
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="absolute right-4">
+            <Button variant="outline" size="sm">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/${locale}/dashboard/bus/${codeId}/events/${event.slug}/visits`}
+                className="flex items-center"
+              >
+                <ListChecks className="h-4 w-4 mr-2" />
+                {tEventCard("visits")}
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/${locale}/dashboard/bus/${codeId}/events/${event.slug}/reviews`}
+                className="flex items-center"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {tEventCard("reviews")}
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardHeader>
       <CardContent className="relative">
         <div className="space-y-2 text-xs">
@@ -81,10 +123,6 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" size="sm" className="cursor-pointer">
-            <BarChart /> {t("viewDetails")}
-          </Button>
-
           {/* View Event Button - Only show if published */}
           {event.isPublished && (
             <Link
@@ -93,7 +131,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <ExternalLink className="h-4 w-4" /> View Event
+              <ExternalLink className="h-4 w-4 mr-2" /> {tEventCard("viewEvent")}
             </Link>
           )}
 
@@ -101,7 +139,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             className={cn(buttonVariants({ variant: "default", size: "sm" }))}
             href={`/${locale}/dashboard/bus/${codeId}/new/1?slug=${event.slug}`}
           >
-            <Pencil /> {t("edit")}
+            <Pencil className="h-4 w-4 mr-2" /> {t("edit")}
           </Link>
         </div>
       </CardContent>

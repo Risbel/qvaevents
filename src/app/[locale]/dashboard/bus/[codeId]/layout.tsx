@@ -23,6 +23,7 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Building2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import LayoutSkeleton from "./components/LayoutSkeleton";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: business, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
 
   if (userLoading || businessLoading) {
-    return <div>Loading...</div>;
+    return <LayoutSkeleton />;
   }
 
   if (!user || !business) {

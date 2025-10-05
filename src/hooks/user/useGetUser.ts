@@ -4,11 +4,13 @@ import getUser from "@/queries/client/user/getUser";
 
 const useGetUser = () => {
   const client = useSupabase();
-  const queryKey = ["user"];
-  const queryFn = async () => {
-    return getUser(client);
-  };
-  return useQuery({ queryKey, queryFn });
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(client),
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 };
 
 export default useGetUser;

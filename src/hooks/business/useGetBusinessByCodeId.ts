@@ -4,12 +4,15 @@ import { getBusinessByCodeId } from "@/queries/client/business/getBusinessByCode
 
 function useGetBusinessByCodeId(codeId: string) {
   const client = useSupabase();
-  const queryKey = ["business", codeId];
 
   return useQuery({
-    queryKey,
+    queryKey: ["business", codeId],
     queryFn: () => getBusinessByCodeId(client, codeId),
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    staleTime: Infinity,
+    enabled: !!codeId,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 }
 export default useGetBusinessByCodeId;

@@ -111,6 +111,13 @@
     "generating": "Generating...",
     "finishing": "Finishing..."
   },
+  "status": {
+    "confirmed": "Confirmed",
+    "attended": "Attended",
+    "canceled": "Canceled",
+    "pending": "Pending",
+    "reservedOn": "Reserved on"
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "overview": "Overview",
@@ -534,7 +541,13 @@
     "visitsLimit": "Visits limit",
     "visitors": "{count, plural, =1 {visitor} other {visitors}}",
     "start": "start",
-    "end": "end"
+    "end": "end",
+    "visits": "Visits",
+    "reviews": "Reviews",
+    "viewEvent": "View Event",
+    "editEvent": "Edit Event",
+    "published": "Published",
+    "draft": "Draft"
   },
   "EventImagesManager": {
     "currentEventImages": "{count, plural, =1 {Current event image} other {Current event images}}",
@@ -604,6 +617,26 @@
     "pending": "Pending",
     "reservedOn": "Reserved on",
     "canceledOn": "Canceled on"
+  },
+  "VisitsPage": {
+    "title": "Visits",
+    "description": "Manage your visits and visitors",
+    "visits": "Visits",
+    "visitsLimit": "Visits limit",
+    "visitsLimitDescription": "Visits limit for the event",
+    "Filter": {
+      "searchPlaceholder": "Search by",
+      "searchBy": "Search by",
+      "search": "Search",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "username": "Username"
+    },
+    "failedToLoadVisits": "Failed to load visits",
+    "failedToLoadVisitsDescription": "Error loading visits. Please try again later.",
+    "loadMore": "Load more visits",
+    "loadingMore": "Loading more visits..."
   },
   "maps": {
     "previewForm": {

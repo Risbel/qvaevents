@@ -111,6 +111,13 @@
     "generating": "Generando...",
     "finishing": "Terminando..."
   },
+  "status": {
+    "confirmed": "Confirmado",
+    "attended": "Asistido",
+    "canceled": "Cancelado",
+    "pending": "Pendiente",
+    "reservedOn": "Reservado el"
+  },
   "Sidebar": {
     "dashboard": "Panel de Control",
     "overview": "Vista General",
@@ -530,7 +537,13 @@
     "visitsLimit": "Límite de visitas",
     "visitors": "{count, plural, =1 {visitante} other {visitantes}}",
     "start": "inicio",
-    "end": "fin"
+    "end": "fin",
+    "visits": "Visitas",
+    "reviews": "Reseñas",
+    "viewEvent": "Ver Evento",
+    "editEvent": "Editar Evento",
+    "published": "Publicado",
+    "draft": "Borrador"
   },
   "EventImagesManager": {
     "currentEventImages": "{count, plural, =1 {Imagen actual del evento} other {Imágenes actuales del evento}}",
@@ -600,6 +613,24 @@
     "pending": "Pendiente",
     "reservedOn": "Reservado el",
     "canceledOn": "Cancelado el"
+  },
+  "VisitsPage": {
+    "title": "Visitas",
+    "description": "Gestiona tus visitas y asistentes",
+    "visits": "Visitas",
+    "visitsLimit": "Límite de visitas",
+    "visitsLimitDescription": "Límite de visitas para el evento",
+    "Filter": {
+      "searchPlaceholder": "Buscar por",
+      "searchBy": "Buscar por",
+      "search": "Buscar",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "username": "Username"
+    },
+    "failedToLoadVisits": "Error al cargar las visitas",
+    "failedToLoadVisitsDescription": "Error al cargar las visitas. Por favor, intenta nuevamente."
   },
   "maps": {
     "previewForm": {
