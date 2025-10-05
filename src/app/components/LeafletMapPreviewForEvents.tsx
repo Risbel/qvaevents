@@ -1,10 +1,10 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LucideRoute, Navigation } from "lucide-react";
+import { LucideRoute, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -46,6 +46,26 @@ export default function LeafletMapPreviewForEvents({
     window.open(googleMapsUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleShareLocation = async () => {
+    const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+    const shareText = `📍 ${title}\n${googleMapsUrl}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t("shareLocationTitle"),
+          text: t("shareLocationText", { title }),
+          url: googleMapsUrl,
+        });
+      } catch (err) {
+        return;
+      }
+    } else {
+      await navigator.clipboard.writeText(shareText);
+      toast.success(t("shareLocationCopied"));
+    }
+  };
+
   const mapComponent = (
     <div style={{ width: "100%", height: "300px" }}>
       <MapContainer
@@ -77,7 +97,11 @@ export default function LeafletMapPreviewForEvents({
     <div>
       {mapComponent}
       {showDirectionsButton && (
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 flex justify-end gap-2">
+          <Button variant="outline" size="sm" className="cursor-pointer" onClick={handleShareLocation}>
+            {t("shareLocation")}
+            <Share2 className="h-4 w-4" />
+          </Button>
           <Button variant="outline" size="sm" className="cursor-pointer" onClick={handleDirectionsClick}>
             {t("howToGetThere")}
             <LucideRoute className="h-4 w-4" />

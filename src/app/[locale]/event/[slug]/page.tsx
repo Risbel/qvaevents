@@ -18,7 +18,7 @@ import ModeToggle from "@/app/components/ModeToggle";
 import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 import Link from "next/link";
 import Image from "next/image";
-import ShareEventButton from "@/app/components/ShareEventButton";
+import ShareEventButton from "./components/ShareEventButton";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
@@ -113,12 +113,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
 
             <div className="grid grid-cols-2 gap-3">
               <ReservationDialog eventId={event.id} />
-              <ShareEventButton
-                eventTitle={event.EventText[0]?.title || ""}
-                eventDate={event.startDate}
-                eventSlug={event.slug}
-                locale={locale}
-              />
+              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
             </div>
 
             <EventDescription />
@@ -180,7 +175,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
 
             <div className="grid grid-cols-2 gap-3">
               <ReservationDialog eventId={event.id} />
-              <Button variant="outline">{t("shareEvent")}</Button>
+              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
             </div>
           </div>
         </div>

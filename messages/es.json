@@ -610,7 +610,11 @@
       "seeInGoogleMaps": "Ver en Google Maps"
     },
     "previewForEvents": {
-      "howToGetThere": "Cómo llegar"
+      "howToGetThere": "Cómo llegar",
+      "shareLocation": "Compartir ubicación",
+      "shareLocationTitle": "Ubicación del evento",
+      "shareLocationText": "Aquí está la ubicación del evento",
+      "shareLocationCopied": "Enlace de ubicación copiado al portapapeles"
     }
   }
 }

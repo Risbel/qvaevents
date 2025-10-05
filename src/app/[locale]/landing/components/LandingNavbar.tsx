@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const OrganizersNavbar = async () => {
+const LandingNavbar = async () => {
   const t = await getTranslations("navigation");
   const tAuth = await getTranslations("Auth");
   const supabase = await createClient();
@@ -17,7 +17,7 @@ const OrganizersNavbar = async () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="flex flex-1 justify-between items-center space-x-2 px-2 md:px-4 py-2">
-        <a href="#" className="text-primary text-xl font-bold">
+        <a href="#hero" className="text-primary text-xl font-bold">
           {t("brand")}
         </a>
         <div className="hidden md:flex items-center gap-2 md:gap-4">
@@ -50,4 +50,4 @@ const OrganizersNavbar = async () => {
   );
 };
 
-export default OrganizersNavbar;
+export default LandingNavbar;

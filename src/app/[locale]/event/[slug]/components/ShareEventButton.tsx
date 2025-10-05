@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Share2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEventText } from "./EventTextProvider";
 
 interface ShareEventButtonProps {
-  eventTitle: string;
   eventDate: string;
   eventSlug: string;
   locale: string;
 }
 
-const ShareEventButton = ({ eventTitle, eventDate, eventSlug, locale }: ShareEventButtonProps) => {
+const ShareEventButton = ({ eventDate, eventSlug, locale }: ShareEventButtonProps) => {
   const t = useTranslations("EventPage");
+  const { currentText } = useEventText();
 
   const shareEvent = async () => {
     const eventUrl = `${window.location.origin}/${locale}/event/${eventSlug}`;
@@ -24,17 +25,17 @@ const ShareEventButton = ({ eventTitle, eventDate, eventSlug, locale }: ShareEve
       day: "numeric",
     });
 
-    const shareText = `🎉 ${eventTitle}\n📅 ${formattedDate}\n\n${eventUrl}`;
+    const shareText = `${t("shareEventText", { eventTitle: currentText?.title || "" })}\n📅 ${formattedDate}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: eventTitle,
-          text: t("shareEventText", { eventTitle }),
+          title: currentText?.title,
+          text: shareText,
           url: eventUrl,
         });
       } catch (err) {
-        toast.error(t("shareEventFailed"));
+        return;
       }
     } else {
       await navigator.clipboard.writeText(shareText);
