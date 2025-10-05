@@ -4,12 +4,8 @@ import { getOrganizerProfile } from "@/queries/client/organizers/getOrganizerPro
 
 const useGetOrganizerProfile = (userId: string) => {
   const client = useSupabase();
-  const queryKey = ["organizer"];
 
-  const queryFn = async () => {
-    return getOrganizerProfile(client, userId);
-  };
-  return useQuery({ queryKey, queryFn, enabled: !!userId });
+  return useQuery({ queryKey: ["organizer"], queryFn: () => getOrganizerProfile(client, userId), enabled: !!userId });
 };
 
 export default useGetOrganizerProfile;

@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import OpenDashboardButton from "@/app/components/OpenDashboardButton";
 
 const LandingNavbar = async () => {
   const t = await getTranslations("navigation");
@@ -30,6 +31,7 @@ const LandingNavbar = async () => {
         </div>
 
         <div className="flex items-center gap-2">
+          {user && <OpenDashboardButton user={user} />}
           <LocaleSwitcher />
           <ModeToggle />
           {user ? (
