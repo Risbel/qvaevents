@@ -28,16 +28,16 @@ const VisitCard = ({ visit }: VisitCardProps) => {
       <CardContent className="flex items-center justify-between relative px-2">
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={visit.ClientProfile.avatar || undefined} />
-            <AvatarFallback>{getInitials(visit.ClientProfile.username)}</AvatarFallback>
+            <AvatarImage src={visit.ClientProfile?.avatar || undefined} />
+            <AvatarFallback>{getInitials(visit.ClientProfile?.username || "")}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-medium leading-4"> {visit.ClientProfile.name}</p>
+            <p className="font-medium leading-4"> {visit.ClientProfile?.name}</p>
 
             <div className="flex flex-col md:flex-row md:items-center md:gap-2">
               <div className="flex items-center gap-1 text-xs md:border-r md:pr-2">
                 <Mail className="h-3 w-3 text-muted-foreground" />
-                <p className="text-xs text-accent-foreground">{visit.ClientProfile.email || "No email"}</p>
+                <p className="text-xs text-accent-foreground">{visit.ClientProfile?.email || "No email"}</p>
               </div>
 
               <div className="flex items-center gap-1 text-xs">

@@ -630,7 +630,11 @@
       "username": "Username"
     },
     "failedToLoadVisits": "Error al cargar las visitas",
-    "failedToLoadVisitsDescription": "Error al cargar las visitas. Por favor, intenta nuevamente."
+    "failedToLoadVisitsDescription": "Error al cargar las visitas. Por favor, intenta nuevamente.",
+    "loadMore": "Cargar más visitas",
+    "loadingMore": "Cargando más visitas...",
+    "noVisits": "No se encontraron visitas",
+    "noVisitsDescription": "No se encontraron visitas para este evento con los criterios de búsqueda actuales."
   },
   "maps": {
     "previewForm": {

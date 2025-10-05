@@ -636,7 +636,9 @@
     "failedToLoadVisits": "Failed to load visits",
     "failedToLoadVisitsDescription": "Error loading visits. Please try again later.",
     "loadMore": "Load more visits",
-    "loadingMore": "Loading more visits..."
+    "loadingMore": "Loading more visits...",
+    "noVisits": "No visits found",
+    "noVisitsDescription": "No visits found for this event with the current search criteria."
   },
   "maps": {
     "previewForm": {

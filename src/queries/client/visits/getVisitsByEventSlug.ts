@@ -30,30 +30,34 @@ const getVisitsByEventSlug = async (
     .single()
     .then(({ data }) => data as Event);
 
-  let query = client.from("Visit").select("*, ClientProfile!inner(*)").eq("eventId", eventData.id);
+  // Build base query with inner join to ensure we only get visits with profiles
+  const baseQuery = client
+    .from("Visit")
+    .select("*, ClientProfile!inner(*)") // Use !inner to only get visits with profiles
+    .eq("eventId", eventData.id);
 
-  // Only apply search if both search term and field are provided
-  if (search && searchField) {
-    query = query.ilike(`ClientProfile.${searchField}`, `%${search}%`);
-  }
+  // Apply search filter if provided
+  const filteredQuery =
+    search && searchField ? baseQuery.ilike(`ClientProfile.${searchField}`, `%${search}%`) : baseQuery;
 
-  const { data: countData } = await query.select("id");
-  const total = countData?.length || 0;
-
-  const { data, error } = await query
-    .select("*, ClientProfile(*)")
+  // Get paginated data
+  const { data, error } = await filteredQuery
     .order("createdAt", { ascending: false })
     .range(pageParam, pageParam + pageSize - 1);
 
   if (error) throw error;
 
-  const nextCursor = total > pageParam + pageSize ? pageParam + pageSize : undefined;
+  // Get total count of filtered results
+  const { data: countResult } = await filteredQuery.select("id");
+  const count = countResult?.length || 0;
+
+  const nextCursor = count > pageParam + pageSize ? pageParam + pageSize : undefined;
 
   return {
     event: eventData,
     visits: data as Visit,
     nextCursor,
-    total,
+    total: count || 0,
   };
 };
 

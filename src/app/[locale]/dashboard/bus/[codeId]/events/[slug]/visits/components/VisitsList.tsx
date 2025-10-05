@@ -6,7 +6,7 @@ import { Visit } from "@/queries/client/visits/getVisitsByEventSlug";
 import { type VisitsResponse } from "@/hooks/visits/useGetVisitsByEventSlug";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2, Users2Icon } from "lucide-react";
 import VisitCard from "./VisitCard";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
@@ -66,16 +66,26 @@ const VisitsList = () => {
       </div>
 
       <div className="space-y-2">
-        {data?.pages.map((page: VisitsResponse, i: number) =>
-          page.visits.map((visit: Visit[number]) => <VisitCard key={`${visit.id}-${i}`} visit={visit} />)
-        )}
-
-        {isFetchingNextPage && (
-          <div className="space-y-3 mt-4">
-            {[...Array(1)].map((_, i) => (
-              <Skeleton key={i} className="h-[72px] w-full" />
-            ))}
+        {firstPage?.visits.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 space-y-2">
+            <Users2Icon className="size-12 text-muted-foreground" />
+            <h3 className="font-semibold text-lg">{tVisits("noVisits")}</h3>
+            <p className="text-sm text-muted-foreground text-center">{tVisits("noVisitsDescription")}</p>
           </div>
+        ) : (
+          <>
+            {data?.pages.map((page: VisitsResponse, i: number) =>
+              page.visits.map((visit: Visit[number]) => <VisitCard key={`${visit.id}-${i}`} visit={visit} />)
+            )}
+
+            {isFetchingNextPage && (
+              <div className="space-y-3 mt-4">
+                {[...Array(1)].map((_, i) => (
+                  <Skeleton key={i} className="h-[72px] w-full" />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 
