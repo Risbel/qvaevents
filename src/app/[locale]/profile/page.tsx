@@ -22,10 +22,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <ProfileForm user={user} />
       <Suspense fallback={<LoadingCard />}>
         <OrganizerProfileInfo user={user} locale={locale} />
       </Suspense>
+      <ProfileForm user={user} />
       <Suspense fallback={<LoadingCard />}>
         <SubscriptionInfo user={user} />
       </Suspense>

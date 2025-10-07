@@ -638,7 +638,15 @@
     "loadMore": "Load more visits",
     "loadingMore": "Loading more visits...",
     "noVisits": "No visits found",
-    "noVisitsDescription": "No visits found for this event with the current search criteria."
+    "noVisitsDescription": "No visits found for this event with the current search criteria.",
+    "messageAll": "Message All",
+    "phonesCopied": "Phone numbers copied to clipboard",
+    "noPhoneNumbers": "No phone numbers available",
+    "emailAll": "Email All",
+    "emailsCopied": "Email addresses copied to clipboard",
+    "noEmails": "No email addresses available",
+    "emailSubject": "Important Update About Your Event",
+    "emailBody": "Hello,\n\nWe wanted to reach out to share some important information about the event you registered for.\n\n[Your message here]\n\nThank you for your attention.\n\nBest regards"
   },
   "maps": {
     "previewForm": {

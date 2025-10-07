@@ -1,5 +1,3 @@
-"use client";
-
 import { useParams, useSearchParams } from "next/navigation";
 import useGetVisitsByEventSlug from "@/hooks/visits/useGetVisitsByEventSlug";
 import { Visit } from "@/queries/client/visits/getVisitsByEventSlug";
@@ -11,6 +9,8 @@ import VisitCard from "./VisitCard";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import MessageAllButton from "./MessageAllButton";
+import EmailAllButton from "./EmailAllButton";
 
 const VisitsList = () => {
   const tVisits = useTranslations("VisitsPage");
@@ -63,6 +63,12 @@ const VisitsList = () => {
         <Badge variant="outline">
           {totalVisits} / {event.visitsLimit}
         </Badge>
+        {totalVisits > 0 && (
+          <div className="flex gap-2">
+            <MessageAllButton data={data} />
+            <EmailAllButton data={data} />
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">

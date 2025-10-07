@@ -634,7 +634,15 @@
     "loadMore": "Cargar más visitas",
     "loadingMore": "Cargando más visitas...",
     "noVisits": "No se encontraron visitas",
-    "noVisitsDescription": "No se encontraron visitas para este evento con los criterios de búsqueda actuales."
+    "noVisitsDescription": "No se encontraron visitas para este evento con los criterios de búsqueda actuales.",
+    "messageAll": "Mensajear a Todos",
+    "phonesCopied": "Números de teléfono copiados al portapapeles",
+    "noPhoneNumbers": "No hay números de teléfono disponibles",
+    "emailAll": "Enviar Email a Todos",
+    "emailsCopied": "Correos electrónicos copiados al portapapeles",
+    "noEmails": "No hay correos electrónicos disponibles",
+    "emailSubject": "Actualización Importante Sobre Tu Evento",
+    "emailBody": "Hola,\n\nQueríamos comunicarnos para compartir información importante sobre el evento en el que te registraste.\n\n[Tu mensaje aquí]\n\nGracias por tu atención.\n\nSaludos cordiales"
   },
   "maps": {
     "previewForm": {
