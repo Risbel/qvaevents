@@ -1,3 +1,5 @@
+"use client";
+
 import { useParams, useSearchParams } from "next/navigation";
 import useGetVisitsByEventSlug from "@/hooks/visits/useGetVisitsByEventSlug";
 import { Visit } from "@/queries/client/visits/getVisitsByEventSlug";

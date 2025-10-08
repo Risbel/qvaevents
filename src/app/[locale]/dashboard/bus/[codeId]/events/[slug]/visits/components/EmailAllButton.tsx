@@ -1,8 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { type VisitsResponse } from "@/hooks/visits/useGetVisitsByEventSlug";
+import { useState } from "react";
+import EmailAllModal from "./EmailAllModal";
 
 interface EmailAllButtonProps {
   data?: { pages: VisitsResponse[] };
@@ -10,6 +14,8 @@ interface EmailAllButtonProps {
 
 const EmailAllButton = ({ data }: EmailAllButtonProps) => {
   const tVisits = useTranslations("VisitsPage");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [emailsList, setEmailsList] = useState<string[]>([]);
 
   const handleEmailAll = () => {
     // Collect all email addresses from all pages
@@ -23,26 +29,34 @@ const EmailAllButton = ({ data }: EmailAllButtonProps) => {
       return;
     }
 
+    // Remove duplicates using Set
+    const uniqueEmails = Array.from(new Set(allEmails));
+
     // Copy to clipboard
-    const emailsList = allEmails.join(", ");
-    navigator.clipboard.writeText(emailsList);
+    const emailsText = uniqueEmails.join(", ");
+    navigator.clipboard.writeText(emailsText);
     toast.success(tVisits("emailsCopied"));
 
-    // Get subject and body from translations
-    const subject = encodeURIComponent(tVisits("emailSubject"));
-    const body = encodeURIComponent(tVisits("emailBody"));
-
-    // Open email client with BCC, subject, and body
-    // Format: mailto:?bcc=emails&subject=Subject&body=Body
-    const mailtoUrl = `mailto:?bcc=${allEmails.join(",")}&subject=${subject}&body=${body}`;
-    window.location.href = mailtoUrl;
+    // Set emails and open modal
+    setEmailsList(uniqueEmails);
+    setIsModalOpen(true);
   };
 
   return (
-    <Button variant="outline" size="sm" onClick={handleEmailAll}>
-      <Mail className="size-4" />
-      {tVisits("emailAll")}
-    </Button>
+    <>
+      <Button variant="outline" size="sm" onClick={handleEmailAll}>
+        <Mail className="size-4" />
+        {tVisits("emailAll")}
+      </Button>
+
+      <EmailAllModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        emails={emailsList}
+        defaultSubject={tVisits("emailSubject")}
+        defaultBody={tVisits("emailBody")}
+      />
+    </>
   );
 };
 

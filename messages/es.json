@@ -642,7 +642,13 @@
     "emailsCopied": "Correos electrónicos copiados al portapapeles",
     "noEmails": "No hay correos electrónicos disponibles",
     "emailSubject": "Actualización Importante Sobre Tu Evento",
-    "emailBody": "Hola,\n\nQueríamos comunicarnos para compartir información importante sobre el evento en el que te registraste.\n\n[Tu mensaje aquí]\n\nGracias por tu atención.\n\nSaludos cordiales"
+    "emailBody": "Hola,\n\nQueríamos comunicarnos para compartir información importante sobre el evento en el que te registraste.\n\n[Tu mensaje aquí]\n\nGracias por tu atención.\n\nSaludos cordiales",
+    "recipients": "Destinatarios",
+    "subject": "Asunto",
+    "body": "Cuerpo del Mensaje",
+    "cancel": "Cancelar",
+    "sendEmail": "Enviar Email",
+    "noRecipientsSelected": "No hay destinatarios seleccionados"
   },
   "maps": {
     "previewForm": {

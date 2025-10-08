@@ -646,7 +646,13 @@
     "emailsCopied": "Email addresses copied to clipboard",
     "noEmails": "No email addresses available",
     "emailSubject": "Important Update About Your Event",
-    "emailBody": "Hello,\n\nWe wanted to reach out to share some important information about the event you registered for.\n\n[Your message here]\n\nThank you for your attention.\n\nBest regards"
+    "emailBody": "Hello,\n\nWe wanted to reach out to share some important information about the event you registered for.\n\n[Your message here]\n\nThank you for your attention.\n\nBest regards",
+    "recipients": "Recipients",
+    "subject": "Subject",
+    "body": "Message Body",
+    "cancel": "Cancel",
+    "sendEmail": "Send Email",
+    "noRecipientsSelected": "No recipients selected"
   },
   "maps": {
     "previewForm": {
