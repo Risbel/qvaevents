@@ -5,7 +5,7 @@ import { State } from "@/types/state";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -23,7 +23,9 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
     if (!validation.success) {
       return {
         status: "error",
-        errors: validation.error.flatten().fieldErrors,
+        errors: {
+          auth: ["Invalid email or password"],
+        },
       } satisfies State;
     }
 
@@ -57,6 +59,8 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
         const { error: profileError } = await supabase.from("ClientProfile").insert({
           user_id: authData.user.id,
           username: username,
+          email: authData.user.email,
+          name: authData.user.email.split("@")[0],
         });
       }
     }

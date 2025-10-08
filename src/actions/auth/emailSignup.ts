@@ -30,7 +30,9 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
     if (!validation.success) {
       return {
         status: "error",
-        errors: validation.error.flatten().fieldErrors,
+        errors: {
+          auth: ["Invalid email or password"],
+        },
       } satisfies State;
     }
 
@@ -54,6 +56,8 @@ export async function emailSignup(prevState: State, formData: FormData): Promise
       const { error: profileError } = await supabase.from("ClientProfile").insert({
         user_id: authData.user.id,
         username: username,
+        email: validation.data.email,
+        name: username,
       });
     }
 

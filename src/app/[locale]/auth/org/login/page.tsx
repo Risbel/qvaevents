@@ -7,11 +7,11 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { State } from "@/types/state";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import GoogleSignIn from "@/app/components/GoogleSignIn";
 
 export default function LoginPage() {
@@ -23,6 +23,7 @@ export default function LoginPage() {
   const locale = params.locale as string;
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(emailLogin, initialState);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -52,14 +53,30 @@ export default function LoginPage() {
             <Label htmlFor="password" className="mb-2">
               {t("password")}
             </Label>
-            <Input
-              className="mb-1"
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <Input
+                className="mb-1 pr-10"
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="current-password"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <Eye className="h-4 w-4 text-muted-foreground" />
+                )}
+              </Button>
+            </div>
             {state?.errors?.password && <p className="text-sm text-destructive">{t("invalidCredentials")}</p>}
             {state?.errors?.auth && <p className="text-sm text-destructive">{t("invalidCredentials")}</p>}
           </div>

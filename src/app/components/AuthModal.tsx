@@ -11,7 +11,7 @@ import { useActionState, useEffect, useState } from "react";
 import { State } from "@/types/state";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import GoogleSignIn from "@/app/components/GoogleSignIn";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,6 +35,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const initialState: State = { status: undefined };
   const [loginState, loginFormAction, isLoginPending] = useActionState(emailLogin, initialState);
   const [signupState, signupFormAction, isSignupPending] = useActionState(emailSignup, initialState);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (loginState.status === "success") {
@@ -69,11 +72,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     onClose();
     setIsLoginMode(true);
     setUserEmail("");
+    setShowLoginPassword(false);
+    setShowSignupPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
     setUserEmail("");
+    setShowLoginPassword(false);
+    setShowSignupPassword(false);
+    setShowConfirmPassword(false);
   };
 
   return (
@@ -101,7 +110,30 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">{t("password")}</Label>
-                <Input id="password" name="password" type="password" required autoComplete="current-password" />
+                <div className="relative">
+                  <Input
+                    className="pr-10"
+                    id="password"
+                    name="password"
+                    type={showLoginPassword ? "text" : "password"}
+                    required
+                    autoComplete="current-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    aria-label={showLoginPassword ? "Hide password" : "Show password"}
+                  >
+                    {showLoginPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
                 {loginState?.errors?.password && <p className="text-sm text-destructive">{t("invalidCredentials")}</p>}
                 {loginState?.errors?.auth && <p className="text-sm text-destructive">{t("invalidCredentials")}</p>}
               </div>
@@ -132,20 +164,60 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="signup-password">{tSignup("password")}</Label>
-                <Input id="signup-password" name="password" type="password" required autoComplete="new-password" />
+                <div className="relative">
+                  <Input
+                    className="pr-10"
+                    id="signup-password"
+                    name="password"
+                    type={showSignupPassword ? "text" : "password"}
+                    required
+                    autoComplete="new-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowSignupPassword(!showSignupPassword)}
+                    aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                  >
+                    {showSignupPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
                 {signupState?.errors?.password && (
                   <p className="text-sm text-destructive">{signupState.errors.password}</p>
                 )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">{tSignup("confirmPassword")}</Label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  autoComplete="new-password"
-                />
+                <div className="relative">
+                  <Input
+                    className="pr-10"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    autoComplete="new-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
                 {signupState?.errors?.confirmPassword && (
                   <p className="text-sm text-destructive">{signupState.errors.confirmPassword}</p>
                 )}
