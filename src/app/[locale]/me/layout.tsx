@@ -1,6 +1,7 @@
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import ModeToggle from "@/app/components/ModeToggle";
 import GoBackButton from "@/app/components/GoBackButton";
+import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 
 const MeLayout = async ({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) => {
   return (
@@ -10,6 +11,7 @@ const MeLayout = async ({ children, params }: { children: React.ReactNode; param
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
+          <ClientsUserDropdown />
         </div>
       </nav>
 

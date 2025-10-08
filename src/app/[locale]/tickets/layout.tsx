@@ -1,6 +1,7 @@
 import GoBackButton from "@/app/components/GoBackButton";
 import LocaleSwitcher from "@/app/components/LocaleSwitcher";
 import ModeToggle from "@/app/components/ModeToggle";
+import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 import { getTranslations } from "next-intl/server";
 
 const TicketsLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -13,6 +14,7 @@ const TicketsLayout = async ({ children }: { children: React.ReactNode }) => {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
+          <ClientsUserDropdown />
         </div>
       </nav>
 

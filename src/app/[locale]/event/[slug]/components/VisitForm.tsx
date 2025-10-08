@@ -10,10 +10,12 @@ import { useTranslations } from "next-intl";
 export default function VisitForm({
   clientProfile,
   eventId,
+  organizerId,
   onSuccess,
 }: {
   clientProfile: Tables<"ClientProfile">;
   eventId: number;
+  organizerId?: number;
   onSuccess?: () => void;
 }) {
   const t = useTranslations("EventPage.ReservationDialog");
@@ -35,6 +37,7 @@ export default function VisitForm({
     <form action={formAction} className="space-y-3">
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="clientId" value={clientProfile.id} />
+      <input type="hidden" name="organizerId" value={organizerId} />
 
       {state?.errors?.auth && <p className="text-sm text-destructive">{state.errors.auth}</p>}
       {state?.errors?.profile && <p className="text-sm text-destructive">{state.errors.profile}</p>}

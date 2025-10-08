@@ -18,7 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import AuthModal from "./AuthModal";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import useGetUser from "@/hooks/user/useGetUser";
+import useGetMyClientProfile from "@/hooks/me/useGetMyClientProfile";
 
 const ClientsUserDropdown = () => {
   const t = useTranslations("Auth");
@@ -29,7 +29,7 @@ const ClientsUserDropdown = () => {
   const locale = params.locale as string;
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading, isFetching } = useGetUser();
+  const { data: user, isLoading, isFetching } = useGetMyClientProfile();
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -37,6 +37,7 @@ const ClientsUserDropdown = () => {
     toast.success(t("signout.signOutSuccess"));
     queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
     queryClient.invalidateQueries({ queryKey: ["user"] });
+    window.location.reload();
   };
 
   // Show skeleton loader while loading or fetching
@@ -52,20 +53,16 @@ const ClientsUserDropdown = () => {
 
   if (user) {
     const getUserName = () => {
-      return user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
+      return user.name || user.email?.split("@")[0] || "User";
     };
+
+    const twoFirstLetters = getUserName().slice(0, 2).toUpperCase();
 
     const getUserAvatar = () => {
-      return user.user_metadata?.avatar_url || user.user_metadata?.picture || undefined;
-    };
-
-    const getInitials = (name: string) => {
-      return name
-        .split(" ")
-        .map((word) => word.charAt(0))
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
+      if (user.avatar) return user.avatar;
+      // Generate colored avatar URL using Vercel Avatar
+      const name = encodeURIComponent(getUserName());
+      return `https://avatar.vercel.sh/${name}.svg?rounded=60&size=30&text=${twoFirstLetters}`;
     };
 
     return (
@@ -74,7 +71,7 @@ const ClientsUserDropdown = () => {
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
               <AvatarImage src={getUserAvatar()} alt={getUserName()} />
-              <AvatarFallback className="text-xs">{getInitials(getUserName())}</AvatarFallback>
+              <AvatarFallback className="text-xs">{twoFirstLetters}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

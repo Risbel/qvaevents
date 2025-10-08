@@ -43,10 +43,10 @@ export type Database = {
           id: number;
           isActive: boolean;
           isDeleted: boolean;
+          logo: string | null;
           name: string | null;
           organizerId: number;
           slug: string | null;
-          logo: string | null;
         };
         Insert: {
           codeId?: string;
@@ -55,10 +55,10 @@ export type Database = {
           id?: number;
           isActive: boolean;
           isDeleted?: boolean;
+          logo?: string | null;
           name?: string | null;
           organizerId: number;
           slug?: string | null;
-          logo?: string | null;
         };
         Update: {
           codeId?: string;
@@ -67,14 +67,53 @@ export type Database = {
           id?: number;
           isActive?: boolean;
           isDeleted?: boolean;
+          logo?: string | null;
           name?: string | null;
           organizerId?: number;
           slug?: string | null;
-          logo?: string | null;
         };
         Relationships: [
           {
             foreignKeyName: "Business_organizerId_fkey";
+            columns: ["organizerId"];
+            isOneToOne: false;
+            referencedRelation: "OrganizerProfile";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      clientOnOrganizer: {
+        Row: {
+          clientId: number;
+          createdAt: string;
+          id: number;
+          organizerId: number;
+          badge: string;
+        };
+        Insert: {
+          clientId: number;
+          createdAt?: string;
+          id?: number;
+          organizerId: number;
+          badge: string;
+        };
+        Update: {
+          clientId?: number;
+          createdAt?: string;
+          id?: number;
+          organizerId?: number;
+          badge: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "clientOnOrganizer_clientId_fkey";
+            columns: ["clientId"];
+            isOneToOne: false;
+            referencedRelation: "ClientProfile";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "clientOnOrganizer_organizerId_fkey";
             columns: ["organizerId"];
             isOneToOne: false;
             referencedRelation: "OrganizerProfile";
@@ -87,43 +126,43 @@ export type Database = {
           avatar: string | null;
           birthday: string | null;
           createdAt: string;
+          email: string | null;
           id: number;
           info: string | null;
+          name: string | null;
+          phone: string | null;
           sex: string | null;
           updatedAt: string;
           user_id: string;
           username: string;
-          name: string;
-          phone: string;
-          email: string;
         };
         Insert: {
           avatar?: string | null;
           birthday?: string | null;
           createdAt?: string;
+          email?: string | null;
           id?: number;
           info?: string | null;
+          name?: string | null;
+          phone?: string | null;
           sex?: string | null;
           updatedAt?: string;
           user_id: string;
           username: string;
-          name: string;
-          phone: string;
-          email: string;
         };
         Update: {
           avatar?: string | null;
           birthday?: string | null;
           createdAt?: string;
+          email?: string | null;
           id?: number;
           info?: string | null;
+          name?: string | null;
+          phone?: string | null;
           sex?: string | null;
           updatedAt?: string;
           user_id?: string;
           username?: string;
-          name?: string;
-          phone?: string;
-          email?: string;
         };
         Relationships: [];
       };

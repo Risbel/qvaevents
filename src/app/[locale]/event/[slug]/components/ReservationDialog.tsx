@@ -16,7 +16,7 @@ import VisitForm from "./VisitForm";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ReservationDialog({ eventId }: { eventId: number }) {
+export default function ReservationDialog({ eventId, organizerId }: { eventId: number; organizerId: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const {
     data: clientProfile,
@@ -51,7 +51,12 @@ export default function ReservationDialog({ eventId }: { eventId: number }) {
           ) : errorClientProfile || !clientProfile ? (
             <p className="text-sm text-muted-foreground">{t("mustBeLoggedIn")}</p>
           ) : eventId && clientProfile ? (
-            <VisitForm clientProfile={clientProfile} eventId={eventId} onSuccess={() => setIsOpen(false)} />
+            <VisitForm
+              clientProfile={clientProfile}
+              eventId={eventId}
+              organizerId={organizerId}
+              onSuccess={() => setIsOpen(false)}
+            />
           ) : (
             <div className="flex gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="flex-1">

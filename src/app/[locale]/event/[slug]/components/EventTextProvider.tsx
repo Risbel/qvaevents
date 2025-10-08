@@ -33,8 +33,8 @@ interface EventTextProviderProps {
 }
 
 export function EventTextProvider({ children, eventTexts, defaultLocale }: EventTextProviderProps) {
-  // Initialize with default locale or first available text
-  const getInitialLanguageId = () => {
+  // Use lazy initialization for useState
+  const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(() => {
     if (eventTexts.length === 0) return null;
 
     // Try to find text matching the default locale
@@ -45,9 +45,7 @@ export function EventTextProvider({ children, eventTexts, defaultLocale }: Event
 
     // Fallback to first text
     return eventTexts[0].languageId;
-  };
-
-  const [currentLanguageId, setCurrentLanguageId] = useState<number | null>(getInitialLanguageId());
+  });
 
   // Get current text based on selected language
   const currentText = eventTexts.find((text) => text.languageId === currentLanguageId) || null;
@@ -57,7 +55,20 @@ export function EventTextProvider({ children, eventTexts, defaultLocale }: Event
 
   // Update current language when defaultLocale changes
   useEffect(() => {
-    setCurrentLanguageId(getInitialLanguageId());
+    if (eventTexts.length === 0) {
+      setCurrentLanguageId(null);
+      return;
+    }
+
+    if (defaultLocale) {
+      const defaultText = eventTexts.find((text) => text.Language.code === defaultLocale);
+      if (defaultText) {
+        setCurrentLanguageId(defaultText.languageId);
+        return;
+      }
+    }
+
+    setCurrentLanguageId(eventTexts[0].languageId);
   }, [defaultLocale, eventTexts]);
 
   const value: EventTextContextType = {

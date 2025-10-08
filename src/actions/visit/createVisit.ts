@@ -7,6 +7,7 @@ import { z } from "zod";
 const createVisitSchema = z.object({
   eventId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
+  organizerId: z.coerce.number().int().positive().optional(),
 });
 
 export async function createVisit(prevState: State, formData: FormData): Promise<State> {
@@ -22,7 +23,9 @@ export async function createVisit(prevState: State, formData: FormData): Promise
   const validation = createVisitSchema.safeParse({
     eventId: formData.get("eventId"),
     clientId: formData.get("clientId"),
+    organizerId: formData.get("organizerId"),
   });
+
   if (!validation.success) {
     return {
       status: "error",
@@ -30,7 +33,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     } satisfies State;
   }
 
-  const { eventId, clientId } = validation.data;
+  const { eventId, clientId, organizerId } = validation.data;
 
   // Prevent duplicate reservations for the same event and client
   const { count: existingCount, error: existsError } = await supabase
@@ -46,21 +49,42 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     } satisfies State;
   }
 
-  const { error: insertError } = await supabase.from("Visit").insert({
-    eventId,
-    clientId,
-    isAttended: false,
-    isCanceled: false,
-    isConfirmed: false,
-    canceledAt: null,
-    createdAt: new Date().toISOString(),
-  });
+  const { error: insertError, data: visitData } = await supabase
+    .from("Visit")
+    .insert({
+      eventId,
+      clientId,
+      isAttended: false,
+      isCanceled: false,
+      isConfirmed: false,
+      canceledAt: null,
+    })
+    .select()
+    .single();
 
   if (insertError) {
     return {
       status: "error",
       errors: { visit: ["Failed to create reservation"] },
     } satisfies State;
+  }
+
+  if (organizerId) {
+    // Check if client is already registered with this organizer
+    const { data: existingRelation, error: existingRelationError } = await supabase
+      .from("clientOnOrganizer")
+      .select("id")
+      .eq("clientId", clientId)
+      .eq("organizerId", organizerId)
+      .maybeSingle();
+
+    // Only add if not already registered
+    if (!existingRelation?.id) {
+      const { error: insertError, data } = await supabase.from("clientOnOrganizer").insert({
+        clientId,
+        organizerId,
+      });
+    }
   }
 
   return { status: "success" } satisfies State;

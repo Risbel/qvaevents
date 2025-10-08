@@ -47,6 +47,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       setUserEmail("");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
+      window.location.reload();
     }
 
     if (loginState.status === "error") {
@@ -61,6 +62,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       setUserEmail("");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
+      window.location.reload();
     }
 
     if (signupState.status === "error") {
