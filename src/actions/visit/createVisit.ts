@@ -8,6 +8,7 @@ const createVisitSchema = z.object({
   eventId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
   organizerId: z.coerce.number().int().positive().optional(),
+  companionsCount: z.coerce.number().int().min(0).max(10).default(0),
 });
 
 export async function createVisit(prevState: State, formData: FormData): Promise<State> {
@@ -24,6 +25,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     eventId: formData.get("eventId"),
     clientId: formData.get("clientId"),
     organizerId: formData.get("organizerId"),
+    companionsCount: formData.get("companionsCount"),
   });
 
   if (!validation.success) {
@@ -33,7 +35,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     } satisfies State;
   }
 
-  const { eventId, clientId, organizerId } = validation.data;
+  const { eventId, clientId, organizerId, companionsCount } = validation.data;
 
   // Prevent duplicate reservations for the same event and client
   const { count: existingCount, error: existsError } = await supabase
@@ -54,6 +56,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     .insert({
       eventId,
       clientId,
+      companionsCount,
       isAttended: false,
       isCanceled: false,
       isConfirmed: false,
@@ -87,5 +90,11 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     }
   }
 
-  return { status: "success" } satisfies State;
+  return {
+    status: "success",
+    data: {
+      visitCode: visitData.code,
+      companionsCount: companionsCount,
+    },
+  } satisfies State;
 }

@@ -593,7 +593,18 @@
       "creating": "Creando...",
       "reservationCreated": "Reserva creada exitosamente.",
       "reservationFailed": "Error al crear la reserva.",
-      "confirmReservation": "Confirmar Reserva"
+      "confirmReservation": "Confirmar Reserva",
+      "addCompanions": "Agregar Acompañantes",
+      "companionsCountLabel": "Número de Acompañantes",
+      "companionsHint": "¿Cuántas personas vienen contigo?",
+      "shareEvent": "Enviar Confirmación",
+      "shareEventTitle": "¡Mira este evento!",
+      "shareEventText": "{clientName} hizo una reserva y te invita como acompañante a este evento. Accede ahora y confirma tu asistencia.",
+      "sharedSuccessfully": "Evento compartido exitosamente",
+      "linkCopied": "Enlace del evento copiado al portapapeles",
+      "successTitle": "¡Reserva Confirmada! 🎉",
+      "successDescription": "¡Comparte este evento con tus acompañantes!",
+      "close": "Cerrar"
     }
   },
   "TicketsPage": {
@@ -690,5 +701,26 @@
       "shareLocationText": "Aquí está la ubicación del evento",
       "shareLocationCopied": "Enlace de ubicación copiado al portapapeles"
     }
+  },
+  "ConfirmCompanionPage": {
+    "title": "Confirma Tu Asistencia",
+    "description": "Has sido invitado a unirte a este evento como acompañante",
+    "organizer": "Organizado por",
+    "invitedYou": "Te ha invitado a este evento",
+    "companions": "Acompañantes Confirmados",
+    "noCompanionsYet": "Aún no hay acompañantes confirmados. ¡Sé el primero!",
+    "confirmAsCompanion": "Confirma tu asistencia como",
+    "confirmButton": "Confirmar Asistencia",
+    "confirming": "Confirmando...",
+    "confirmationSuccess": "¡Confirmado exitosamente! Redirigiendo al evento...",
+    "confirmationFailed": "Error al confirmar asistencia",
+    "notLoggedIn": "No Has Iniciado Sesión",
+    "mustBeLoggedInDescription": "Debes iniciar sesión con un perfil de cliente para confirmar tu asistencia",
+    "reservationFull": "Reserva Completa",
+    "reservationFullDescription": "Esta reserva no puede aceptar más acompañantes. Se ha alcanzado el límite.",
+    "confirmed": "¡Confirmado!",
+    "confirmedDescription": "Has confirmado exitosamente tu asistencia a este evento",
+    "alreadyConfirmed": "Ya Confirmado",
+    "alreadyConfirmedDescription": "Ya has confirmado tu asistencia a este evento"
   }
 }

@@ -597,7 +597,18 @@
       "creating": "Creating...",
       "reservationCreated": "Reservation created successfully.",
       "reservationFailed": "Failed to create reservation.",
-      "confirmReservation": "Confirm Reservation"
+      "confirmReservation": "Confirm Reservation",
+      "addCompanions": "Add Companions",
+      "companionsCountLabel": "Number of Companions",
+      "companionsHint": "How many people are coming with you?",
+      "shareEvent": "Send Confirmation",
+      "shareEventTitle": "Check out this event!",
+      "shareEventText": "{clientName} made a reservation and invites you as a companion to this event. Access now and confirm your attendance.",
+      "sharedSuccessfully": "Event shared successfully",
+      "linkCopied": "Event link copied to clipboard",
+      "successTitle": "Reservation Confirmed! 🎉",
+      "successDescription": "Share this event with your companions!",
+      "close": "Close"
     }
   },
   "TicketsPage": {
@@ -694,5 +705,26 @@
       "shareLocationText": "Here's the event location",
       "shareLocationCopied": "Location link copied to clipboard"
     }
+  },
+  "ConfirmCompanionPage": {
+    "title": "Confirm Your Attendance",
+    "description": "You've been invited to join this event as a companion",
+    "organizer": "Organized by",
+    "invitedYou": "Has invited you to this event",
+    "companions": "Confirmed Companions",
+    "noCompanionsYet": "No companions confirmed yet. Be the first!",
+    "confirmAsCompanion": "Confirm your attendance as",
+    "confirmButton": "Confirm Attendance",
+    "confirming": "Confirming...",
+    "confirmationSuccess": "Successfully confirmed! Redirecting to event...",
+    "confirmationFailed": "Failed to confirm attendance",
+    "notLoggedIn": "Not Logged In",
+    "mustBeLoggedInDescription": "You must be logged in with a client profile to confirm your attendance",
+    "reservationFull": "Reservation Full",
+    "reservationFullDescription": "This reservation cannot accept more companions. The limit has been reached.",
+    "confirmed": "Confirmed!",
+    "confirmedDescription": "You have successfully confirmed your attendance for this event",
+    "alreadyConfirmed": "Already Confirmed",
+    "alreadyConfirmedDescription": "You have already confirmed your attendance for this event"
   }
 }

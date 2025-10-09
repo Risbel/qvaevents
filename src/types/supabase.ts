@@ -82,27 +82,63 @@ export type Database = {
           }
         ];
       };
-      clientOnOrganizer: {
+      ClientCompanion: {
         Row: {
           clientId: number;
           createdAt: string;
           id: number;
-          organizerId: number;
-          badge: string;
+          visitId: number | null;
         };
         Insert: {
           clientId: number;
           createdAt?: string;
           id?: number;
-          organizerId: number;
-          badge: string;
+          visitId?: number | null;
         };
         Update: {
           clientId?: number;
           createdAt?: string;
           id?: number;
-          organizerId?: number;
+          visitId?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ClientCompanion_clientId_fkey";
+            columns: ["clientId"];
+            isOneToOne: false;
+            referencedRelation: "ClientProfile";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ClientCompanion_visitId_fkey";
+            columns: ["visitId"];
+            isOneToOne: false;
+            referencedRelation: "Visit";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      clientOnOrganizer: {
+        Row: {
           badge: string;
+          clientId: number;
+          createdAt: string;
+          id: number;
+          organizerId: number;
+        };
+        Insert: {
+          badge?: string;
+          clientId: number;
+          createdAt?: string;
+          id?: number;
+          organizerId: number;
+        };
+        Update: {
+          badge?: string;
+          clientId?: number;
+          createdAt?: string;
+          id?: number;
+          organizerId?: number;
         };
         Relationships: [
           {
@@ -643,32 +679,38 @@ export type Database = {
         Row: {
           canceledAt: string | null;
           clientId: number | null;
+          companionsCount: number;
           createdAt: string;
           eventId: number;
           id: number;
           isAttended: boolean;
           isCanceled: boolean;
           isConfirmed: boolean;
+          code: string;
         };
         Insert: {
           canceledAt?: string | null;
           clientId?: number | null;
+          companionsCount?: number;
           createdAt?: string;
           eventId: number;
           id?: number;
           isAttended?: boolean;
           isCanceled?: boolean;
           isConfirmed?: boolean;
+          code: string;
         };
         Update: {
           canceledAt?: string | null;
           clientId?: number | null;
+          companionsCount?: number;
           createdAt?: string;
           eventId?: number;
           id?: number;
           isAttended?: boolean;
           isCanceled?: boolean;
           isConfirmed?: boolean;
+          code: string;
         };
         Relationships: [
           {

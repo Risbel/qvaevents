@@ -45,8 +45,8 @@ export default function ReservationDialog({ eventId, organizerId }: { eventId: n
         <div className="space-y-4">
           {isLoadingClientProfile || isFetchingClientProfile ? (
             <div className="space-y-3">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-8 w-full" />
             </div>
           ) : errorClientProfile || !clientProfile ? (
             <p className="text-sm text-muted-foreground">{t("mustBeLoggedIn")}</p>
