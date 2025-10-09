@@ -328,7 +328,7 @@
     "businessNotFoundDescription": "The business you're looking for doesn't exist, has been removed, or you don't have access to it."
   },
   "Dashboard": {
-    "createBusiness": "Create Business",
+    "createBusiness": "New Business",
     "businesses": "Businesses",
     "businessesDescription": "Manage your businesses and their events",
     "errorLoadingBusinesses": "Error loading businesses. Please refresh the page.",
@@ -653,6 +653,31 @@
     "cancel": "Cancel",
     "sendEmail": "Send Email",
     "noRecipientsSelected": "No recipients selected"
+  },
+  "ClientsPage": {
+    "clients": "Clients",
+    "totalClients": "Total Clients",
+    "registeredOn": "Registered on",
+    "failedToLoadClients": "Failed to load clients",
+    "failedToLoadClientsDescription": "Error loading clients. Please try again later.",
+    "loadMore": "Load more clients",
+    "loadingMore": "Loading more clients...",
+    "noClients": "No clients found",
+    "noClientsDescription": "No clients registered with your organization yet.",
+    "Filter": {
+      "searchPlaceholder": "Search by",
+      "searchBy": "Search by",
+      "search": "Search",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "username": "Username"
+    },
+    "badges": {
+      "regular": "Regular",
+      "badgeUpdated": "Badge updated successfully",
+      "badgeUpdateError": "Failed to update badge"
+    }
   },
   "maps": {
     "previewForm": {

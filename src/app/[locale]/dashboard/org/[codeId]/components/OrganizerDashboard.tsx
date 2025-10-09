@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Building2 } from "lucide-react";
+import { Building2, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import BusinessList from "./BusinessList";
@@ -43,7 +43,9 @@ export default function OrganizerDashboard({ codeId, organizer }: OrganizerDashb
           </div>
           <div className="flex justify-end">
             <Button asChild size="sm" className="max-w-fit">
-              <Link href={`/${locale}/new/${organizer.codeId}`}>{t("createBusiness")}</Link>
+              <Link href={`/${locale}/new/${organizer.codeId}`} className="flex items-center">
+                <PlusIcon className="w-4 h-4" /> {t("createBusiness")}
+              </Link>
             </Button>
           </div>
         </CardHeader>

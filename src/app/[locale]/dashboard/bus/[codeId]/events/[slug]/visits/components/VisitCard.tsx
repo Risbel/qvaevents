@@ -23,12 +23,21 @@ const VisitCard = ({ visit }: VisitCardProps) => {
     return username.slice(0, 2).toUpperCase();
   };
 
+  const username = visit.ClientProfile?.username || visit.ClientProfile?.name || "User";
+  const twoFirstLetters = username.slice(0, 2).toUpperCase();
+
+  const getUserAvatar = () => {
+    if (!visit.ClientProfile?.avatar)
+      return `https://avatar.vercel.sh/${username}.svg?rounded=60&size=30&text=${twoFirstLetters}`;
+    return visit.ClientProfile?.avatar;
+  };
+
   return (
     <Card className="py-2">
       <CardContent className="flex items-center justify-between relative px-2">
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={visit.ClientProfile?.avatar || undefined} />
+            <AvatarImage src={getUserAvatar()} />
             <AvatarFallback>{getInitials(visit.ClientProfile?.username || "")}</AvatarFallback>
           </Avatar>
           <div>

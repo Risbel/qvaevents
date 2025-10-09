@@ -31,7 +31,7 @@ const LandingNavbar = async () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {user && <OpenDashboardButton user={user} />}
+          {user && <OpenDashboardButton />}
           <LocaleSwitcher />
           <ModeToggle />
           {user ? (

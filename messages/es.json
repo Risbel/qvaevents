@@ -324,7 +324,7 @@
     "businessNotFoundDescription": "El negocio que estás buscando no existe, ha sido eliminado, o no tienes acceso a él."
   },
   "Dashboard": {
-    "createBusiness": "Crear Negocio",
+    "createBusiness": "Nuevo Negocio",
     "businesses": "Negocios",
     "businessesDescription": "Gestiona tus negocios y sus eventos",
     "errorLoadingBusinesses": "Error al cargar los negocios. Por favor actualiza la página.",
@@ -649,6 +649,31 @@
     "cancel": "Cancelar",
     "sendEmail": "Enviar Email",
     "noRecipientsSelected": "No hay destinatarios seleccionados"
+  },
+  "ClientsPage": {
+    "clients": "Clientes",
+    "totalClients": "Total de Clientes",
+    "registeredOn": "Registrado el",
+    "failedToLoadClients": "Error al cargar los clientes",
+    "failedToLoadClientsDescription": "Error al cargar los clientes. Por favor, intenta nuevamente.",
+    "loadMore": "Cargar más clientes",
+    "loadingMore": "Cargando más clientes...",
+    "noClients": "No se encontraron clientes",
+    "noClientsDescription": "No hay clientes registrados con tu organización aún.",
+    "Filter": {
+      "searchPlaceholder": "Buscar por",
+      "searchBy": "Buscar por",
+      "search": "Buscar",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "username": "Username"
+    },
+    "badges": {
+      "regular": "Regular",
+      "badgeUpdated": "Insignia actualizada exitosamente",
+      "badgeUpdateError": "Error al actualizar la insignia"
+    }
   },
   "maps": {
     "previewForm": {
