@@ -47,7 +47,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       setUserEmail("");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
-      window.location.reload();
     }
 
     if (loginState.status === "error") {
@@ -62,7 +61,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       setUserEmail("");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["myClientProfile"] });
-      window.location.reload();
     }
 
     if (signupState.status === "error") {
@@ -224,7 +222,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <p className="text-sm text-destructive">{signupState.errors.confirmPassword}</p>
                 )}
               </div>
-              {signupState?.errors?.auth && <p className="text-sm text-destructive">{signupState.errors.auth}</p>}
+              {signupState?.errors?.auth && (
+                <p className="text-sm text-destructive">
+                  {signupState.errors.auth[0] === "emailAlreadyRegistered"
+                    ? tSignup("emailAlreadyRegistered")
+                    : signupState.errors.auth}
+                </p>
+              )}
               <Button type="submit" className="w-full" disabled={isSignupPending}>
                 {isSignupPending ? (
                   <>

@@ -393,9 +393,11 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
                 id="visitsLimit"
                 name="visitsLimit"
                 type="number"
-                min={10}
+                min={5}
                 defaultValue={event.visitsLimit || ""}
                 placeholder={t("basicInfo.visitsLimitPlaceholder")}
+                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onWheel={(e) => e.currentTarget.blur()}
               />
             </div>
           </div>

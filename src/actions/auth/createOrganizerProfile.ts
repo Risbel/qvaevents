@@ -8,7 +8,7 @@ import { addMonths, endOfMonth } from "date-fns";
 const createOrganizerProfileSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   companyType: z.string().min(1, "Company type is required"),
-  companyLogo: z.string().url().optional().or(z.literal("")),
+  companyLogo: z.url().optional().or(z.literal("")),
   planId: z.string().min(1, "Plan selection is required"),
   billingCycle: z.string().min(1, "Billing cycle is required"),
 });

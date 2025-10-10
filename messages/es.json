@@ -112,7 +112,7 @@
     "finishing": "Terminando..."
   },
   "status": {
-    "confirmed": "Confirmado",
+    "confirmed": "Confirmado{count, plural, =1 { } other {s}}",
     "attended": "Asistido",
     "canceled": "Cancelado",
     "pending": "Pendiente",
@@ -159,7 +159,10 @@
       "continueWithGoogle": "Continuar con Google",
       "googleSuccess": "Esperando a que Google te redirija...",
       "signupSuccess": "Registro exitoso!",
-      "signupError": "Registro fallido!"
+      "signupError": "Registro fallido!",
+      "profileAlreadyExists": "Un perfil ya existe para este usuario",
+      "emailAlreadyRegistered": "Este correo electrónico ya está registrado",
+      "failedToCreateProfile": "Error al crear el perfil de usuario. Por favor contacta soporte."
     },
     "emailConfirmation": {
       "title": "Revisa tu correo electrónico",
@@ -184,6 +187,11 @@
       "message": "Por favor intenta de nuevo o contacta soporte si el problema persiste.",
       "backToLogin": "Volver al inicio de sesión"
     }
+  },
+  "UserDropdown": {
+    "profile": "Perfil",
+    "tickets": "Tickets",
+    "settings": "Ajustes"
   },
   "Profile": {
     "title": "Perfil",
@@ -594,6 +602,15 @@
       "reservationCreated": "Reserva creada exitosamente.",
       "reservationFailed": "Error al crear la reserva.",
       "confirmReservation": "Confirmar Reserva",
+      "fullyBooked": "Completamente Reservado",
+      "fullyBookedDescription": "Lo sentimos, este evento está completamente reservado. No hay más lugares disponibles.",
+      "capacity": {
+        "title": "Capacidad",
+        "noSpaceForCompanions": "No hay espacio para acompañantes",
+        "remainingCapacity": "Capacidad restante",
+        "spots": "lugares",
+        "maxCompanions": "Máximo de acompañantes"
+      },
       "addCompanions": "Agregar Acompañantes",
       "companionsCountLabel": "Número de Acompañantes",
       "companionsHint": "¿Cuántas personas vienen contigo?",
@@ -620,6 +637,9 @@
     "loadMore": "Cargar más tickets",
     "canceled": "Cancelado",
     "attended": "Asistido",
+    "companions": "Acompañantes",
+    "noCompanionsConfirmed": "Aún no hay acompañantes confirmados",
+    "unknownCompanion": "Acompañante desconocido",
     "confirmed": "Confirmado",
     "pending": "Pendiente",
     "reservedOn": "Reservado el",
@@ -627,6 +647,9 @@
   },
   "VisitsPage": {
     "title": "Visitas",
+    "companions": "Acompañantes",
+    "noCompanionsConfirmed": "Aún no hay acompañantes confirmados",
+    "unknownCompanion": "Acompañante desconocido",
     "description": "Gestiona tus visitas y asistentes",
     "visits": "Visitas",
     "visitsLimit": "Límite de visitas",
@@ -646,10 +669,10 @@
     "loadingMore": "Cargando más visitas...",
     "noVisits": "No se encontraron visitas",
     "noVisitsDescription": "No se encontraron visitas para este evento con los criterios de búsqueda actuales.",
-    "messageAll": "Mensajear a Todos",
+    "messageAll": "Mensajear",
     "phonesCopied": "Números de teléfono copiados al portapapeles",
     "noPhoneNumbers": "No hay números de teléfono disponibles",
-    "emailAll": "Enviar Email a Todos",
+    "emailAll": "Enviar Emails",
     "emailsCopied": "Correos electrónicos copiados al portapapeles",
     "noEmails": "No hay correos electrónicos disponibles",
     "emailSubject": "Actualización Importante Sobre Tu Evento",

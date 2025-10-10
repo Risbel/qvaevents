@@ -60,7 +60,7 @@ export async function emailLogin(prevState: State, formData: FormData): Promise<
           user_id: authData.user.id,
           username: username,
           email: authData.user.email,
-          name: authData.user.email.split("@")[0],
+          name: authData.user.user_metadata?.full_name || authData.user.user_metadata?.name || username,
         });
       }
     }

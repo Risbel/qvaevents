@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
+import { Mail, MailsIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { type VisitsResponse } from "@/hooks/visits/useGetVisitsByEventSlug";
@@ -45,7 +45,7 @@ const EmailAllButton = ({ data }: EmailAllButtonProps) => {
   return (
     <>
       <Button variant="outline" size="sm" onClick={handleEmailAll}>
-        <Mail className="size-4" />
+        <MailsIcon className="size-4" />
         {tVisits("emailAll")}
       </Button>
 

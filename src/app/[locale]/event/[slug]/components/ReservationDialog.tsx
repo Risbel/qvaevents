@@ -15,9 +15,20 @@ import useGetMyClientProfile from "@/hooks/me/useGetMyClientProfile";
 import VisitForm from "./VisitForm";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
+import useGetVisitsCountByEventId from "@/hooks/visits/useGetVisitsCountByEventId";
 
-export default function ReservationDialog({ eventId, organizerId }: { eventId: number; organizerId: number }) {
+export default function ReservationDialog({
+  eventId,
+  visitsLimit,
+  organizerId,
+}: {
+  eventId: number;
+  visitsLimit: number;
+  organizerId: number;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: visitsCount, isLoading: isLoadingVisitsCount } = useGetVisitsCountByEventId(eventId);
+
   const {
     data: clientProfile,
     isLoading: isLoadingClientProfile,
@@ -29,12 +40,19 @@ export default function ReservationDialog({ eventId, organizerId }: { eventId: n
   const t = useTranslations("EventPage.ReservationDialog");
   const tAction = useTranslations("actions");
 
+  const totalReserved = visitsCount?.totalCount || 0;
+  const isFullyBooked = visitsLimit > 0 && totalReserved >= visitsLimit;
+
+  if (isLoadingVisitsCount) {
+    return <Skeleton className="h-9 w-full" />;
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">
+        <Button className="w-full" disabled={isFullyBooked}>
           <Ticket className="h-4 w-4 mr-2" />
-          {t("reserve")}
+          {isFullyBooked ? t("fullyBooked") : t("reserve")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
@@ -43,20 +61,41 @@ export default function ReservationDialog({ eventId, organizerId }: { eventId: n
           <DialogDescription>{t("reserveDescription")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          {isLoadingClientProfile || isFetchingClientProfile ? (
+          {isLoadingClientProfile || isFetchingClientProfile || isLoadingVisitsCount ? (
             <div className="space-y-3">
               <Skeleton className="h-9 w-full" />
               <Skeleton className="h-8 w-full" />
             </div>
           ) : errorClientProfile || !clientProfile ? (
             <p className="text-sm text-muted-foreground">{t("mustBeLoggedIn")}</p>
+          ) : isFullyBooked ? (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground text-center">{t("fullyBookedDescription")}</p>
+              <div className="flex gap-2 pt-2">
+                <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="flex-1">
+                  {tAction("close")}
+                </Button>
+              </div>
+            </div>
           ) : eventId && clientProfile ? (
-            <VisitForm
-              clientProfile={clientProfile}
-              eventId={eventId}
-              organizerId={organizerId}
-              onSuccess={() => setIsOpen(false)}
-            />
+            <>
+              {visitsLimit > 0 && (
+                <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+                  <span>{t("capacity.title")}</span>
+                  <span>
+                    {totalReserved} / {visitsLimit}
+                  </span>
+                </div>
+              )}
+              <VisitForm
+                clientProfile={clientProfile}
+                eventId={eventId}
+                visitsLimit={visitsLimit}
+                visitsCount={visitsCount?.totalCount || 0}
+                organizerId={organizerId}
+                onSuccess={() => setIsOpen(false)}
+              />
+            </>
           ) : (
             <div className="flex gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="flex-1">

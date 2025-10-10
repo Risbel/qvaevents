@@ -8,6 +8,11 @@ export type Event = {
 export type Visit = Array<
   Tables<"Visit"> & {
     ClientProfile: Tables<"ClientProfile">;
+    ClientCompanion: Array<{
+      id: number;
+      clientId: number;
+      ClientProfile: Tables<"ClientProfile">;
+    }>;
   }
 >;
 
@@ -33,7 +38,23 @@ const getVisitsByEventSlug = async (
   // Build base query with inner join to ensure we only get visits with profiles
   const baseQuery = client
     .from("Visit")
-    .select("*, ClientProfile!inner(*)") // Use !inner to only get visits with profiles
+    .select(
+      `
+      *,
+      ClientProfile!inner(*),
+      ClientCompanion(
+        id,
+        clientId,
+        ClientProfile(
+          id,
+          name,
+          email,
+          username,
+          avatar
+        )
+      )
+    `
+    )
     .eq("eventId", eventData.id);
 
   // Apply search filter if provided

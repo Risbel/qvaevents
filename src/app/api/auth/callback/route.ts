@@ -29,6 +29,8 @@ export async function GET(request: Request) {
         const { error: profileError } = await supabase.from("ClientProfile").insert({
           user_id: data.user.id,
           username: username,
+          email: data.user.email,
+          name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || username,
         });
       }
 

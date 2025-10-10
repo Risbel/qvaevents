@@ -4,6 +4,8 @@ import { EventDateTime } from "@/app/components/EventDateTime";
 import { VisitWithEvent } from "@/queries/client/visits/getMyVisits";
 import TicketStatusBadge from "@/app/components/TicketStatusBadge";
 import { useTranslations } from "next-intl";
+import { Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface TicketCardProps {
   visit: VisitWithEvent;
@@ -12,6 +14,11 @@ interface TicketCardProps {
 
 const TicketCard = ({ visit, locale }: TicketCardProps) => {
   const t = useTranslations("TicketsPage");
+
+  const companions = visit.ClientCompanion || [];
+  const confirmedCount = companions.length;
+  const totalCompanions = visit.companionsCount || 0;
+  const hasCompanions = totalCompanions > 0;
 
   return (
     <div className="bg-card hover:bg-accent/50 rounded-lg shadow-md shadow-primary/50 border transition-colors">
@@ -58,6 +65,34 @@ const TicketCard = ({ visit, locale }: TicketCardProps) => {
               className="text-sm md:text-md font-bold text-violet-400"
             />
           </div>
+
+          {/* Companions Section */}
+          {hasCompanions && (
+            <div className="flex items-center mt-3 pt-2 border-t gap-2">
+              <div className="flex items-center gap-2 border-r pr-2">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">{t("companions")}</span>
+                <Badge variant={confirmedCount >= totalCompanions ? "default" : "secondary"} className="text-[10px]">
+                  {confirmedCount} / {totalCompanions}
+                </Badge>
+              </div>
+
+              {confirmedCount > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {companions.map((companion) => (
+                    <Badge key={companion.id} variant="outline">
+                      {companion.ClientProfile?.name ||
+                        companion.ClientProfile?.username ||
+                        companion.ClientProfile?.email ||
+                        t("unknownCompanion")}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground italic">{t("noCompanionsConfirmed")}</p>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-row justify-between pt-2 mt-2 border-t gap-2">
             <p className="text-muted-foreground text-[10px] md:text-xs">

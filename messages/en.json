@@ -159,7 +159,10 @@
       "continueWithGoogle": "Continue with Google",
       "googleSuccess": "Waiting for Google to redirect you...",
       "signupSuccess": "Signup successful!",
-      "signupError": "Signup failed!"
+      "signupError": "Signup failed!",
+      "profileAlreadyExists": "A profile already exists for this user",
+      "emailAlreadyRegistered": "This email is already registered",
+      "failedToCreateProfile": "Failed to create user profile. Please contact support."
     },
     "emailConfirmation": {
       "title": "Check your email",
@@ -184,6 +187,11 @@
       "message": "Please try again or contact support if the problem persists.",
       "backToLogin": "Back to login"
     }
+  },
+  "UserDropdown": {
+    "profile": "Profile",
+    "tickets": "Tickets",
+    "settings": "Settings"
   },
   "Profile": {
     "title": "Profile",
@@ -598,6 +606,15 @@
       "reservationCreated": "Reservation created successfully.",
       "reservationFailed": "Failed to create reservation.",
       "confirmReservation": "Confirm Reservation",
+      "fullyBooked": "Fully Booked",
+      "fullyBookedDescription": "Sorry, this event is fully booked. No more spots available.",
+      "capacity": {
+        "title": "Capacity",
+        "noSpaceForCompanions": "No space for companions",
+        "remainingCapacity": "Remaining capacity",
+        "spots": "spots",
+        "maxCompanions": "Max companions"
+      },
       "addCompanions": "Add Companions",
       "companionsCountLabel": "Number of Companions",
       "companionsHint": "How many people are coming with you?",
@@ -624,6 +641,9 @@
     "loadMore": "Load more tickets",
     "canceled": "Canceled",
     "attended": "Attended",
+    "companions": "Companions",
+    "noCompanionsConfirmed": "No companions confirmed yet",
+    "unknownCompanion": "Unknown companion",
     "confirmed": "Confirmed",
     "pending": "Pending",
     "reservedOn": "Reserved on",
@@ -631,6 +651,9 @@
   },
   "VisitsPage": {
     "title": "Visits",
+    "companions": "Companions",
+    "noCompanionsConfirmed": "No companions confirmed yet",
+    "unknownCompanion": "Unknown companion",
     "description": "Manage your visits and visitors",
     "visits": "Visits",
     "visitsLimit": "Visits limit",

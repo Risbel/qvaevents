@@ -21,11 +21,15 @@ import { useParams } from "next/navigation";
 export default function VisitForm({
   clientProfile,
   eventId,
+  visitsLimit,
+  visitsCount,
   organizerId,
   onSuccess,
 }: {
   clientProfile: Tables<"ClientProfile">;
   eventId: number;
+  visitsLimit: number;
+  visitsCount: number;
   organizerId?: number;
   onSuccess?: () => void;
 }) {
@@ -37,6 +41,10 @@ export default function VisitForm({
   const [companionsCount, setCompanionsCount] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [visitCode, setVisitCode] = useState<string | null>(null);
+
+  const remainingCapacity = visitsLimit > 0 ? visitsLimit - visitsCount : 30;
+  const maxCompanions = Math.max(0, remainingCapacity - 1);
+  const canAddCompanions = maxCompanions > 0;
 
   useEffect(() => {
     if (state.status === "success") {
@@ -123,9 +131,16 @@ export default function VisitForm({
       </div>
 
       {!showCompanions ? (
-        <Button type="button" variant="outline" size={"sm"} onClick={() => setShowCompanions(true)} className="w-full">
+        <Button
+          type="button"
+          variant="outline"
+          size={"sm"}
+          onClick={() => setShowCompanions(true)}
+          className="w-full"
+          disabled={!canAddCompanions}
+        >
           <UserPlus className="h-4 w-4 mr-2" />
-          {t("addCompanions")}
+          {canAddCompanions ? t("addCompanions") : t("capacity.noSpaceForCompanions")}
         </Button>
       ) : (
         <div className="space-y-2">
@@ -134,13 +149,26 @@ export default function VisitForm({
             id="companionsCount"
             type="number"
             min="1"
-            max="30"
+            max={maxCompanions}
             value={companionsCount}
-            onChange={(e) => setCompanionsCount(Math.max(1, Math.min(30, parseInt(e.target.value) || 0)).toString())}
+            onChange={(e) =>
+              setCompanionsCount(Math.max(1, Math.min(maxCompanions, parseInt(e.target.value) || 0)).toString())
+            }
             className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             onWheel={(e) => e.currentTarget.blur()}
           />
           <p className="text-xs text-muted-foreground">{t("companionsHint")}</p>
+          {visitsLimit > 0 && (
+            <p className="text-xs text-muted-foreground">
+              {t("capacity.remainingCapacity")}: {remainingCapacity} {t("capacity.spots")}
+              {maxCompanions > 0 && (
+                <>
+                  {" "}
+                  • {t("capacity.maxCompanions")}: {maxCompanions}
+                </>
+              )}
+            </p>
+          )}
         </div>
       )}
 

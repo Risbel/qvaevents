@@ -11,7 +11,6 @@ export async function getVisitByCode(code: string) {
       Event!inner(
         *,
         EventText(*, Language(id, code, name, native, icon)),
-        EventImage(*),
         Business(
           *
         )

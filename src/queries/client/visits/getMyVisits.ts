@@ -6,6 +6,11 @@ export type VisitWithEvent = Tables<"Visit"> & {
     EventText: Tables<"EventText">[];
     Business: Tables<"Business">;
   };
+  ClientCompanion: Array<
+    Tables<"ClientCompanion"> & {
+      ClientProfile: Tables<"ClientProfile">;
+    }
+  >;
 };
 
 interface GetMyVisitsParams {
@@ -33,7 +38,13 @@ const getMyVisits = async (
     client.from("Visit").select("*", { count: "exact", head: true }).eq("clientId", Number(clientId)),
     client
       .from("Visit")
-      .select("*, Event(*, EventImage(*), EventText(*, Language(*)), Business(*))")
+      .select(
+        `
+        *, 
+        Event(*, EventImage(*), EventText(*, Language(*)), Business(*)),
+        ClientCompanion(*, ClientProfile(*))
+      `
+      )
       .eq("clientId", Number(clientId))
       .order("createdAt", { ascending: false })
       .range(start, end - 1),
