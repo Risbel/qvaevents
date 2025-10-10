@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Tables } from "@/types/supabase";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function VisitForm({
   clientProfile,
@@ -34,6 +35,8 @@ export default function VisitForm({
   onSuccess?: () => void;
 }) {
   const t = useTranslations("EventPage.ReservationDialog");
+  const tAction = useTranslations("actions");
+  const queryClient = useQueryClient();
   const { slug, locale } = useParams();
   const initial: State<{ visitCode?: string; companionsCount?: number }> = { status: undefined };
   const [state, formAction, pending] = useActionState(createVisit, initial);
@@ -41,7 +44,6 @@ export default function VisitForm({
   const [companionsCount, setCompanionsCount] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [visitCode, setVisitCode] = useState<string | null>(null);
-
   const remainingCapacity = visitsLimit > 0 ? visitsLimit - visitsCount : 30;
   const maxCompanions = Math.max(0, remainingCapacity - 1);
   const canAddCompanions = maxCompanions > 0;
@@ -49,6 +51,7 @@ export default function VisitForm({
   useEffect(() => {
     if (state.status === "success") {
       toast.success(t("reservationCreated"));
+      queryClient.invalidateQueries({ queryKey: ["visitsCount", eventId] });
 
       // Store the visit code from the action response
       if (state.data && "visitCode" in state.data && typeof state.data.visitCode === "string") {
@@ -56,15 +59,8 @@ export default function VisitForm({
       }
 
       // Show share modal only if companions were added
-      if (
-        state.data &&
-        "companionsCount" in state.data &&
-        typeof state.data.companionsCount === "number" &&
-        state.data.companionsCount >= 1
-      ) {
+      if (state.data && "companionsCount" in state.data && Number(state.data.companionsCount) >= 1) {
         setShowShareModal(true);
-      } else {
-        onSuccess?.();
       }
     } else if (state.status === "error") {
       const firstErrorKey = state.errors && Object.keys(state.errors)[0];
@@ -104,6 +100,7 @@ export default function VisitForm({
 
   const handleCloseShareModal = () => {
     setShowShareModal(false);
+    onSuccess?.();
   };
 
   return (
@@ -145,18 +142,25 @@ export default function VisitForm({
       ) : (
         <div className="space-y-2">
           <Label htmlFor="companionsCount">{t("companionsCountLabel")}</Label>
-          <Input
-            id="companionsCount"
-            type="number"
-            min="1"
-            max={maxCompanions}
-            value={companionsCount}
-            onChange={(e) =>
-              setCompanionsCount(Math.max(1, Math.min(maxCompanions, parseInt(e.target.value) || 0)).toString())
-            }
-            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            onWheel={(e) => e.currentTarget.blur()}
-          />
+          <div className="flex gap-2">
+            <Input
+              id="companionsCount"
+              type="number"
+              min="1"
+              max={maxCompanions}
+              value={companionsCount}
+              onChange={(e) =>
+                setCompanionsCount(Math.max(1, Math.min(maxCompanions, parseInt(e.target.value) || 0)).toString())
+              }
+              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              onWheel={(e) => e.currentTarget.blur()}
+            />
+
+            <Button type="button" variant="outline" onClick={() => setShowCompanions(false)}>
+              {tAction("discard")}
+            </Button>
+          </div>
+
           <p className="text-xs text-muted-foreground">{t("companionsHint")}</p>
           {visitsLimit > 0 && (
             <p className="text-xs text-muted-foreground">

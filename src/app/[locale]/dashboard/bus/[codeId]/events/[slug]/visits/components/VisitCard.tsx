@@ -17,11 +17,7 @@ type VisitWithProfile = Tables<"Visit"> & {
   }>;
 };
 
-interface VisitCardProps {
-  visit: VisitWithProfile;
-}
-
-const VisitCard = ({ visit }: VisitCardProps) => {
+const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
   const tStatus = useTranslations("status");
   const t = useTranslations("VisitsPage");
 
@@ -52,7 +48,7 @@ const VisitCard = ({ visit }: VisitCardProps) => {
             <AvatarFallback>{getInitials(visit.ClientProfile?.username || "")}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-medium leading-4"> {visit.ClientProfile?.name}</p>
+            <p className="text-sm font-semibold leading-5"> {visit.ClientProfile?.name}</p>
 
             <div className="flex flex-col md:flex-row md:items-center md:gap-2">
               <div className="flex items-center gap-1 text-xs md:border-r md:pr-2">
@@ -73,7 +69,7 @@ const VisitCard = ({ visit }: VisitCardProps) => {
               </p>
             </div>
             {/* Companions Section */}
-            {hasCompanions && confirmedCount > 0 && (
+            {hasCompanions && (
               <div className="flex items-center flex-wrap space-x-2">
                 <Users className="h-3 w-3 text-muted-foreground" />{" "}
                 <span className="text-xs text-muted-foreground border-r pr-2">
@@ -85,16 +81,18 @@ const VisitCard = ({ visit }: VisitCardProps) => {
                 <Badge variant={confirmedCount >= totalCompanions ? "default" : "secondary"} className="text-[10px]">
                   {confirmedCount} / {totalCompanions}
                 </Badge>{" "}
-                <div className="flex flex-wrap gap-1 max-w-[200px] justify-end">
-                  {companions.map((companion) => (
-                    <Badge key={companion.id} variant="outline" className="text-[10px]">
-                      {companion.ClientProfile?.name ||
-                        companion.ClientProfile?.username ||
-                        companion.ClientProfile?.email ||
-                        t("unknownCompanion")}
-                    </Badge>
-                  ))}
-                </div>
+                {confirmedCount > 0 && (
+                  <div className="flex flex-wrap gap-1 max-w-[200px] justify-end">
+                    {companions.map((companion) => (
+                      <Badge key={companion.id} variant="outline" className="text-[10px]">
+                        {companion.ClientProfile?.name ||
+                          companion.ClientProfile?.username ||
+                          companion.ClientProfile?.email ||
+                          t("unknownCompanion")}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

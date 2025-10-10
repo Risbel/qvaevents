@@ -8,7 +8,7 @@ const createVisitSchema = z.object({
   eventId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
   organizerId: z.coerce.number().int().positive().optional(),
-  companionsCount: z.coerce.number().int().min(0).max(10).default(0),
+  companionsCount: z.string().min(1).max(30).default("1"),
 });
 
 export async function createVisit(prevState: State, formData: FormData): Promise<State> {
@@ -56,7 +56,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     .insert({
       eventId,
       clientId,
-      companionsCount,
+      companionsCount: Number(companionsCount),
       isAttended: false,
       isCanceled: false,
       isConfirmed: false,

@@ -18,6 +18,7 @@
   "actions": {
     "save": "Guardar",
     "cancel": "Cancelar",
+    "discard": "Descartar",
     "delete": "Eliminar",
     "deleting": "Eliminando...",
     "edit": "Editar",
@@ -658,6 +659,8 @@
       "searchPlaceholder": "Buscar por",
       "searchBy": "Buscar por",
       "search": "Buscar",
+      "searchResults": "Resultados de búsqueda",
+      "activeFilter": "Filtrado",
       "name": "Nombre",
       "email": "Email",
       "phone": "Teléfono",

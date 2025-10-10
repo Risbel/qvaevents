@@ -55,7 +55,7 @@ export default function BusinessList({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {businesses &&
         businesses.map((business) => (
-          <Card key={business.id} className="hover:shadow-md transition-shadow">
+          <Card key={business.id} className="hover:shadow-md transition-shadow shadow-primary/30">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export default function BusinessList({
                       {t("viewBusiness")}
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Button asChild variant="default" size="sm" className="flex-1">
                     <Link href={`/${locale}/dashboard/bus/${business.codeId}`}>
                       <LayoutDashboard className="w-4 h-4 mr-2" />
                       {t("dashboard")}

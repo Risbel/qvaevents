@@ -17,7 +17,7 @@ export type Visit = Array<
 >;
 
 interface GetVisitsParams {
-  pageParam?: number;
+  page?: number; // Changed from pageParam to page for clarity
   pageSize?: number;
 }
 
@@ -26,22 +26,27 @@ const getVisitsByEventSlug = async (
   slug: string,
   search?: string,
   searchField?: string,
-  { pageParam = 0, pageSize = 30 }: GetVisitsParams = {}
+  { page = 1, pageSize = 20 }: GetVisitsParams = {}
 ) => {
-  const eventData = await client
-    .from("Event")
-    .select("id, visitsLimit")
-    .eq("slug", slug)
-    .single()
-    .then(({ data }) => data as Event);
+  // Get event data first
+  const eventResponse = await client.from("Event").select("id, visitsLimit").eq("slug", slug).single();
+  const eventData = eventResponse.data as Event;
 
-  // Build base query with inner join to ensure we only get visits with profiles
-  const baseQuery = client
+  // Build base query for paginated data
+  let query = client
     .from("Visit")
     .select(
       `
-      *,
-      ClientProfile!inner(*),
+      id,
+      createdAt,
+      companionsCount,
+      ClientProfile!inner(
+        id,
+        name,
+        email,
+        username,
+        avatar
+      ),
       ClientCompanion(
         id,
         clientId,
@@ -53,32 +58,48 @@ const getVisitsByEventSlug = async (
           avatar
         )
       )
-    `
+    `,
+      { count: "exact" }
     )
-    .eq("eventId", eventData.id);
+    .eq("eventId", eventData.id)
+    .order("createdAt", { ascending: false });
 
   // Apply search filter if provided
-  const filteredQuery =
-    search && searchField ? baseQuery.ilike(`ClientProfile.${searchField}`, `%${search}%`) : baseQuery;
+  if (search && searchField) {
+    query = query.ilike(`ClientProfile.${searchField}`, `%${search}%`);
+  }
 
-  // Get paginated data
-  const { data, error } = await filteredQuery
-    .order("createdAt", { ascending: false })
-    .range(pageParam, pageParam + pageSize - 1);
+  // Execute queries in parallel - get paginated data and total counts
+  const [{ data, error, count: filteredCount }, { count: totalVisitsCount }, companionsData] = await Promise.all([
+    // Get paginated data with companions count
+    query.range((page - 1) * pageSize, (page - 1) * pageSize + pageSize - 1),
+    // Just get the count, no data needed
+    client.from("Visit").select("*", { count: "exact", head: true }).eq("eventId", eventData.id),
+    // Fetch just companionsCount column for aggregation
+    client.from("Visit").select("companionsCount").eq("eventId", eventData.id),
+  ]);
 
   if (error) throw error;
 
-  // Get total count of filtered results
-  const { data: countResult } = await filteredQuery.select("id");
-  const count = countResult?.length || 0;
+  if (totalVisitsCount === null) throw new Error("Total visits not found");
 
-  const nextCursor = count > pageParam + pageSize ? pageParam + pageSize : undefined;
+  // Calculate total companions from the aggregated data
+  const totalCompanions = companionsData.data?.reduce((acc, visit) => acc + (visit.companionsCount || 0), 0) || 0;
+
+  // Use filtered count for pagination (count comes from the main query now)
+  const totalPages = Math.ceil((filteredCount ?? 0) / pageSize);
+
+  // Check if there's a next page
+  const hasNextPage = page < totalPages;
 
   return {
     event: eventData,
     visits: data as Visit,
-    nextCursor,
-    total: count || 0,
+    currentPage: page,
+    totalPages,
+    hasNextPage,
+    totalVisits: totalVisitsCount, // Total visits and total companions to display (totalVisits + totalCompanions/event.visitsLimit)
+    totalCompanions,
   };
 };
 

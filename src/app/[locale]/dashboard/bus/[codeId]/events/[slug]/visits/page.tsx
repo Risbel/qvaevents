@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useGetVisitsCountByEventId from "@/hooks/visits/useGetVisitsCountByEventId";
 
 const VisitsPage = () => {
   const t = useTranslations("VisitsPage.Filter");
