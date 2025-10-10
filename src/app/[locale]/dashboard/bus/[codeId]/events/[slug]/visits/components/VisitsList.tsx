@@ -114,9 +114,7 @@ const VisitsList = () => {
               </div>
             ) : (
               // Show current page visits
-              data?.pages[currentPage - 1]?.visits.map((visit: Visit[number]) => (
-                <VisitCard key={visit.id} visit={visit} />
-              ))
+              data?.pages[currentPage - 1]?.visits.map((visit: any) => <VisitCard key={visit.id} visit={visit} />)
             )}
           </>
         )}

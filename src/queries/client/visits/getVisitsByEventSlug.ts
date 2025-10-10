@@ -13,6 +13,13 @@ export type Visit = Array<
       clientId: number;
       ClientProfile: Tables<"ClientProfile">;
     }>;
+    // Changed to single object if one-to-one relationship
+    clientVisitAffiliated: {
+      id: number;
+      clientId: number;
+      createdAt: string;
+      ClientProfile: Tables<"ClientProfile">;
+    };
   }
 >;
 
@@ -50,6 +57,18 @@ const getVisitsByEventSlug = async (
       ClientCompanion(
         id,
         clientId,
+        ClientProfile(
+          id,
+          name,
+          email,
+          username,
+          avatar
+        )
+      ), 
+      clientVisitAffiliated(
+        id,
+        clientId,
+        createdAt,
         ClientProfile(
           id,
           name,

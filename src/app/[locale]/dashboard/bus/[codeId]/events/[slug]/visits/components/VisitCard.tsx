@@ -15,6 +15,12 @@ type VisitWithProfile = Tables<"Visit"> & {
     clientId: number;
     ClientProfile: Tables<"ClientProfile">;
   }>;
+  clientVisitAffiliated: {
+    id: number;
+    clientId: number;
+    createdAt: string;
+    ClientProfile: Tables<"ClientProfile">;
+  };
 };
 
 const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
@@ -48,7 +54,17 @@ const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
             <AvatarFallback>{getInitials(visit.ClientProfile?.username || "")}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-semibold leading-5"> {visit.ClientProfile?.name}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold"> {visit.ClientProfile?.name}</p>
+              {visit.clientVisitAffiliated && (
+                <div className="flex items-center gap-1 border-l pl-2">
+                  <p className="text-xs text-muted-foreground">{t("Filter.affiliatedWith")}:</p>
+                  <Badge variant="outline" className="text-xs text-muted-foreground">
+                    {visit.clientVisitAffiliated?.ClientProfile?.username}
+                  </Badge>
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col md:flex-row md:items-center md:gap-2">
               <div className="flex items-center gap-1 text-xs md:border-r md:pr-2">

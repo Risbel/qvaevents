@@ -232,7 +232,7 @@ export type Database = {
           {
             foreignKeyName: "clientVisitAffiliated_visitId_fkey";
             columns: ["visitId"];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: "Visit";
             referencedColumns: ["id"];
           }
@@ -679,6 +679,7 @@ export type Database = {
         Row: {
           canceledAt: string | null;
           clientId: number | null;
+          code: string | null;
           companionsCount: number;
           createdAt: string;
           eventId: number;
@@ -686,11 +687,11 @@ export type Database = {
           isAttended: boolean;
           isCanceled: boolean;
           isConfirmed: boolean;
-          code: string;
         };
         Insert: {
           canceledAt?: string | null;
           clientId?: number | null;
+          code?: string | null;
           companionsCount?: number;
           createdAt?: string;
           eventId: number;
@@ -698,11 +699,11 @@ export type Database = {
           isAttended?: boolean;
           isCanceled?: boolean;
           isConfirmed?: boolean;
-          code: string;
         };
         Update: {
           canceledAt?: string | null;
           clientId?: number | null;
+          code?: string | null;
           companionsCount?: number;
           createdAt?: string;
           eventId?: number;
@@ -710,7 +711,6 @@ export type Database = {
           isAttended?: boolean;
           isCanceled?: boolean;
           isConfirmed?: boolean;
-          code: string;
         };
         Relationships: [
           {
