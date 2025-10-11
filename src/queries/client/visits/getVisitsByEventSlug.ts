@@ -47,6 +47,9 @@ const getVisitsByEventSlug = async (
       id,
       createdAt,
       companionsCount,
+      isAttended,
+      isCanceled,
+      isConfirmed,
       ClientProfile!inner(
         id,
         name,

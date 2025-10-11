@@ -6,7 +6,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
-import { Mail, Phone, Users } from "lucide-react";
+import { Mail, Phone, Users, Loader2, UserCheck2, MoreVertical, CheckCircle2Icon, XCircle } from "lucide-react";
+import { useTransition } from "react";
+import { markAsAttended } from "@/actions/visit/markAsAttended";
+import { cancelVisit } from "@/actions/visit/cancelVisit";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type VisitWithProfile = Tables<"Visit"> & {
   ClientProfile: Tables<"ClientProfile">;
@@ -25,8 +40,11 @@ type VisitWithProfile = Tables<"Visit"> & {
 
 const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
   const tStatus = useTranslations("status");
+  const tActions = useTranslations("actions");
+  const { slug } = useParams() as { slug: string };
   const t = useTranslations("VisitsPage");
-
+  const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
   const companions = visit.ClientCompanion || [];
   const confirmedCount = companions.length;
   const totalCompanions = visit.companionsCount || 0;
@@ -45,8 +63,32 @@ const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
     return visit.ClientProfile?.avatar;
   };
 
+  const handleMarkAsAttended = () => {
+    startTransition(async () => {
+      try {
+        await markAsAttended(visit.id);
+        toast.success(t("attendedSuccess"));
+        queryClient.invalidateQueries({ queryKey: ["visits", slug] });
+      } catch (error) {
+        toast.error(t("attendedError"));
+      }
+    });
+  };
+
+  const handleCancelVisit = () => {
+    startTransition(async () => {
+      try {
+        await cancelVisit(visit.id);
+        toast.success(t("cancelSuccess"));
+        queryClient.invalidateQueries({ queryKey: ["visits", slug] });
+      } catch (error) {
+        toast.error(t("cancelError"));
+      }
+    });
+  };
+
   return (
-    <Card className="py-2">
+    <Card className={cn("py-2", visit.isCanceled && "bg-red-500/10")}>
       <CardContent className="flex items-center justify-between relative px-2">
         <div className="flex items-center gap-2">
           <Avatar>
@@ -86,7 +128,7 @@ const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
             </div>
             {/* Companions Section */}
             {hasCompanions && (
-              <div className="flex items-center flex-wrap space-x-2">
+              <div className="flex items-center flex-wrap space-x-2 mr-10">
                 <Users className="h-3 w-3 text-muted-foreground" />{" "}
                 <span className="text-xs text-muted-foreground border-r pr-2">
                   {t("companions")}: {totalCompanions}
@@ -114,16 +156,48 @@ const VisitCard = ({ visit }: { visit: VisitWithProfile }) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 absolute right-2 top-0">
+        <div className="flex gap-2 items-start absolute right-2 top-0">
           <div className="flex items-center gap-2">
             {visit.isConfirmed && <Badge variant="outline">{tStatus("confirmed")}</Badge>}
-            {visit.isAttended && <Badge variant="outline">{tStatus("attended")}</Badge>}
-            {visit.isCanceled && <Badge variant="destructive">{tStatus("canceled")}</Badge>}
+            {visit.isAttended && (
+              <Badge className="bg-green-500">
+                {tStatus("attended")} <CheckCircle2Icon />
+              </Badge>
+            )}
+            {visit.isCanceled && (
+              <Badge className="bg-red-500">
+                {tStatus("canceled")} <XCircle className="h-4 w-4 text-white" />
+              </Badge>
+            )}
             {!visit.isConfirmed && !visit.isAttended && !visit.isCanceled && (
               <Badge variant="outline">{tStatus("pending")}</Badge>
             )}
           </div>
         </div>
+        {!visit.isCanceled && !visit.isAttended && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="absolute right-2 bottom-0">
+              <Button size="icon" variant="outline" className="cursor-pointer" disabled={isPending}>
+                {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreVertical className="h-4 w-4" />}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {!visit.isAttended && (
+                <DropdownMenuItem onClick={handleMarkAsAttended} disabled={isPending} className="cursor-pointer">
+                  <UserCheck2 className="h-4 w-4 text-green-400" />
+                  {t("markAsAttended")}
+                </DropdownMenuItem>
+              )}
+
+              {!visit.isAttended && <DropdownMenuSeparator />}
+
+              <DropdownMenuItem onClick={handleCancelVisit} disabled={isPending} className="cursor-pointer">
+                <XCircle className="h-4 w-4 text-destructive" />
+                {tActions("cancel")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </CardContent>
     </Card>
   );
