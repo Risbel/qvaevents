@@ -692,6 +692,12 @@
     "visits": "Visits",
     "visitsLimit": "Visits limit",
     "visitsLimitDescription": "Visits limit for the event",
+    "columns": "Columns",
+    "showing": "Showing",
+    "of": "of",
+    "page": "Page",
+    "previous": "Previous",
+    "next": "Next",
     "Filter": {
       "searchPlaceholder": "Search by",
       "searchBy": "Search by",

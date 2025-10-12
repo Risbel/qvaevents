@@ -688,6 +688,12 @@
     "visits": "Visitas",
     "visitsLimit": "Límite de visitas",
     "visitsLimitDescription": "Límite de visitas para el evento",
+    "columns": "Columnas",
+    "showing": "Mostrando",
+    "of": "de",
+    "page": "Página",
+    "previous": "Anterior",
+    "next": "Siguiente",
     "Filter": {
       "searchPlaceholder": "Buscar por",
       "searchBy": "Buscar por",

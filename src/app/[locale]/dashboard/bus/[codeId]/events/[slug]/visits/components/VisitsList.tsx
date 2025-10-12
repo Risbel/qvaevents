@@ -1,198 +1,361 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname, useParams } from "next/navigation";
 import useGetVisitsByEventSlug from "@/hooks/visits/useGetVisitsByEventSlug";
-import { Visit } from "@/queries/client/visits/getVisitsByEventSlug";
-import { type VisitsResponse } from "@/hooks/visits/useGetVisitsByEventSlug";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, Loader2, Users2Icon } from "lucide-react";
-import VisitCard from "./VisitCard";
+import { AlertTriangle, Users2Icon, ChevronLeft, ChevronRight, ArrowUpDown, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+  type ColumnDef,
+  type SortingState,
+  type VisibilityState,
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { format } from "date-fns";
+import { Tables } from "@/types/supabase";
+import VisitsListSkeleton from "./VisitsListSkeleton";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import MessageAllButton from "./MessageAllButton";
 import EmailAllButton from "./EmailAllButton";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import CompanionsPopover from "./CompanionsPopover";
 import { cn } from "@/lib/utils";
 
-const ITEMS_PER_PAGE = 20;
+// Import the VisitActions component dynamically to avoid circular dependencies
+import dynamic from "next/dynamic";
+const VisitActions = dynamic(() => import("./VisitActions"), { ssr: false });
+
+type VisitWithProfile = Tables<"Visit"> & {
+  ClientProfile: Tables<"ClientProfile">;
+  ClientCompanion: Array<{
+    id: number;
+    clientId: number;
+    ClientProfile: Tables<"ClientProfile">;
+  }>;
+  clientVisitAffiliated: {
+    id: number;
+    clientId: number;
+    createdAt: string;
+    ClientProfile: Tables<"ClientProfile">;
+  } | null;
+};
 
 const VisitsList = () => {
-  const tVisits = useTranslations("VisitsPage");
-  const { slug, codeId } = useParams() as { slug: string; codeId: string };
+  const t = useTranslations("VisitsPage");
+  const tStatus = useTranslations("status");
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { slug } = useParams() as { slug: string };
   const search = searchParams.get("search") || undefined;
   const searchField = searchParams.get("searchField") || undefined;
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = 30;
 
-  const { data, isLoading, isFetching, isError, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useGetVisitsByEventSlug(slug, search, searchField, {
-      pageSize: ITEMS_PER_PAGE,
-      initialPage: currentPage,
-    });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const currentPageData = data?.pages[data.pages.length - 1];
+  const { data, isLoading, isError } = useGetVisitsByEventSlug(slug, currentPage, pageSize, search, searchField);
 
-  // Only show loading skeleton on initial load, not on every refetch
-  if (isLoading && !currentPageData) {
-    return (
-      <div className="w-full space-y-3">
-        <div className="w-full flex items-center justify-between">
-          <Skeleton className="h-5 w-12" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-8 w-24" />
-          </div>
-        </div>
-        <div className="w-full space-y-3">
-          {[...Array(ITEMS_PER_PAGE)].map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full" />
-          ))}
-        </div>
-      </div>
-    );
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const getUserAvatar = (visit: VisitWithProfile) => {
+    if (visit.ClientProfile?.avatar) return visit.ClientProfile.avatar;
+    const name = visit.ClientProfile?.name || visit.ClientProfile?.username || "User";
+    const twoFirstLetters = name.slice(0, 2).toUpperCase();
+    return `https://avatar.vercel.sh/${encodeURIComponent(name)}.svg?rounded=60&size=30&text=${twoFirstLetters}`;
+  };
+
+  const getInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const getStatusBadge = (visit: VisitWithProfile) => {
+    if (visit.isCanceled) {
+      return <Badge variant="destructive">{tStatus("canceled")}</Badge>;
+    }
+    if (visit.isAttended) {
+      return <Badge className="bg-green-500">{tStatus("attended")}</Badge>;
+    }
+    if (visit.isConfirmed) {
+      return <Badge variant="outline">{tStatus("confirmed")}</Badge>;
+    }
+    return <Badge variant="secondary">{tStatus("pending")}</Badge>;
+  };
+
+  const columns = useMemo<ColumnDef<VisitWithProfile>[]>(
+    () => [
+      {
+        id: "client",
+        accessorKey: "ClientProfile",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="hover:bg-transparent p-0"
+            >
+              {t("Filter.name")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const visit = row.original;
+          return (
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={getUserAvatar(visit)} />
+                <AvatarFallback>{getInitials(visit.ClientProfile?.username || "")}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-medium text-sm">{visit.ClientProfile?.name || visit.ClientProfile?.username}</p>
+                {visit.clientVisitAffiliated && (
+                  <p className="text-xs text-muted-foreground">
+                    {t("Filter.affiliatedWith")}: {visit.clientVisitAffiliated.ClientProfile?.username}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        },
+        sortingFn: (rowA, rowB) => {
+          const nameA = rowA.original.ClientProfile?.name || rowA.original.ClientProfile?.username || "";
+          const nameB = rowB.original.ClientProfile?.name || rowB.original.ClientProfile?.username || "";
+          return nameA.localeCompare(nameB);
+        },
+        enableHiding: false,
+      },
+      {
+        id: "email",
+        accessorKey: "email",
+        header: t("Filter.email"),
+        cell: ({ row }) => {
+          return <span className="text-sm">{row.original.ClientProfile?.email || "No email"}</span>;
+        },
+      },
+      {
+        id: "phone",
+        accessorKey: "phone",
+        header: t("Filter.phone"),
+        cell: ({ row }) => {
+          return <span className="text-sm">{row.original.ClientProfile?.phone || "No phone"}</span>;
+        },
+      },
+      {
+        id: "companions",
+        accessorKey: "companionsCount",
+        header: t("companions"),
+        cell: ({ row }) => {
+          const visit = row.original;
+          const totalCompanions = visit.companionsCount || 0;
+          const companions = visit.ClientCompanion || [];
+
+          if (totalCompanions === 0) {
+            return <span className="text-sm text-muted-foreground">-</span>;
+          }
+
+          return <CompanionsPopover companions={companions} totalCompanions={totalCompanions} />;
+        },
+      },
+      {
+        id: "status",
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => getStatusBadge(row.original),
+      },
+      {
+        id: "reservedOn",
+        accessorKey: "createdAt",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="hover:bg-transparent p-0"
+            >
+              {tStatus("reservedOn")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          return <span className="text-sm">{format(new Date(row.original.createdAt), "PPp")}</span>;
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => <VisitActions visit={row.original} />,
+        enableHiding: false,
+      },
+    ],
+    [t, tStatus]
+  );
+
+  const visits = useMemo(() => {
+    return data?.visits || [];
+  }, [data]);
+
+  const table = useReactTable({
+    data: visits,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      sorting,
+      columnVisibility,
+    },
+  });
+
+  if (isLoading) {
+    return <VisitsListSkeleton />;
   }
 
   if (isError) {
     return (
-      <Alert variant="destructive" className="max-w-2xl w-full">
+      <Alert variant="destructive" className="w-full">
         <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>{tVisits("failedToLoadVisits")}</AlertTitle>
-        <AlertDescription>{tVisits("failedToLoadVisitsDescription")}</AlertDescription>
+        <AlertTitle>{t("failedToLoadVisits")}</AlertTitle>
+        <AlertDescription>{t("failedToLoadVisitsDescription")}</AlertDescription>
       </Alert>
     );
   }
 
-  if (!currentPageData || !data) {
-    return null;
-  }
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 0;
+  const totalVisits = data?.totalVisits ?? 0;
+  const totalCompanions = data?.totalCompanions ?? 0;
+  const visitsLimit = data?.event?.visitsLimit ?? 0;
 
   return (
     <div className="space-y-4 w-full">
-      <div className="flex items-center justify-between gap-1">
-        <Badge variant="outline">
-          <span>{tVisits("visits")}:</span>
-          {currentPageData.totalVisits + currentPageData.totalCompanions} / {currentPageData.event.visitsLimit}
-        </Badge>
-
-        {currentPageData.totalVisits > 0 && (
-          <div className="flex gap-1">
-            <MessageAllButton data={data} />
-            <EmailAllButton data={data} />
-          </div>
-        )}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="text-sm">
+            {t("visits")}: {totalVisits + totalCompanions} / {visitsLimit}
+          </Badge>
+        </div>
+        <div className="flex items-center gap-2">
+          {totalVisits > 0 && data && (
+            <>
+              <MessageAllButton data={{ pages: [data] }} />
+              <EmailAllButton data={{ pages: [data] }} />
+            </>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                {t("columns")} <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {currentPageData.visits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 space-y-2">
-            <Users2Icon className="size-12 text-muted-foreground" />
-            <h3 className="font-semibold text-lg">{tVisits("noVisits")}</h3>
-            <p className="text-sm text-muted-foreground text-center">{tVisits("noVisitsDescription")}</p>
-          </div>
-        ) : (
-          <>
-            {isFetchingNextPage ? (
-              // Show skeleton when loading next page
-              <div className="space-y-3">
-                {[...Array(ITEMS_PER_PAGE)].map((_, i) => (
-                  <Skeleton key={i} className="h-24 w-full" />
+      {data?.visits.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10 space-y-2 border rounded-lg">
+          <Users2Icon className="size-12 text-muted-foreground" />
+          <h3 className="font-semibold text-lg">{t("noVisits")}</h3>
+          <p className="text-sm text-muted-foreground text-center">{t("noVisitsDescription")}</p>
+        </div>
+      ) : (
+        <>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    ))}
+                  </TableRow>
                 ))}
-              </div>
-            ) : (
-              // Show current page visits
-              data?.pages[currentPage - 1]?.visits.map((visit: any) => <VisitCard key={visit.id} visit={visit} />)
-            )}
-          </>
-        )}
-      </div>
-
-      {currentPageData.totalPages > 1 && currentPageData.visits.length > 0 && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  currentPage === 1 ? "opacity-50 cursor-default" : "cursor-pointer"
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} className={cn(row.original.isCanceled && "bg-red-500/10")}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      {t("noVisits")}
+                    </TableCell>
+                  </TableRow>
                 )}
-                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                  e.preventDefault();
-                  if (currentPage > 1) {
-                    setCurrentPage((prev) => prev - 1);
-                  }
-                }}
-                aria-disabled={currentPage === 1}
-              />
-            </PaginationItem>
+              </TableBody>
+            </Table>
+          </div>
 
-            {[...Array(Math.min(5, currentPageData.totalPages))].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  className={cn(i + 1 === currentPage && "shadow-sm")}
-                  href={`/dashboard/bus/${codeId}/events/${slug}/visits?page=${i + 1}`}
-                  onClick={async (e: React.MouseEvent<HTMLAnchorElement>) => {
-                    e.preventDefault();
-                    const targetPage = i + 1;
-                    if (targetPage > data?.pages.length!) {
-                      await fetchNextPage();
-                    }
-                    setCurrentPage(targetPage);
-                  }}
-                  isActive={i + 1 === currentPage}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            {currentPageData.totalPages > 5 && (
-              <>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href={`/dashboard/bus/${codeId}/events/${slug}/visits?page=${currentPageData.totalPages}`}
-                  >
-                    {currentPageData.totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-
-            <PaginationItem>
-              <PaginationNext
-                className={cn(
-                  currentPage >= currentPageData.totalPages ? "opacity-50 cursor-default" : "cursor-pointer",
-                  buttonVariants({ variant: "outline" })
-                )}
-                href={`/dashboard/bus/${codeId}/events/${slug}/visits?page=${currentPage + 1}`}
-                onClick={async (e: React.MouseEvent<HTMLAnchorElement>) => {
-                  e.preventDefault();
-                  if (currentPage < currentPageData.totalPages) {
-                    if (currentPage >= data?.pages.length!) {
-                      await fetchNextPage();
-                    }
-                    setCurrentPage((prev) => prev + 1);
-                  }
-                }}
-                aria-disabled={currentPage >= currentPageData.totalPages || isFetchingNextPage}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {t("page")} {currentPage} {t("of")} {totalPages} ({t("showing")} {visits.length} {t("of")} {total}{" "}
+              {t("visits").toLowerCase()})
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                {t("previous")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+              >
+                {t("next")}
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
