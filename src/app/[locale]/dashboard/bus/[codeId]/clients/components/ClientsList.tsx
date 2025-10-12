@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import useGetClientsByOrganizerId from "@/hooks/clients/useGetClientsByOrganizerId";
+import { useSearchParams, useRouter, usePathname, useParams } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, Users2Icon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -30,8 +29,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useGetClientsByBusinessCodeId from "@/hooks/clients/useGetClientsByBusinessCodeId";
 
-type ClientOnOrganizerWithProfile = Tables<"clientOnOrganizer"> & {
+type ClientOnBusinessWithProfile = Tables<"clientOnBusiness"> & {
   ClientProfile: Tables<"ClientProfile">;
 };
 
@@ -39,6 +39,8 @@ const ClientsList = () => {
   const t = useTranslations("ClientsPage");
   const router = useRouter();
   const pathname = usePathname();
+  const { codeId: codeIdParam } = useParams();
+  const codeId = codeIdParam as string;
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || undefined;
   const searchField = searchParams.get("searchField") || undefined;
@@ -48,7 +50,13 @@ const ClientsList = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const { data, isLoading, isError } = useGetClientsByOrganizerId(currentPage, pageSize, search, searchField);
+  const { data, isLoading, isError } = useGetClientsByBusinessCodeId(
+    codeId,
+    currentPage,
+    pageSize,
+    search,
+    searchField
+  );
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams);
@@ -56,7 +64,7 @@ const ClientsList = () => {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const getUserAvatar = (client: ClientOnOrganizerWithProfile) => {
+  const getUserAvatar = (client: ClientOnBusinessWithProfile) => {
     if (client.ClientProfile?.avatar) return client.ClientProfile.avatar;
     const name = encodeURIComponent(client.ClientProfile?.name || client.ClientProfile?.username || "User");
     const twoFirstLetters = (client.ClientProfile?.name || client.ClientProfile?.username || "U")
@@ -69,7 +77,7 @@ const ClientsList = () => {
     return name.slice(0, 2).toUpperCase();
   };
 
-  const columns = useMemo<ColumnDef<ClientOnOrganizerWithProfile>[]>(
+  const columns = useMemo<ColumnDef<ClientOnBusinessWithProfile>[]>(
     () => [
       {
         id: "name",

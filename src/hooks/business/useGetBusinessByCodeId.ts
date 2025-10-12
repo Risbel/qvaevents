@@ -8,7 +8,7 @@ function useGetBusinessByCodeId(codeId: string) {
   return useQuery({
     queryKey: ["business", codeId],
     queryFn: () => getBusinessByCodeId(client, codeId),
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
     enabled: !!codeId,
     refetchOnMount: false,
     refetchOnReconnect: false,

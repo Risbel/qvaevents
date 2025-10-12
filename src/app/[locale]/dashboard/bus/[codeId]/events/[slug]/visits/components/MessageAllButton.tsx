@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, MessageSquareShareIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { type VisitsResponse } from "@/hooks/visits/useGetVisitsByEventSlug";
@@ -36,8 +36,8 @@ const MessageAllButton = ({ data }: MessageAllButtonProps) => {
 
   return (
     <Button variant="outline" size="sm" onClick={handleMessageAll}>
-      <MessageSquare className="size-4" />
-      {tVisits("messageAll")}
+      <MessageSquareShareIcon className="size-4" />
+      <span className="hidden md:block">{tVisits("messageAll")}</span>
     </Button>
   );
 };

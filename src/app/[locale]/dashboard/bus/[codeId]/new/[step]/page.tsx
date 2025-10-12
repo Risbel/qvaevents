@@ -9,7 +9,6 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import { CreateBasicInfo } from "./components/basic-info/CreateBasicInfo";
 import { StepBar } from "./components/StepBar";
 import { useTranslations } from "next-intl";
-import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
 
 const NewStepPage = () => {
   const { step, codeId } = useParams();

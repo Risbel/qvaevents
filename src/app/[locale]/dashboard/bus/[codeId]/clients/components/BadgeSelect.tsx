@@ -1,6 +1,6 @@
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Crown, User2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -31,7 +31,7 @@ const BadgeSelect = ({ clientId, initialBadge }: BadgeSelectProps) => {
 
     startTransition(async () => {
       try {
-        const { error } = await supabase.from("clientOnOrganizer").update({ badge: newBadge }).eq("id", clientId);
+        const { error } = await supabase.from("clientOnBusiness").update({ badge: newBadge }).eq("id", clientId);
 
         if (error) throw error;
         toast.success(t("badges.badgeUpdated"));

@@ -1,19 +1,14 @@
-"use client";
-
-import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, TrendingUp, Plus, Eye } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
+import { getBusinessByCode } from "@/queries/server/business/getBusinessByCode";
 
-export default function BusDashboard() {
-  const params = useParams();
-  const { codeId, locale } = params;
-
-  const { data: business } = useGetBusinessByCodeId(codeId as string);
+export default async function BusDashboard({ params }: { params: Promise<{ codeId: string; locale: string }> }) {
+  const { codeId, locale } = await params;
+  const { data } = await getBusinessByCode(codeId);
 
   const stats = [
     {
@@ -58,9 +53,9 @@ export default function BusDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <div>
-          <h1 className="text-3xl font-bold">{business?.name || "Business Dashboard"}</h1>
+          <h1 className="text-3xl font-bold">{data?.business.name || "Business Dashboard"}</h1>
           <p className="text-muted-foreground">
-            {business?.description || "Manage your business events and activities"}
+            {data?.business.description || "Manage your business events and activities"}
           </p>
         </div>
       </div>

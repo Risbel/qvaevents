@@ -24,14 +24,14 @@ export default function VisitForm({
   eventId,
   visitsLimit,
   visitsCount,
-  organizerId,
+  businessId,
   onSuccess,
 }: {
   clientProfile: Tables<"ClientProfile">;
   eventId: number;
   visitsLimit: number;
   visitsCount: number;
-  organizerId?: number;
+  businessId?: number;
   onSuccess?: () => void;
 }) {
   const t = useTranslations("ReservationDialog");
@@ -107,7 +107,7 @@ export default function VisitForm({
     <form action={formAction} className="space-y-3">
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="clientId" value={clientProfile.id} />
-      <input type="hidden" name="organizerId" value={organizerId} />
+      <input type="hidden" name="businessId" value={businessId} />
       <input type="hidden" name="companionsCount" value={companionsCount} />
 
       {state?.errors?.auth && <p className="text-sm text-destructive">{state.errors.auth}</p>}

@@ -118,41 +118,41 @@ export type Database = {
           }
         ];
       };
-      clientOnOrganizer: {
+      clientOnBusiness: {
         Row: {
           badge: string;
+          businessId: number;
           clientId: number;
           createdAt: string;
           id: number;
-          organizerId: number;
         };
         Insert: {
           badge?: string;
+          businessId: number;
           clientId: number;
           createdAt?: string;
           id?: number;
-          organizerId: number;
         };
         Update: {
           badge?: string;
+          businessId?: number;
           clientId?: number;
           createdAt?: string;
           id?: number;
-          organizerId?: number;
         };
         Relationships: [
           {
-            foreignKeyName: "clientOnOrganizer_clientId_fkey";
-            columns: ["clientId"];
+            foreignKeyName: "clientOnBusiness_businessId_fkey";
+            columns: ["businessId"];
             isOneToOne: false;
-            referencedRelation: "ClientProfile";
+            referencedRelation: "Business";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "clientOnOrganizer_organizerId_fkey";
-            columns: ["organizerId"];
+            foreignKeyName: "clientOnBusiness_clientId_fkey";
+            columns: ["clientId"];
             isOneToOne: false;
-            referencedRelation: "OrganizerProfile";
+            referencedRelation: "ClientProfile";
             referencedColumns: ["id"];
           }
         ];
@@ -296,9 +296,9 @@ export type Database = {
           defaultLocale: string | null;
           endDate: string;
           id: number;
-          isFull: boolean;
           isDeleted: boolean;
           isForMinors: boolean | null;
+          isFull: boolean;
           isPublic: boolean | null;
           isPublished: boolean | null;
           keywords: string[] | null;
@@ -321,9 +321,9 @@ export type Database = {
           defaultLocale?: string | null;
           endDate: string;
           id?: number;
-          isFull?: boolean;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
+          isFull?: boolean;
           isPublic?: boolean | null;
           isPublished?: boolean | null;
           keywords?: string[] | null;
@@ -346,9 +346,9 @@ export type Database = {
           defaultLocale?: string | null;
           endDate?: string;
           id?: number;
-          isFull?: boolean;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
+          isFull?: boolean;
           isPublic?: boolean | null;
           isPublished?: boolean | null;
           keywords?: string[] | null;

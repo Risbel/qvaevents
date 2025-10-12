@@ -46,7 +46,7 @@ const EmailAllButton = ({ data }: EmailAllButtonProps) => {
     <>
       <Button variant="outline" size="sm" onClick={handleEmailAll}>
         <MailsIcon className="size-4" />
-        {tVisits("emailAll")}
+        <span className="hidden md:block">{tVisits("emailAll")}</span>
       </Button>
 
       <EmailAllModal

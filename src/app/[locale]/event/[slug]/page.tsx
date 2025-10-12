@@ -1,6 +1,5 @@
 import { getEventBySlug } from "@/queries/server/event/getEventBySlug";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Calendar, Users, Shield, Ticket, CalendarClockIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LanguageSelector } from "./components/LanguageSelector";
@@ -26,7 +25,6 @@ import { getEventSubType, getEventType } from "@/utils/eventTypesSelector";
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
   const t = await getTranslations("EventPage");
-  const tStatus = await getTranslations("status");
   const eventResult = await getEventBySlug(slug);
 
   if (!eventResult || eventResult.status !== "success" || !eventResult.data?.event) {
@@ -96,7 +94,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 isFull={event.isFull}
                 eventId={event.id}
                 visitsLimit={event.visitsLimit || 0}
-                organizerId={event.Business.organizerId}
+                businessId={event.Business.id}
               />
               <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
             </div>
@@ -117,7 +115,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 isFull={event.isFull}
                 eventId={event.id}
                 visitsLimit={event.visitsLimit || 0}
-                organizerId={event.Business.organizerId}
+                businessId={event.Business.id}
               />
               <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
             </div>

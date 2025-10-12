@@ -7,7 +7,7 @@ import { z } from "zod";
 const createVisitSchema = z.object({
   eventId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
-  organizerId: z.coerce.number().int().positive().optional(),
+  businessId: z.coerce.number().int().positive().optional(),
   companionsCount: z.string().min(1).max(30).default("1"),
 });
 
@@ -24,7 +24,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
   const validation = createVisitSchema.safeParse({
     eventId: formData.get("eventId"),
     clientId: formData.get("clientId"),
-    organizerId: formData.get("organizerId"),
+    businessId: formData.get("businessId"),
     companionsCount: formData.get("companionsCount"),
   });
 
@@ -35,7 +35,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     } satisfies State;
   }
 
-  const { eventId, clientId, organizerId, companionsCount } = validation.data;
+  const { eventId, clientId, businessId, companionsCount } = validation.data;
 
   // Prevent duplicate reservations for the same event and client
   const { count: existingCount, error: existsError } = await supabase
@@ -72,20 +72,20 @@ export async function createVisit(prevState: State, formData: FormData): Promise
     } satisfies State;
   }
 
-  if (organizerId) {
-    // Check if client is already registered with this organizer
+  if (businessId) {
+    // Check if client is already registered with this business
     const { data: existingRelation, error: existingRelationError } = await supabase
-      .from("clientOnOrganizer")
+      .from("clientOnBusiness")
       .select("id")
       .eq("clientId", clientId)
-      .eq("organizerId", organizerId)
+      .eq("businessId", businessId)
       .maybeSingle();
 
     // Only add if not already registered
     if (!existingRelation?.id) {
-      const { error: insertError, data } = await supabase.from("clientOnOrganizer").insert({
+      const { error: insertError, data } = await supabase.from("clientOnBusiness").insert({
         clientId,
-        organizerId,
+        businessId,
       });
     }
   }

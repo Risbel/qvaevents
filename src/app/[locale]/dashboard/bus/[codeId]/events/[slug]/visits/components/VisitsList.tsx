@@ -248,13 +248,12 @@ const VisitsList = () => {
 
   return (
     <div className="space-y-4 w-full">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-sm">
-            {t("visits")}: {totalVisits + totalCompanions} / {visitsLimit}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-1">
+        <Badge variant="outline" className="text-sm">
+          {t("visits")}: {totalVisits + totalCompanions} / {visitsLimit}
+        </Badge>
+
+        <div className="flex items-center gap-1">
           {totalVisits > 0 && data && (
             <>
               <MessageAllButton data={{ pages: [data] }} />
@@ -264,7 +263,7 @@ const VisitsList = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
-                {t("columns")} <ChevronDown className="ml-2 h-4 w-4" />
+                {t("columns")} <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -16,17 +16,16 @@ import VisitForm from "./VisitForm";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import useGetVisitsCountByEventId from "@/hooks/visits/useGetVisitsCountByEventId";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function ReservationDialog({
   eventId,
   visitsLimit,
-  organizerId,
+  businessId,
   isFull,
 }: {
   eventId: number;
   visitsLimit: number;
-  organizerId: number;
+  businessId: number;
   isFull: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +88,7 @@ export default function ReservationDialog({
                 eventId={eventId}
                 visitsLimit={visitsLimit}
                 visitsCount={visitsCount?.totalCount || 0}
-                organizerId={organizerId}
+                businessId={businessId}
                 onSuccess={() => setIsOpen(false)}
               />
             </>
