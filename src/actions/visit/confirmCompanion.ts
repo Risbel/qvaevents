@@ -7,6 +7,7 @@ import { z } from "zod";
 const confirmCompanionSchema = z.object({
   visitId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
+  businessId: z.coerce.number().int().positive(),
 });
 
 export async function confirmCompanion(prevState: State, formData: FormData): Promise<State> {
@@ -22,6 +23,7 @@ export async function confirmCompanion(prevState: State, formData: FormData): Pr
   const validation = confirmCompanionSchema.safeParse({
     visitId: formData.get("visitId"),
     clientId: formData.get("clientId"),
+    businessId: formData.get("businessId"),
   });
 
   if (!validation.success) {
@@ -31,7 +33,7 @@ export async function confirmCompanion(prevState: State, formData: FormData): Pr
     } satisfies State;
   }
 
-  const { visitId, clientId } = validation.data;
+  const { visitId, clientId, businessId } = validation.data;
 
   // Get the visit to check companions count
   const { data: visit, error: visitError } = await supabase
@@ -72,7 +74,7 @@ export async function confirmCompanion(prevState: State, formData: FormData): Pr
     } satisfies State;
   }
 
-  // Create the companion confirmation
+  // Create the companion confirmation (MOST IMPORTANT - must succeed)
   const { error: insertError } = await supabase.from("ClientCompanion").insert({
     visitId,
     clientId,
@@ -83,6 +85,21 @@ export async function confirmCompanion(prevState: State, formData: FormData): Pr
       status: "error",
       errors: { insert: ["Failed to confirm companion. Please try again."] },
     } satisfies State;
+  }
+
+  // Try to add client to business if not already registered (secondary operation - can fail silently)
+  const { data: existingClientOnBusiness } = await supabase
+    .from("clientOnBusiness")
+    .select("id")
+    .eq("clientId", clientId)
+    .eq("businessId", businessId)
+    .maybeSingle();
+
+  if (!existingClientOnBusiness) {
+    await supabase.from("clientOnBusiness").insert({
+      clientId,
+      businessId,
+    });
   }
 
   return {

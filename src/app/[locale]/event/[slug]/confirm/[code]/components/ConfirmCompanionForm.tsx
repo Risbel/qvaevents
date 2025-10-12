@@ -17,6 +17,7 @@ interface ConfirmCompanionFormProps {
   isFull: boolean;
   eventSlug: string;
   confirmedClientIds: number[];
+  businessId: number;
 }
 
 export default function ConfirmCompanionForm({
@@ -24,6 +25,7 @@ export default function ConfirmCompanionForm({
   isFull,
   eventSlug,
   confirmedClientIds,
+  businessId,
 }: ConfirmCompanionFormProps) {
   const t = useTranslations("ConfirmCompanionPage");
   const router = useRouter();
@@ -107,6 +109,7 @@ export default function ConfirmCompanionForm({
     <form action={formAction}>
       <input type="hidden" name="visitId" value={visitId} />
       <input type="hidden" name="clientId" value={clientProfile.id} />
+      <input type="hidden" name="businessId" value={businessId} />
 
       <Card className="gap-2 shadow-primary/50">
         <CardContent className="py-6 space-y-4">

@@ -1,6 +1,6 @@
 import { getVisitByCode } from "@/queries/server/visit/getVisitByCode";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, MapPin, User, CheckCircle2 } from "lucide-react";
+import { Calendar, CheckCircle2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { EventDateTime } from "@/app/components/EventDateTime";
 import { getTranslations } from "next-intl/server";
@@ -165,6 +165,7 @@ const ConfirmCompanionPage = async ({
               isFull={currentCompanionsCount >= maxCompanions}
               eventSlug={event.slug}
               confirmedClientIds={companions.map((c: any) => c.clientId)}
+              businessId={visit.Event.Business.id}
             />
           </div>
         </div>

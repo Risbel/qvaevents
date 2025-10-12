@@ -1,21 +1,11 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { Tables } from "@/types/supabase";
 
-interface EventText {
-  id: number;
-  title: string;
-  description: string;
-  locationText: string | null;
-  languageId: number;
-  Language: {
-    id: number;
-    code: string;
-    icon: string | null;
-    name: string;
-    native: string;
-  };
-}
+type EventText = Tables<"EventText"> & {
+  Language: Tables<"Language">;
+};
 
 interface EventTextContextType {
   currentText: EventText | null;

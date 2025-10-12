@@ -1,6 +1,20 @@
 import { createClient } from "@/utils/supabase/server";
+import { Tables } from "@/types/supabase";
 
-export async function getVisitByCode(code: string) {
+export type Visit = Tables<"Visit"> & {
+  Event: Tables<"Event"> & {
+    EventText: (Tables<"EventText"> & {
+      Language: Tables<"Language">;
+    })[];
+    Business: Tables<"Business">;
+  };
+  ClientProfile: Tables<"ClientProfile">;
+  ClientCompanion: Tables<"ClientCompanion">[];
+};
+
+export async function getVisitByCode(
+  code: string
+): Promise<{ status: "success" | "error"; data?: { visit: Visit }; error?: string }> {
   const supabase = await createClient();
 
   const { data: visit, error } = await supabase
@@ -52,6 +66,6 @@ export async function getVisitByCode(code: string) {
 
   return {
     status: "success" as const,
-    data: { visit },
+    data: { visit: visit as Visit },
   };
 }
