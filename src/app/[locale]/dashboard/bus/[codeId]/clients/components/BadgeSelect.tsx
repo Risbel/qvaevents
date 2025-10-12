@@ -44,36 +44,37 @@ const BadgeSelect = ({ clientId, initialBadge }: BadgeSelectProps) => {
   };
 
   return (
-    <div className="flex w-full justify-between items-center">
-      <Badge variant="secondary" className="text-xs flex items-center gap-1">
-        {currentBadge === "VIP" ? (
-          <>
-            <Crown className="h-3 w-3 text-yellow-500" />
-            VIP
-          </>
-        ) : (
-          <>
+    <Select value={currentBadge} onValueChange={(value: BadgeType) => handleBadgeChange(value)} disabled={isPending}>
+      <SelectTrigger className="w-[140px] h-8 text-xs">
+        <Badge variant="secondary" className="text-xs flex items-center gap-1 border-0">
+          {currentBadge === "VIP" ? (
+            <>
+              <Crown className="h-3 w-3 text-yellow-500" />
+              VIP
+            </>
+          ) : (
+            <>
+              <User2 className="h-3 w-3 text-muted-foreground" />
+              {t("badges.regular")}
+            </>
+          )}
+        </Badge>
+      </SelectTrigger>
+      <SelectContent className="text-xs">
+        <SelectItem value="REGULAR" className="flex items-center text-xs">
+          <div className="flex items-center gap-2">
             <User2 className="h-3 w-3 text-muted-foreground" />
             {t("badges.regular")}
-          </>
-        )}
-      </Badge>
-      <Select value={currentBadge} onValueChange={(value: BadgeType) => handleBadgeChange(value)} disabled={isPending}>
-        <SelectTrigger className="w-fit absolute right-2 top-2">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent dir="rtl">
-          <SelectItem dir="ltr" value="REGULAR" className="flex items-center gap-1">
-            <User2 className="h-3 w-3 text-muted-foreground" />
-            {t("badges.regular")}
-          </SelectItem>
-          <SelectItem dir="ltr" value="VIP" className="flex items-center gap-1">
+          </div>
+        </SelectItem>
+        <SelectItem value="VIP" className="flex items-center text-xs">
+          <div className="flex items-center gap-2">
             <Crown className="h-3 w-3 text-yellow-500" />
             VIP
-          </SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+          </div>
+        </SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 

@@ -6,42 +6,63 @@ export type ClientOnOrganizer = Array<
   }
 >;
 
-interface GetClientsParams {
-  pageParam?: number;
-  pageSize?: number;
-}
-
 const getClientsByOrganizerId = async (
   client: TypedSupabaseClient,
-  organizerId: number,
+  page: number = 1,
+  pageSize: number = 30,
   search?: string,
-  searchField?: string,
-  { pageParam = 0, pageSize = 30 }: GetClientsParams = {}
+  searchField?: string
 ) => {
+  // Get current user
+  const {
+    data: { user },
+    error: userError,
+  } = await client.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error("User not authenticated");
+  }
+
+  // Get organizer profile
+  const { data: organizerProfile, error: organizerError } = await client
+    .from("OrganizerProfile")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
+
+  if (organizerError || !organizerProfile) {
+    throw new Error("Organizer profile not found");
+  }
+
+  // Calculate offset based on page
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
   // Build base query with inner join to ensure we only get clients with profiles
-  const baseQuery = client.from("clientOnOrganizer").select("*, ClientProfile!inner(*)").eq("organizerId", organizerId);
+  let query = client
+    .from("clientOnOrganizer")
+    .select("*, ClientProfile!inner(*)", { count: "exact" })
+    .eq("organizerId", organizerProfile.id);
 
   // Apply search filter if provided
-  const filteredQuery =
-    search && searchField ? baseQuery.ilike(`ClientProfile.${searchField}`, `%${search}%`) : baseQuery;
+  if (search && searchField) {
+    query = query.ilike(`ClientProfile.${searchField}`, `%${search}%`);
+  }
 
-  // Get paginated data
-  const { data, error } = await filteredQuery
-    .order("createdAt", { ascending: false })
-    .range(pageParam, pageParam + pageSize - 1);
+  // Get paginated data with count
+  const { data, error, count: totalCount } = await query.order("createdAt", { ascending: false }).range(from, to);
 
   if (error) throw error;
 
-  // Get total count of filtered results
-  const { data: countResult } = await filteredQuery.select("id");
-  const count = countResult?.length || 0;
-
-  const nextCursor = count > pageParam + pageSize ? pageParam + pageSize : undefined;
+  const total = totalCount || 0;
+  const totalPages = Math.ceil(total / pageSize);
 
   return {
     clients: data as ClientOnOrganizer,
-    nextCursor,
-    total: count || 0,
+    total,
+    totalPages,
+    currentPage: page,
+    organizerProfile,
   };
 };
 

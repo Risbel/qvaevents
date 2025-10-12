@@ -8,12 +8,10 @@ import { Calendar, Users, TrendingUp, Plus, Eye } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
-import { useTranslations } from "next-intl";
 
 export default function BusDashboard() {
   const params = useParams();
   const { codeId, locale } = params;
-  const t = useTranslations("Business");
 
   const { data: business } = useGetBusinessByCodeId(codeId as string);
 
