@@ -16,15 +16,18 @@ import VisitForm from "./VisitForm";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import useGetVisitsCountByEventId from "@/hooks/visits/useGetVisitsCountByEventId";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function ReservationDialog({
   eventId,
   visitsLimit,
   organizerId,
+  isFull,
 }: {
   eventId: number;
   visitsLimit: number;
   organizerId: number;
+  isFull: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: visitsCount, isLoading: isLoadingVisitsCount } = useGetVisitsCountByEventId(eventId);
@@ -37,7 +40,8 @@ export default function ReservationDialog({
   } = useGetMyClientProfile({
     enabled: isOpen, // Only fetch when modal is open
   });
-  const t = useTranslations("EventPage.ReservationDialog");
+  const t = useTranslations("ReservationDialog");
+  const tEventPage = useTranslations("EventPage");
   const tAction = useTranslations("actions");
 
   const totalReserved = visitsCount?.totalCount || 0;
@@ -60,6 +64,7 @@ export default function ReservationDialog({
           <DialogTitle>{t("reserveTitle")}</DialogTitle>
           <DialogDescription>{t("reserveDescription")}</DialogDescription>
         </DialogHeader>
+
         <div className="space-y-4">
           {isLoadingClientProfile || isFetchingClientProfile || isLoadingVisitsCount ? (
             <div className="space-y-3">
@@ -68,9 +73,9 @@ export default function ReservationDialog({
             </div>
           ) : errorClientProfile || !clientProfile ? (
             <p className="text-sm text-muted-foreground">{t("mustBeLoggedIn")}</p>
-          ) : isFullyBooked ? (
+          ) : isFullyBooked || isFull ? (
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground text-center">{t("fullyBookedDescription")}</p>
+              <p className="text-sm">{t("fullyBookedDescription")}</p>
               <div className="flex gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="flex-1">
                   {tAction("close")}
@@ -79,14 +84,6 @@ export default function ReservationDialog({
             </div>
           ) : eventId && clientProfile ? (
             <>
-              {visitsLimit > 0 && (
-                <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                  <span>{t("capacity.title")}</span>
-                  <span>
-                    {totalReserved} / {visitsLimit}
-                  </span>
-                </div>
-              )}
               <VisitForm
                 clientProfile={clientProfile}
                 eventId={eventId}

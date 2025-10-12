@@ -34,7 +34,7 @@ export default function VisitForm({
   organizerId?: number;
   onSuccess?: () => void;
 }) {
-  const t = useTranslations("EventPage.ReservationDialog");
+  const t = useTranslations("ReservationDialog");
   const tAction = useTranslations("actions");
   const queryClient = useQueryClient();
   const { slug, locale } = useParams();
@@ -152,6 +152,7 @@ export default function VisitForm({
               onChange={(e) =>
                 setCompanionsCount(Math.max(1, Math.min(maxCompanions, parseInt(e.target.value) || 0)).toString())
               }
+              autoComplete="off"
               className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               onWheel={(e) => e.currentTarget.blur()}
             />
@@ -194,7 +195,7 @@ export default function VisitForm({
               {t("shareEvent")}
             </Button>
             <Button type="button" variant="outline" onClick={handleCloseShareModal} className="w-full">
-              {t("close")}
+              {tAction("close")}
             </Button>
           </DialogFooter>
         </DialogContent>

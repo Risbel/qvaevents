@@ -81,13 +81,11 @@ const VisitsList = () => {
   return (
     <div className="space-y-4 w-full">
       <div className="flex items-center justify-between gap-1">
-        <div className="flex gap-1 flex-wrap">
-          <Badge variant="outline">
-            <span>{tVisits("visits")}:</span>
-            {currentPageData.totalVisits + currentPageData.totalCompanions} / {currentPageData.event.visitsLimit}
-          </Badge>
-          {search && <Badge variant="secondary">{tVisits("Filter.activeFilter")}</Badge>}
-        </div>
+        <Badge variant="outline">
+          <span>{tVisits("visits")}:</span>
+          {currentPageData.totalVisits + currentPageData.totalCompanions} / {currentPageData.event.visitsLimit}
+        </Badge>
+
         {currentPageData.totalVisits > 0 && (
           <div className="flex gap-1">
             <MessageAllButton data={data} />

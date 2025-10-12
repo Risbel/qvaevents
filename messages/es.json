@@ -117,7 +117,9 @@
     "attended": "Asistido",
     "canceled": "Cancelado",
     "pending": "Pendiente",
-    "reservedOn": "Reservado el"
+    "reservedOn": "Reservado el",
+    "expired": "Expirado",
+    "full": "Sold Out"
   },
   "Sidebar": {
     "dashboard": "Panel de Control",
@@ -529,6 +531,10 @@
     "noEvents": "No se encontraron eventos",
     "noEventsDescription": "Este negocio no tiene ningún evento todavía."
   },
+  "EventsFilter": {
+    "upcoming": "Próximos",
+    "expired": "Expirados"
+  },
   "EventsError": {
     "title": "Error al cargar los eventos",
     "description": "Ocurrió un error al cargar los eventos. Esto puede ser debido a un problema de red o un problema del servidor."
@@ -552,7 +558,32 @@
     "viewEvent": "Ver Evento",
     "editEvent": "Editar Evento",
     "published": "Publicado",
-    "draft": "Borrador"
+    "draft": "Borrador",
+    "delete": "Eliminar Evento",
+    "deleteTitle": "Eliminar Evento",
+    "deleteDescription": "¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.",
+    "warning": "Todos los datos asociados a este evento serán eliminados permanentemente.",
+    "deleteConfirmLabel": "Confirmar eliminación",
+    "deleteConfirmInstruction": "Escribe el siguiente texto para confirmar:",
+    "deleteConfirmPhrase": "eliminar este evento",
+    "deleteConfirmError": "Por favor escribe la frase de confirmación correctamente",
+    "cancel": "Cancelar",
+    "confirmDelete": "Eliminar Evento",
+    "deleting": "Eliminando...",
+    "deleteSuccess": "¡Evento eliminado exitosamente!",
+    "deleteError": "Error al eliminar el evento",
+    "setFull": "Cerrar Reservas",
+    "unsetFull": "Quitar Sold Out",
+    "setFullTitle": "Marcar Evento como Sold Out",
+    "unsetFullTitle": "Quitar Estado de Sold Out",
+    "setFullDescription": "¿Estás seguro de que quieres marcar como sold out este evento? Esto impedirá nuevas reservas.",
+    "unsetFullDescription": "¿Estás seguro de que quieres quitar el estado de sold out de este evento? Esto permitirá nuevas reservas nuevamente.",
+    "confirmSetFull": "Marcar como Sold Out",
+    "confirmUnsetFull": "Quitar Sold Out",
+    "updating": "Actualizando...",
+    "setFullSuccess": "¡Evento marcado como sold out exitosamente!",
+    "unsetFullSuccess": "¡Estado de sold out eliminado exitosamente!",
+    "setFullError": "Error al actualizar el estado del evento"
   },
   "EventImagesManager": {
     "currentEventImages": "{count, plural, =1 {Imagen actual del evento} other {Imágenes actuales del evento}}",
@@ -584,6 +615,7 @@
   },
   "EventPage": {
     "eventDetails": "Detalles del Evento",
+    "aboutEvent": "Sobre el Evento",
     "shareEvent": "Compartir Evento",
     "shareEventFailed": "Error al compartir el evento",
     "shareEventSuccess": "Evento compartido exitosamente",
@@ -594,36 +626,37 @@
     "adultsOnly": "Solo para adultos 🔞",
     "suitableForMinors": "Apto para menores",
     "location": "Ubicación",
-    "ReservationDialog": {
-      "reserve": "Reservar",
-      "reserveTitle": "Reservar Tu Lugar",
-      "reserveDescription": "Reserva tu lugar para este evento.",
-      "mustBeLoggedIn": "Debes estar logueado y tener un perfil de cliente antes de reservar.",
-      "creating": "Creando...",
-      "reservationCreated": "Reserva creada exitosamente.",
-      "reservationFailed": "Error al crear la reserva.",
-      "confirmReservation": "Confirmar Reserva",
-      "fullyBooked": "Completamente Reservado",
-      "fullyBookedDescription": "Lo sentimos, este evento está completamente reservado. No hay más lugares disponibles.",
-      "capacity": {
-        "title": "Capacidad",
-        "noSpaceForCompanions": "No hay espacio para acompañantes",
-        "remainingCapacity": "Capacidad restante",
-        "spots": "lugares",
-        "maxCompanions": "Máximo de acompañantes"
-      },
-      "addCompanions": "Agregar Acompañantes",
-      "companionsCountLabel": "Número de Acompañantes",
-      "companionsHint": "¿Cuántas personas vienen contigo?",
-      "shareEvent": "Enviar Confirmación",
-      "shareEventTitle": "¡Mira este evento!",
-      "shareEventText": "{clientName} hizo una reserva y te invita como acompañante a este evento. Accede ahora y confirma tu asistencia.",
-      "sharedSuccessfully": "Evento compartido exitosamente",
-      "linkCopied": "Enlace del evento copiado al portapapeles",
-      "successTitle": "¡Reserva Confirmada! 🎉",
-      "successDescription": "¡Comparte este evento con tus acompañantes!",
-      "close": "Cerrar"
-    }
+    "eventExpired": "Evento Expirado",
+    "eventExpiredDescription": "Este evento ha expirado. Por favor, contacta al organizador para más información."
+  },
+  "ReservationDialog": {
+    "reserve": "Reservar",
+    "reserveTitle": "Reservar Tu Lugar",
+    "reserveDescription": "Reserva tu lugar para este evento.",
+    "mustBeLoggedIn": "Debes estar logueado y tener un perfil de cliente antes de reservar.",
+    "creating": "Creando...",
+    "reservationCreated": "Reserva creada exitosamente.",
+    "reservationFailed": "Error al crear la reserva.",
+    "confirmReservation": "Confirmar Reserva",
+    "fullyBooked": "Completamente Reservado",
+    "fullyBookedDescription": "Lo sentimos, este evento está completamente reservado. No hay más lugares disponibles.",
+    "capacity": {
+      "title": "Capacidad",
+      "noSpaceForCompanions": "No hay espacio para acompañantes",
+      "remainingCapacity": "Capacidad restante",
+      "spots": "lugares",
+      "maxCompanions": "Máximo de acompañantes"
+    },
+    "addCompanions": "Agregar Acompañantes",
+    "companionsCountLabel": "Número de Acompañantes",
+    "companionsHint": "¿Cuántas personas vienen contigo?",
+    "shareEvent": "Enviar Confirmación",
+    "shareEventTitle": "¡Mira este evento!",
+    "shareEventText": "{clientName} hizo una reserva y te invita como acompañante a este evento. Accede ahora y confirma tu asistencia.",
+    "sharedSuccessfully": "Evento compartido exitosamente",
+    "linkCopied": "Enlace del evento copiado al portapapeles",
+    "successTitle": "¡Reserva Confirmada! 🎉",
+    "successDescription": "¡Comparte este evento con tus acompañantes!"
   },
   "TicketsPage": {
     "title": "Mis Tickets",

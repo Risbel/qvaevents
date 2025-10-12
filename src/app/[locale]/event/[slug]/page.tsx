@@ -1,7 +1,7 @@
 import { getEventBySlug } from "@/queries/server/event/getEventBySlug";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, Shield, Ticket } from "lucide-react";
+import { Calendar, Users, Shield, Ticket, CalendarClockIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { ImageCarousel } from "@/app/components/ImageCarousel";
@@ -19,11 +19,14 @@ import ClientsUserDropdown from "@/app/components/ClientsUserDropdown";
 import Link from "next/link";
 import Image from "next/image";
 import ShareEventButton from "./components/ShareEventButton";
+import { cn } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getEventSubType, getEventType } from "@/utils/eventTypesSelector";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;
   const t = await getTranslations("EventPage");
-
+  const tStatus = await getTranslations("status");
   const eventResult = await getEventBySlug(slug);
 
   if (!eventResult || eventResult.status !== "success" || !eventResult.data?.event) {
@@ -31,30 +34,7 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
   }
 
   const event = eventResult.data.event;
-
-  // Get event type and subtype translations
-  const eventTypeMap: Record<string, string> = {
-    party: "Party",
-    conference: "Conference",
-    workshop: "Workshop",
-    concert: "Concert",
-    festival: "Festival",
-    exhibition: "Exhibition",
-    sports: "Sports",
-    cultural: "Cultural",
-    business: "Business",
-    educational: "Educational",
-  };
-
-  const eventSubTypeMap: Record<string, string> = {
-    nightClub: "Night Club",
-    bar: "Bar",
-    restaurant: "Restaurant",
-    outdoor: "Outdoor",
-    indoor: "Indoor",
-    virtual: "Virtual",
-    hybrid: "Hybrid",
-  };
+  const isExpired = new Date(event.endDate) < new Date();
 
   return (
     <EventTextProvider eventTexts={event.EventText} defaultLocale={event.defaultLocale}>
@@ -111,18 +91,37 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               />
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
               <ReservationDialog
+                isFull={event.isFull}
                 eventId={event.id}
                 visitsLimit={event.visitsLimit || 0}
                 organizerId={event.Business.organizerId}
               />
               <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
             </div>
+            {isExpired && (
+              <Alert variant="destructive" className="shadow-md shadow-red-500/20">
+                <CalendarClockIcon className="h-5 w-5 text-primary" />
+                <AlertTitle>{t("eventExpired")}</AlertTitle>
+                <AlertDescription>{t("eventExpiredDescription")}</AlertDescription>
+              </Alert>
+            )}
 
             <EventDescription />
+            <EventLocation />
+            <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
-            <Card className="gap-2">
+            <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
+              <ReservationDialog
+                isFull={event.isFull}
+                eventId={event.id}
+                visitsLimit={event.visitsLimit || 0}
+                organizerId={event.Business.organizerId}
+              />
+              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
+            </div>
+            <Card className="gap-2 shadow-md shadow-primary/20">
               <CardHeader>
                 <CardTitle>{t("eventDetails")}</CardTitle>
               </CardHeader>
@@ -144,9 +143,17 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 <div className="flex items-center gap-3 p-2 border rounded-md">
                   <Ticket className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">{eventTypeMap[event.type] || event.type}</p>
+                    <p className="font-medium flex items-center gap-2">
+                      <span>{getEventType(event.type, locale).label}</span>
+                      {getEventType(event.type, locale).icon && <span>{getEventType(event.type, locale).icon}</span>}
+                    </p>
                     {event.subType && (
-                      <p className="text-sm text-muted-foreground">{eventSubTypeMap[event.subType] || event.subType}</p>
+                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                        <span>{getEventSubType(event.subType, locale).label}</span>
+                        {getEventSubType(event.subType, locale).icon && (
+                          <span>{getEventSubType(event.subType, locale).icon}</span>
+                        )}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -172,19 +179,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 </div>
               </CardContent>
             </Card>
-
-            <EventLocation />
-
-            <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
-
-            <div className="grid grid-cols-2 gap-3">
-              <ReservationDialog
-                eventId={event.id}
-                visitsLimit={event.visitsLimit || 0}
-                organizerId={event.Business.organizerId}
-              />
-              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
-            </div>
           </div>
         </div>
       </main>

@@ -117,7 +117,9 @@
     "attended": "Attended",
     "canceled": "Canceled",
     "pending": "Pending",
-    "reservedOn": "Reserved on"
+    "reservedOn": "Reserved on",
+    "expired": "Expired",
+    "full": "Sold Out"
   },
   "Sidebar": {
     "dashboard": "Dashboard",
@@ -533,6 +535,10 @@
     "noEvents": "No events found",
     "noEventsDescription": "This business doesn't have any events yet."
   },
+  "EventsFilter": {
+    "upcoming": "Upcoming",
+    "expired": "Expired"
+  },
   "EventsError": {
     "title": "Failed to load events",
     "description": "We encountered an error while loading the events. This could be due to a network issue or a server problem."
@@ -556,7 +562,32 @@
     "viewEvent": "View Event",
     "editEvent": "Edit Event",
     "published": "Published",
-    "draft": "Draft"
+    "draft": "Draft",
+    "delete": "Delete Event",
+    "deleteTitle": "Delete Event",
+    "deleteDescription": "Are you sure you want to delete this event? This action cannot be undone.",
+    "warning": "All data linked to this event will be permanently deleted.",
+    "deleteConfirmLabel": "Confirm deletion",
+    "deleteConfirmInstruction": "Type the following text to confirm:",
+    "deleteConfirmPhrase": "delete this event",
+    "deleteConfirmError": "Please type the confirmation phrase correctly",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete Event",
+    "deleting": "Deleting...",
+    "deleteSuccess": "Event deleted successfully!",
+    "deleteError": "Failed to delete event",
+    "setFull": "Mark as Sold Out",
+    "unsetFull": "Remove Sold Out",
+    "setFullTitle": "Mark Event as Sold Out",
+    "unsetFullTitle": "Remove Sold Out Status",
+    "setFullDescription": "Are you sure you want to mark as sold out this event? This will prevent new reservations.",
+    "unsetFullDescription": "Are you sure you want to remove the sold out status from this event? This will allow new reservations again.",
+    "confirmSetFull": "Mark as Sold Out",
+    "confirmUnsetFull": "Remove Sold Out",
+    "updating": "Updating...",
+    "setFullSuccess": "Event marked as sold out successfully!",
+    "unsetFullSuccess": "Sold out status removed successfully!",
+    "setFullError": "Failed to update event status"
   },
   "EventImagesManager": {
     "currentEventImages": "{count, plural, =1 {Current event image} other {Current event images}}",
@@ -588,6 +619,7 @@
   },
   "EventPage": {
     "eventDetails": "Event Details",
+    "aboutEvent": "About Event",
     "shareEvent": "Share Event",
     "shareEventFailed": "Failed to share event",
     "shareEventSuccess": "Event shared successfully",
@@ -598,36 +630,37 @@
     "adultsOnly": "Adults only 🔞",
     "suitableForMinors": "Suitable for minors",
     "location": "Location",
-    "ReservationDialog": {
-      "reserve": "Reserve",
-      "reserveTitle": "Reserve Your Spot",
-      "reserveDescription": "Reserve your spot for this event.",
-      "mustBeLoggedIn": "You must be logged in and have a client profile before reserving.",
-      "creating": "Creating...",
-      "reservationCreated": "Reservation created successfully.",
-      "reservationFailed": "Failed to create reservation.",
-      "confirmReservation": "Confirm Reservation",
-      "fullyBooked": "Fully Booked",
-      "fullyBookedDescription": "Sorry, this event is fully booked. No more spots available.",
-      "capacity": {
-        "title": "Capacity",
-        "noSpaceForCompanions": "No space for companions",
-        "remainingCapacity": "Remaining capacity",
-        "spots": "spots",
-        "maxCompanions": "Max companions"
-      },
-      "addCompanions": "Add Companions",
-      "companionsCountLabel": "Number of Companions",
-      "companionsHint": "How many people are coming with you?",
-      "shareEvent": "Send Confirmation",
-      "shareEventTitle": "Check out this event!",
-      "shareEventText": "{clientName} made a reservation and invites you as a companion to this event. Access now and confirm your attendance.",
-      "sharedSuccessfully": "Event shared successfully",
-      "linkCopied": "Event link copied to clipboard",
-      "successTitle": "Reservation Confirmed! 🎉",
-      "successDescription": "Share this event with your companions!",
-      "close": "Close"
-    }
+    "eventExpired": "Event Expired",
+    "eventExpiredDescription": "This event has expired. Please contact the organizer for more information."
+  },
+  "ReservationDialog": {
+    "reserve": "Reserve",
+    "reserveTitle": "Reserve Your Spot",
+    "reserveDescription": "Reserve your spot for this event.",
+    "mustBeLoggedIn": "You must be logged in and have a client profile before reserving.",
+    "creating": "Creating...",
+    "reservationCreated": "Reservation created successfully.",
+    "reservationFailed": "Failed to create reservation.",
+    "confirmReservation": "Confirm Reservation",
+    "fullyBooked": "Fully Booked",
+    "fullyBookedDescription": "Sorry, this event is fully booked. No more spots available.",
+    "capacity": {
+      "title": "Capacity",
+      "noSpaceForCompanions": "No space for companions",
+      "remainingCapacity": "Remaining capacity",
+      "spots": "spots",
+      "maxCompanions": "Max companions"
+    },
+    "addCompanions": "Add Companions",
+    "companionsCountLabel": "Number of Companions",
+    "companionsHint": "How many people are coming with you?",
+    "shareEvent": "Send Confirmation",
+    "shareEventTitle": "Check out this event!",
+    "shareEventText": "{clientName} made a reservation and invites you as a companion to this event. Access now and confirm your attendance.",
+    "sharedSuccessfully": "Event shared successfully",
+    "linkCopied": "Event link copied to clipboard",
+    "successTitle": "Reservation Confirmed! 🎉",
+    "successDescription": "Share this event with your companions!"
   },
   "TicketsPage": {
     "title": "My Tickets",

@@ -2,21 +2,23 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEventText } from "./EventTextProvider";
+import { useTranslations } from "next-intl";
 
 export function EventDescription() {
   const { currentText } = useEventText();
+  const t = useTranslations("EventPage");
 
   if (!currentText) {
     return null;
   }
 
   return (
-    <Card className="gap-0">
+    <Card className="gap-2 shadow-md shadow-primary/20">
       <CardHeader>
-        <CardTitle>About</CardTitle>
+        <CardTitle>{t("aboutEvent")}:</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground whitespace-break-spaces">{currentText.description}</p>
+        <p className="whitespace-break-spaces">{currentText.description}</p>
       </CardContent>
     </Card>
   );

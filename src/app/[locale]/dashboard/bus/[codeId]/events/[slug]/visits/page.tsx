@@ -24,8 +24,12 @@ const VisitsPage = () => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams);
 
-    if (search) {
-      params.set("search", search);
+    const trimmedSearch = search.trim();
+
+    setSearch(trimmedSearch);
+
+    if (trimmedSearch) {
+      params.set("search", trimmedSearch);
       params.set("searchField", searchField);
     } else {
       params.delete("search");

@@ -296,7 +296,7 @@ export type Database = {
           defaultLocale: string | null;
           endDate: string;
           id: number;
-          isActive: boolean | null;
+          isFull: boolean;
           isDeleted: boolean;
           isForMinors: boolean | null;
           isPublic: boolean | null;
@@ -321,7 +321,7 @@ export type Database = {
           defaultLocale?: string | null;
           endDate: string;
           id?: number;
-          isActive?: boolean | null;
+          isFull?: boolean;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
           isPublic?: boolean | null;
@@ -346,7 +346,7 @@ export type Database = {
           defaultLocale?: string | null;
           endDate?: string;
           id?: number;
-          isActive?: boolean | null;
+          isFull?: boolean;
           isDeleted?: boolean;
           isForMinors?: boolean | null;
           isPublic?: boolean | null;

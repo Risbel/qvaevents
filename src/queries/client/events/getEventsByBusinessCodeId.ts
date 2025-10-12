@@ -5,14 +5,20 @@ import { Business } from "../business/getBusinessByCodeId";
 export type Event = Tables<"Event">;
 export type EventText = Tables<"EventText">;
 export type Language = Tables<"Language">;
+export type EventImage = Tables<"EventImage">;
 
 export type EventWithTexts = Event & {
   EventText: (EventText & {
     Language: Language;
   })[];
+  EventImage: EventImage[];
 };
 
-export async function getEventsByBusinessCodeId(client: TypedSupabaseClient, codeId: string) {
+export async function getEventsByBusinessCodeId(
+  client: TypedSupabaseClient,
+  codeId: string,
+  status: string = "upcoming"
+) {
   const business = await client
     .from("Business")
     .select("id")
@@ -27,8 +33,10 @@ export async function getEventsByBusinessCodeId(client: TypedSupabaseClient, cod
     };
   }
 
-  // Then get all events for this business
-  const events = await client
+  const now = new Date().toISOString();
+
+  // Build the query based on status filter
+  let query = client
     .from("Event")
     .select(
       `
@@ -42,12 +50,25 @@ export async function getEventsByBusinessCodeId(client: TypedSupabaseClient, cod
             native,
             icon
           )
+        ),
+        EventImage (
+          id,
+          url,
+          type
         )
       `
     )
-    .eq("businessId", business.id)
-    .order("createdAt", { ascending: false })
-    .then(({ data }) => data as EventWithTexts[]);
+    .eq("isDeleted", false)
+    .eq("businessId", business.id);
+
+  // Apply date filter based on status
+  if (status === "upcoming") {
+    query = query.gte("endDate", now);
+  } else if (status === "expired") {
+    query = query.lt("endDate", now);
+  }
+
+  const events = await query.order("createdAt", { ascending: false }).then(({ data }) => data as EventWithTexts[]);
 
   if (!events) {
     return {

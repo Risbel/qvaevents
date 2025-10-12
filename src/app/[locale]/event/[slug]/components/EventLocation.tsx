@@ -14,7 +14,7 @@ export function EventLocation() {
   }
 
   return (
-    <Card className="gap-0">
+    <Card className="gap-0 shadow-md shadow-primary/20">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MapPin className="h-5 w-5" />

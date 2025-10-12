@@ -152,7 +152,7 @@ export const EventDateTime = ({
     if (twoRows) {
       return (
         <div className={cn("flex items-center gap-2", className)}>
-          <div className="font-medium">
+          <div>
             {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
           </div>
           {timezoneDisplay && showTimeZone && <div className="text-muted-foreground">({timezoneDisplay})</div>}
@@ -162,7 +162,7 @@ export const EventDateTime = ({
 
     return (
       <div className={cn("flex items-center gap-2", className)}>
-        <p className="font-medium">
+        <p>
           {startDateFormatted} - {endDateFormatted} • {startTime} - {endTime}
           {timezoneDisplay && showTimeZone && <span className="text-muted-foreground"> • {timezoneDisplay}</span>}
         </p>
