@@ -6,12 +6,20 @@ export type Event = Tables<"Event">;
 export type EventText = Tables<"EventText">;
 export type Language = Tables<"Language">;
 export type EventImage = Tables<"EventImage">;
+export type Type = Tables<"Type">;
+export type SubType = Tables<"SubType">;
+export type SpaceType = Tables<"SpaceType">;
+export type AccessType = Tables<"AccessType">;
 
 export type EventWithTexts = Event & {
   EventText: (EventText & {
     Language: Language;
   })[];
   EventImage: EventImage[];
+  Type: Type;
+  SubType: SubType;
+  SpaceType: SpaceType;
+  AccessType: AccessType;
 };
 
 export async function getEventsByBusinessCodeId(
@@ -55,6 +63,30 @@ export async function getEventsByBusinessCodeId(
           id,
           url,
           type
+        ),
+        Type (
+          id,
+          name,
+          labelEn,
+          labelEs
+        ),
+        SubType (
+          id,
+          name,
+          labelEn,
+          labelEs
+        ),
+        SpaceType (
+          id,
+          name,
+          labelEn,
+          labelEs
+        ),
+        AccessType (
+          id,
+          name,
+          labelEn,
+          labelEs
         )
       `
     )

@@ -61,7 +61,7 @@ function MapClickHandler({
 export default function LeafletMapPreviewForm({
   lat,
   lng,
-  zoom = 14,
+  zoom = 15,
   onLocationSelect,
   isInteractive = false,
 }: LeafletMapPreviewFormProps) {
@@ -120,6 +120,7 @@ export default function LeafletMapPreviewForm({
         <MapContainer
           center={[mapCenter.lat, mapCenter.lng]}
           zoom={currentZoom}
+          maxZoom={18}
           style={{ width: "100%", height: "100%" }}
           zoomControl={true}
           scrollWheelZoom={true}

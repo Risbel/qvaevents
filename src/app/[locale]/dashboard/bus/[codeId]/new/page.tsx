@@ -14,37 +14,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import useGetUser from "@/hooks/user/useGetUser";
 import useGetTypesAndSubtypes from "@/hooks/eventTypes/useGetTypesAndSubtypes";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import NewEventConfigSkeleton from "./components/Skeleton";
 
 const NewBusPage = () => {
-  const { codeId, locale } = useParams();
-  const router = useRouter();
-
   const t = useTranslations("EventCreation");
-
-  const { data: user, isLoading: userLoading, isError: userError } = useGetUser();
-
-  if (userError || !user) {
-    router.push(`/${locale}/auth/org/login`);
-  }
-
-  // Fetch Types and SubTypes
-  const { data: types, isLoading: typesLoading, isError: typesError } = useGetTypesAndSubtypes();
-  if (typesLoading) {
-    return <NewEventConfigSkeleton />;
-  }
-
-  if (typesError || !types) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Error loading types and subtypes</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
 
   return (
     <EventConfigProvider>
@@ -66,7 +38,7 @@ const NewBusPage = () => {
               <CardTitle>{t("typeSelector.title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <TypeSelector types={types} />
+              <TypeSelector />
             </CardContent>
           </Card>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">

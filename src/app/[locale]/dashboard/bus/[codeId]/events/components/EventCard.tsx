@@ -14,7 +14,7 @@ import {
   MessageSquare,
   CalendarClockIcon,
 } from "lucide-react";
-import { toNormalCase } from "@/utils/textFormating";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,6 +47,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const imageUrl = event.EventImage[0]?.url || "";
   const isExpired = new Date(event.endDate) < new Date();
 
+  const labelSelected = locale === "es" ? event.Type.labelEs : event.Type.labelEn;
+  const subTypeSelected = locale === "es" ? event.SubType.labelEs : event.SubType.labelEn;
+
   return (
     <Card
       className={cn(
@@ -75,8 +78,8 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </div>
 
         <div className="flex flex-wrap items-center gap-1 mt-2">
-          <Badge variant="outline">{toNormalCase(event.type)}</Badge>
-          <Badge variant="outline">{toNormalCase(event.subType)}</Badge>
+          <Badge variant="outline">{labelSelected}</Badge>
+          <Badge variant="outline">{subTypeSelected}</Badge>
 
           {event.isForMinors ? (
             <Badge variant="outline" className="bg-green-300/50 shadow-md shadow-green-300/20">
@@ -130,15 +133,19 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                 </Link>
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link
-                href={`/${locale}/dashboard/bus/${codeId}/events/${event.slug}/visits`}
-                className="flex items-center"
-              >
-                <ListChecks className="h-4 w-4" />
-                {tEventCard("visits")}
-              </Link>
-            </DropdownMenuItem>
+
+            {event.isPublished && (
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link
+                  href={`/${locale}/dashboard/bus/${codeId}/events/${event.slug}/visits`}
+                  className="flex items-center"
+                >
+                  <ListChecks className="h-4 w-4" />
+                  {tEventCard("visits")}
+                </Link>
+              </DropdownMenuItem>
+            )}
+
             {/* <DropdownMenuItem asChild className="cursor-pointer">
               <Link
                 href={`/${locale}/dashboard/bus/${codeId}/events/${event.slug}/reviews`}
@@ -149,10 +156,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
               </Link>
             </DropdownMenuItem> */}
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className={cn(!event.isPublished && "hidden")} />
 
             {!isExpired && (
-              <DropdownMenuItem asChild className="cursor-pointer ">
+              <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href={`/${locale}/dashboard/bus/${codeId}/new/1?slug=${event.slug}`}>
                   <Pencil className="h-4 w-4" /> {t("edit")}
                 </Link>
@@ -160,7 +167,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             )}
             <EventDeleteAction eventId={event.id} />
 
-            {!isExpired && <EventSetFullAction eventId={event.id} isFull={event.isFull || false} />}
+            {!isExpired && event.isPublished && (
+              <EventSetFullAction eventId={event.id} isFull={event.isFull || false} />
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>

@@ -6,10 +6,14 @@ interface EventConfig {
   type?: string;
   subType?: string;
   customSubType?: string;
+  typeId?: number;
+  subTypeId?: number;
   isForMinors?: string;
   isPublic?: boolean;
   spaceType?: string;
   accessType?: string;
+  spaceTypeId?: number;
+  accessTypeId?: number;
   selectedLanguages: string[];
   savedConfigId?: string;
 }
@@ -42,22 +46,22 @@ export const EventConfigProvider: React.FC<{ children: ReactNode }> = ({ childre
   const buildUrl = (): string => {
     const params = new URLSearchParams();
 
-    // Add all non-empty values to URL params
-    if (config.type) params.set("type", config.type);
+    // Add all non-empty values to URL params - use semantic names but ID values
+    if (config.typeId) params.set("type", config.typeId.toString());
 
     // Handle subtype vs custom subtype - only include one
     if (config.customSubType && config.customSubType !== "") {
       // If we have a custom subtype, use that
       params.set("customSubType", config.customSubType);
-    } else if (config.subType && config.subType !== "" && config.subType !== "other") {
-      // If we have a regular subtype (not "other"), use that
-      params.set("subType", config.subType);
+    } else if (config.subTypeId) {
+      // If we have a regular subtype ID, use that
+      params.set("subType", config.subTypeId.toString());
     }
 
     if (config.isForMinors) params.set("isForMinors", config.isForMinors);
-    if (config.isPublic) params.set("isPublic", config.isPublic.toString());
-    if (config.spaceType) params.set("spaceType", config.spaceType);
-    if (config.accessType) params.set("accessType", config.accessType);
+    if (config.isPublic !== undefined) params.set("isPublic", config.isPublic.toString());
+    if (config.spaceTypeId) params.set("spaceType", config.spaceTypeId.toString());
+    if (config.accessTypeId) params.set("accessType", config.accessTypeId.toString());
     if (config.selectedLanguages.length > 0) {
       params.set("languages", config.selectedLanguages.join(","));
     }

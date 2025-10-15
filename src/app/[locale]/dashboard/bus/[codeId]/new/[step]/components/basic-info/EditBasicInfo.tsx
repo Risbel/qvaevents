@@ -183,12 +183,12 @@ export const EditBasicInfo = ({ languages, businessId, event }: EditBasicInfoPro
     <form action={formAction} className="space-y-4 md:space-y-6 w-full md:w-auto lg:w-5xl">
       {/* Hidden inputs for form data */}
       <input type="hidden" name="eventId" value={event.id} />
-      <input type="hidden" name="type" value={event.type} />
-      <input type="hidden" name="subType" value={event.subType} />
+      <input type="hidden" name="type" value={event.typeId} />
+      <input type="hidden" name="subType" value={event.subTypeId || ""} />
       <input type="hidden" name="isForMinors" value={event.isForMinors?.toString() || "false"} />
       <input type="hidden" name="isPublic" value={event.isPublic?.toString() || "false"} />
-      <input type="hidden" name="spaceType" value={event.spaceType || ""} />
-      <input type="hidden" name="accessType" value={event.accessType || ""} />
+      <input type="hidden" name="spaceType" value={event.spaceTypeId || ""} />
+      <input type="hidden" name="accessType" value={event.accessTypeId || ""} />
       <input type="hidden" name="businessId" value={businessId.toString()} />
       <input type="hidden" name="defaultLocale" value={defaultLocale || ""} />
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />

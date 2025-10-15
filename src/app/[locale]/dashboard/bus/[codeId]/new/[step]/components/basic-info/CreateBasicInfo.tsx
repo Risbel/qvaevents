@@ -59,8 +59,8 @@ export const CreateBasicInfo = () => {
   const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
   // Coordinates state - separate from eventTexts
   const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
-    lat: null,
-    lng: null,
+    lat: 22.144916,
+    lng: -80.448374,
   });
   const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
   const { data: businessResult, isError, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
@@ -250,8 +250,8 @@ export const CreateBasicInfo = () => {
       <input type="hidden" name="eventTexts" value={JSON.stringify(eventTextsArray)} />
 
       {/* Hidden inputs for coordinates */}
-      <input type="hidden" name="lat" value={coordinates.lat || ""} />
-      <input type="hidden" name="lng" value={coordinates.lng || ""} />
+      <input type="hidden" name="lat" value={coordinates.lat || 22.144916} />
+      <input type="hidden" name="lng" value={coordinates.lng || -80.448374} />
 
       {/* Hidden inputs for keywords */}
       {keywords.map((keyword, index) => (

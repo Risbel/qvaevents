@@ -52,6 +52,7 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       error: userError,
     } = await supabase.auth.getUser();
     if (userError || !user) {
+      console.error("userError: ", userError);
       return {
         status: "error",
         errors: { auth: ["User not authenticated"] },
@@ -79,14 +80,43 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       lng: Number(formData.get("lng")),
     };
 
-    const validatedData = createEventBasicInfoSchema.parse(rawData);
+    const validatedData = createEventBasicInfoSchema.safeParse(rawData);
+
+    if (!validatedData.success) {
+      console.log("validatedData.error: ", validatedData.error);
+      return {
+        status: "error",
+        errors: validatedData.error.issues.reduce((acc, error) => {
+          acc[error.path[0] as string] = [error.message];
+          return acc;
+        }, {} as { [key: string]: string[] }),
+      } satisfies State;
+    }
+
+    const {
+      lat,
+      lng,
+      startDateTime,
+      endDateTime,
+      visitsLimit,
+      type,
+      subType,
+      isPublic,
+      isForMinors,
+      spaceType,
+      accessType,
+      businessId,
+      defaultLocale,
+      keywords,
+      eventTexts,
+    } = validatedData.data;
 
     try {
       const { timezoneData, startDateUTC, endDateUTC } = await processEventDates(
-        validatedData.lat!,
-        validatedData.lng!,
-        validatedData.startDateTime,
-        validatedData.endDateTime,
+        lat!,
+        lng!,
+        startDateTime,
+        endDateTime,
         process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
       );
 
@@ -95,22 +125,20 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         .from("Event")
         .insert({
           step: 1, // Initially 1 when creating basic info
-          visitsLimit: validatedData.visitsLimit,
-          type: validatedData.type,
-          subType: validatedData.subType,
-          isPublic: validatedData.isPublic,
-          isForMinors: validatedData.isForMinors,
-          spaceType: validatedData.spaceType,
-          accessType: validatedData.accessType,
-          businessId: validatedData.businessId,
-          defaultLocale: validatedData.defaultLocale,
-          keywords: validatedData.keywords || [],
+          visitsLimit: visitsLimit,
+          typeId: type,
+          subTypeId: subType,
+          isPublic: isPublic,
+          isForMinors: isForMinors,
+          spaceTypeId: spaceType,
+          accessTypeId: accessType,
+          businessId: businessId,
+          defaultLocale: defaultLocale,
+          keywords: keywords || [],
           startDate: startDateUTC,
           endDate: endDateUTC,
-          isActive: true,
-          isDeleted: false,
-          lat: validatedData.lat,
-          lng: validatedData.lng,
+          lat: lat,
+          lng: lng,
           timeZoneId: timezoneData.timeZoneId,
           timeZoneName: timezoneData.timeZoneName,
         })
@@ -118,6 +146,7 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         .single();
 
       if (eventError) {
+        console.log("eventError: ", eventError);
         return {
           status: "error",
           errors: { event: [eventError.message] },
@@ -127,7 +156,7 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       const eventId = event.id;
 
       // Insert event texts
-      const eventTextsData = validatedData.eventTexts.map((text) => ({
+      const eventTextsData = eventTexts.map((text) => ({
         title: text.title,
         description: text.description,
         locationText: text.locationText || null,
@@ -138,6 +167,7 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       const { error: eventTextsError } = await supabase.from("EventText").insert(eventTextsData);
 
       if (eventTextsError) {
+        console.log("eventTextsError: ", eventTextsError);
         return {
           status: "error",
           errors: { eventTexts: [eventTextsError.message] },
@@ -149,6 +179,7 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         data: { eventId: eventId, slug: event.slug },
       } satisfies State;
     } catch (tzError) {
+      console.log("tzError: ", tzError);
       return {
         status: "error",
         errors: {
@@ -157,6 +188,8 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       } satisfies State;
     }
   } catch (error) {
+    console.log("error: ", error);
+
     return {
       status: "error",
       errors: { general: ["An unexpected error occurred"] },

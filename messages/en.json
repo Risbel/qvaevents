@@ -459,27 +459,28 @@
     "spaceType": {
       "title": "Space type",
       "indoor": "Indoor",
-      "outdoors": "Outdoors",
-      "semiCovered": "Semi-covered",
+      "outdoor": "Outdoor",
+      "semicovered": "Semi-covered",
       "airConditioned": "Air conditioned",
-      "mixed": "Climatized & outdoor",
-      "mixed2": "Covered & outdoor",
+      "climatizedAndOutdor": "Climatized & outdoor",
+      "coveredAndOutdoor": "Covered & outdoor",
       "indoorVenue": "Indoor venue",
       "outdoorVenue": "Outdoor venue",
-      "semiCoveredVenue": "Semi-covered venue",
+      "semicoveredVenue": "Semi-covered venue",
       "airConditionedVenue": "Air conditioned venue",
-      "mixedVenue": "Climatized & outdoor venue"
+      "climatizedAndOutdorVenue": "Climatized & outdoor venue",
+      "coveredAndOutdoorVenue": "Covered & outdoor venue"
     },
     "accessType": {
       "title": "Access type",
       "confirmations": "Confirmations",
+      "confirmationsDescription": "Only confirmations and optional companions.",
+      "confirmationsAndSpaces": "Confirmations & Spaces",
+      "confirmationsAndSpacesDescription": "Confirmations and optional categorized spaces",
       "tickets": "Tickets",
+      "ticketsDescription": "Ticket-based access. Ideal if the entry is based on tickets or if there are different prices for different classes.",
       "ticketsAndSpaces": "Tickets & Spaces",
-      "spaces": "Seats",
-      "simpleAccess": "Simple access with one click",
-      "ticketBased": "Ticket-based access",
-      "ticketsWithSpaces": "Tickets with optional space reservation",
-      "idealForTheaters": "Ideal for theaters and auditoriums"
+      "ticketsAndSpacesDescription": "Tickets and optional categorized spaces"
     },
     "languages": {
       "title": "Event languages",
@@ -504,7 +505,7 @@
       "selectDate": "Select date",
       "slug": "Event Slug",
       "slugPlaceholder": "Enter a unique URL slug for your event",
-      "visitsLimit": "Visits Limit",
+      "visitsLimit": "Entries Limit",
       "visitsLimitPlaceholder": "Maximum number of visits (optional)",
       "languages": "Event Languages",
       "languagesDescription": "Select languages for your event content",

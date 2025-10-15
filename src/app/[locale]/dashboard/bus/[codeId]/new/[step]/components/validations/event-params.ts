@@ -6,12 +6,20 @@ export const eventParamsSchema = z.object({
     .string()
     .nullable()
     .refine((val) => val !== null && val.length > 0, "Event type is required")
-    .refine((val) => val === null || val.length <= 30, "Event type must be 30 characters or less"),
+    .refine((val) => {
+      if (!val) return true;
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 100;
+    }, "Event type must be a valid ID between 1 and 100"),
   subType: z
     .string()
     .nullable()
     .refine((val) => val !== null && val.length > 0, "Event subtype is required")
-    .refine((val) => val === null || val.length <= 30, "Event subtype must be 30 characters or less"),
+    .refine((val) => {
+      if (!val) return true;
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 100;
+    }, "Event subtype must be a valid ID between 1 and 100"),
   customSubType: z.string().nullable().optional(),
   isForMinors: z
     .string()
@@ -25,12 +33,20 @@ export const eventParamsSchema = z.object({
     .string()
     .nullable()
     .refine((val) => val !== null && val.length > 0, "Space type is required")
-    .refine((val) => val === null || val.length <= 30, "Space type must be 30 characters or less"),
+    .refine((val) => {
+      if (!val) return true;
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 100;
+    }, "Space type must be a valid ID between 1 and 100"),
   accessType: z
     .string()
     .nullable()
     .refine((val) => val !== null && val.length > 0, "Access type is required")
-    .refine((val) => val === null || val.length <= 30, "Access type must be 30 characters or less"),
+    .refine((val) => {
+      if (!val) return true;
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 100;
+    }, "Access type must be a valid ID between 1 and 100"),
   languages: z
     .string()
     .nullable()

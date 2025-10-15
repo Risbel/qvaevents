@@ -52,7 +52,7 @@ export async function generateMetadata({
       educational: "Educational",
     };
 
-    const eventType = eventTypeMap[event.type] || event.type;
+    const eventType = eventTypeMap[event.Type.name] || event.Type.name;
 
     const title = `${currentLocaleText.title}`;
     const description =
@@ -68,7 +68,7 @@ export async function generateMetadata({
       description,
       keywords: [
         eventType.toLowerCase(),
-        ...(event.subType ? [event.subType.toLowerCase()] : []),
+        ...(event.SubType.name ? [event.SubType.name.toLowerCase()] : []),
         ...(event.keywords || []),
         "event",
         "tickets",

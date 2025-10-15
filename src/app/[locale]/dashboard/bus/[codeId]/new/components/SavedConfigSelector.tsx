@@ -3,9 +3,16 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
-import { CustomEventConfig } from "@/queries/client/business/getBusinessByCodeId";
+import { Tables } from "@/types/supabase";
 
-export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs: CustomEventConfig[] }) => {
+type CustomEventConfigWithJoins = Tables<"CustomEventConfig"> & {
+  Type?: Tables<"Type">;
+  SubType?: Tables<"SubType">;
+  SpaceType?: Tables<"SpaceType">;
+  AccessType?: Tables<"AccessType">;
+};
+
+export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs: CustomEventConfigWithJoins[] }) => {
   const { config, updateConfig } = useEventConfig();
   const t = useTranslations("EventCreation");
 
@@ -15,12 +22,16 @@ export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs
       if (dbConfig) {
         // Convert database config to the format expected by the provider
         const convertedConfig = {
-          type: dbConfig.type,
-          subType: dbConfig.subType || "",
+          type: dbConfig.Type?.name || "",
+          subType: dbConfig.SubType?.name || "",
+          typeId: dbConfig.typeId || undefined,
+          subTypeId: dbConfig.subTypeId || undefined,
           isForMinors: dbConfig.isForMinors ? "yes" : "no",
           isPublic: dbConfig.isPublic,
-          spaceType: dbConfig.spaceType,
-          accessType: dbConfig.accessType,
+          spaceType: dbConfig.SpaceType?.name || "",
+          accessType: dbConfig.AccessType?.name || "",
+          spaceTypeId: dbConfig.spaceTypeId || undefined,
+          accessTypeId: dbConfig.accessTypeId || undefined,
           selectedLanguages: dbConfig.selectedLanguages || [],
           savedConfigId: value,
         };
@@ -31,11 +42,10 @@ export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs
     }
   };
 
-  // Only use database configs
-  const allConfigs = customEventConfigs.map((dbConfig) => ({
-    id: dbConfig.id.toString(),
-    name: dbConfig.name,
-  }));
+  // Only show configs if there are any
+  if (!customEventConfigs || customEventConfigs.length === 0) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -44,8 +54,8 @@ export const SavedConfigSelector = ({ customEventConfigs }: { customEventConfigs
           <SelectValue placeholder={t("useSavedConfig")} className="text-sm" />
         </SelectTrigger>
         <SelectContent>
-          {allConfigs.map((configItem) => (
-            <SelectItem key={configItem.id} value={configItem.id} className="text-sm">
+          {customEventConfigs.map((configItem) => (
+            <SelectItem key={configItem.id} value={configItem.id.toString()} className="text-sm">
               <span className="font-medium">{configItem.name}</span>
             </SelectItem>
           ))}

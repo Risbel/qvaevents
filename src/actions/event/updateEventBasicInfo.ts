@@ -85,12 +85,8 @@ export async function updateEventBasicInfo(prevState: State, formData: FormData)
         .from("Event")
         .update({
           visitsLimit: validatedData.visitsLimit,
-          type: validatedData.type,
-          subType: validatedData.subType,
           isPublic: validatedData.isPublic,
           isForMinors: validatedData.isForMinors,
-          spaceType: validatedData.spaceType,
-          accessType: validatedData.accessType,
           businessId: validatedData.businessId,
           defaultLocale: validatedData.defaultLocale,
           keywords: validatedData.keywords || [],

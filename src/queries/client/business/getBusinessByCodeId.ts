@@ -10,7 +10,7 @@ export interface BusinessWithOrganizer extends Business {
 }
 
 export async function getBusinessByCodeId(client: TypedSupabaseClient, codeId: string): Promise<BusinessWithOrganizer> {
-  return client
+  return await client
     .from("Business")
     .select(
       `
@@ -24,17 +24,7 @@ export async function getBusinessByCodeId(client: TypedSupabaseClient, codeId: s
           user_id,
           isDeleted
         ),
-        CustomEventConfig (
-          id,
-          name,
-          type,
-          subType,
-          isForMinors,
-          isPublic,
-          spaceType,
-          accessType,
-          selectedLanguages
-        )
+        CustomEventConfig(*)
       `
     )
     .eq("codeId", codeId)

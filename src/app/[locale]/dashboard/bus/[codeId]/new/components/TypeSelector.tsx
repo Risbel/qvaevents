@@ -4,31 +4,56 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
+import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEventConfig } from "./EventConfigProvider";
 import { useTranslations } from "next-intl";
-import { TypeWithSubTypes } from "@/queries/client/eventTypes/getTypesAndSubtypes";
+import useGetTypesAndSubtypes from "@/hooks/eventTypes/useGetTypesAndSubtypes";
+import { TypesWithSubTypes, SubType } from "@/queries/client/eventTypes/getTypesAndSubtypes";
 
-export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
+export function TypeSelector() {
   const params = useParams();
   const locale = params.locale as string;
   const { config, updateConfig } = useEventConfig();
   const t = useTranslations("EventCreation");
+
+  const { data: typesData, isLoading, isError } = useGetTypesAndSubtypes();
+  const types = typesData || [];
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="flex items-center space-x-1">
+              <Skeleton className="h-4 w-4 rounded-full" />
+              <Skeleton className={`h-8 ${index % 2 === 0 ? "w-16" : "w-20"} rounded-md`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (isError || !types) {
+    return <div className="text-sm text-destructive">Error loading event types. Please try again.</div>;
+  }
 
   // Find the selected type and subtype based on config values
   const selectedType = types.find((type) => type.name === config.type);
   const selectedTypeId = selectedType?.id || null;
 
   // Find the selected subtype
-  const selectedSubType = selectedType?.SubType?.find((subType) => subType.name === config.subType);
+  const selectedSubType = selectedType?.SubType?.find((subType: SubType) => subType.name === config.subType);
   const selectedSubTypeId = selectedSubType?.id || null;
   const isOtherSelected = config.subType === "other" || (config.customSubType && config.customSubType !== "");
   const customType = isOtherSelected ? config.customSubType : "";
 
   // Helper function to get the correct label based on locale
-  const getLocalizedLabel = (type: TypeWithSubTypes) => {
+  const getLocalizedLabel = (type: TypesWithSubTypes) => {
     if (locale === "es" && type.labelEs) {
       return type.labelEs;
     }
@@ -45,10 +70,10 @@ export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
 
   const handleSubTypeChange = (value: string) => {
     if (value === "other") {
-      updateConfig({ subType: "other", customSubType: "" });
+      updateConfig({ subType: "other", subTypeId: undefined, customSubType: "" });
     } else {
       const subType = selectedType?.SubType?.find((st) => st.id.toString() === value);
-      updateConfig({ subType: subType?.name || "", customSubType: "" });
+      updateConfig({ subType: subType?.name || "", subTypeId: subType?.id, customSubType: "" });
     }
   };
 
@@ -67,12 +92,14 @@ export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
             const type = types.find((t) => t.id.toString() === value);
             updateConfig({
               type: type?.name || "",
+              typeId: type?.id,
               subType: "",
+              subTypeId: undefined,
             });
           }}
           className="flex flex-wrap gap-1"
         >
-          {types.map((type) => (
+          {types.map((type: TypesWithSubTypes) => (
             <div key={type.id} className="flex items-center space-x-1">
               <RadioGroupItem className="cursor-pointer" value={type.id.toString()} id={`type-${type.id}`} />
               <Label
@@ -101,7 +128,7 @@ export function TypeSelector({ types }: { types: TypeWithSubTypes[] }) {
             onValueChange={handleSubTypeChange}
             className="flex flex-wrap gap-2"
           >
-            {selectedType.SubType.map((subType) => (
+            {selectedType.SubType.map((subType: SubType) => (
               <div key={subType.id} className="flex items-center space-x-1">
                 <RadioGroupItem className="cursor-pointer" value={subType.id.toString()} id={`subtype-${subType.id}`} />
                 <Label htmlFor={`subtype-${subType.id}`} className="cursor-pointer">

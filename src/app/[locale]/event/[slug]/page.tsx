@@ -34,6 +34,9 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
   const event = eventResult.data.event;
   const isExpired = new Date(event.endDate) < new Date();
 
+  const typeSelected = locale === "es" ? event.Type.labelEs : event.Type.labelEn;
+  const subTypeSelected = locale === "es" ? event.SubType.labelEs : event.SubType.labelEn;
+
   return (
     <EventTextProvider eventTexts={event.EventText} defaultLocale={event.defaultLocale}>
       <nav className="flex flex-1 justify-between items-center space-x-2 px-2 md:px-4 py-2 sticky top-0 z-50 bg-background/50 backdrop-blur-sm border-b">
@@ -89,15 +92,18 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               />
             )}
 
-            <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
-              <ReservationDialog
-                isFull={event.isFull}
-                eventId={event.id}
-                visitsLimit={event.visitsLimit || 0}
-                businessId={event.Business.id}
-              />
-              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
-            </div>
+            {event.AccessType.name === "confirmations" && (
+              <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
+                <ReservationDialog
+                  isFull={event.isFull}
+                  eventId={event.id}
+                  visitsLimit={event.visitsLimit || 0}
+                  businessId={event.Business.id}
+                />
+                <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
+              </div>
+            )}
+
             {isExpired && (
               <Alert variant="destructive" className="shadow-md shadow-red-500/20">
                 <CalendarClockIcon className="h-5 w-5 text-primary" />
@@ -110,15 +116,18 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
             <EventLocation />
             <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
-            <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
-              <ReservationDialog
-                isFull={event.isFull}
-                eventId={event.id}
-                visitsLimit={event.visitsLimit || 0}
-                businessId={event.Business.id}
-              />
-              <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
-            </div>
+            {event.AccessType.name === "confirmations" && (
+              <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
+                <ReservationDialog
+                  isFull={event.isFull}
+                  eventId={event.id}
+                  visitsLimit={event.visitsLimit || 0}
+                  businessId={event.Business.id}
+                />
+                <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
+              </div>
+            )}
+
             <Card className="gap-2 shadow-md shadow-primary/20">
               <CardHeader>
                 <CardTitle>{t("eventDetails")}</CardTitle>
@@ -142,15 +151,13 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                   <Ticket className="h-5 w-5 text-primary" />
                   <div>
                     <p className="font-medium flex items-center gap-2">
-                      <span>{getEventType(event.type, locale).label}</span>
-                      {getEventType(event.type, locale).icon && <span>{getEventType(event.type, locale).icon}</span>}
+                      <span>{typeSelected}</span>
+                      {event.Type.icon && <span>{event.Type.icon}</span>}
                     </p>
-                    {event.subType && (
+                    {event.SubType.name && (
                       <p className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span>{getEventSubType(event.subType, locale).label}</span>
-                        {getEventSubType(event.subType, locale).icon && (
-                          <span>{getEventSubType(event.subType, locale).icon}</span>
-                        )}
+                        <span>{subTypeSelected}</span>
+                        {event.SubType.icon && <span>{event.SubType.icon}</span>}
                       </p>
                     )}
                   </div>

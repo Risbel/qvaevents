@@ -8,7 +8,7 @@ const createVisitSchema = z.object({
   eventId: z.coerce.number().int().positive(),
   clientId: z.coerce.number().int().positive(),
   businessId: z.coerce.number().int().positive().optional(),
-  companionsCount: z.string().min(1).max(30).default("1"),
+  companionsCount: z.string().min(0).max(30).default("0"),
 });
 
 export async function createVisit(prevState: State, formData: FormData): Promise<State> {
@@ -29,6 +29,7 @@ export async function createVisit(prevState: State, formData: FormData): Promise
   });
 
   if (!validation.success) {
+    console.log(validation.error);
     return {
       status: "error",
       errors: { visit: ["Invalid payload"] },
