@@ -135,11 +135,29 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       } satisfies State;
     }
 
+    const { data: subscriptionHistory, error: subscriptionHistoryError } = await supabase
+      .from("SubscriptionHistory")
+      .insert({
+        event: "create",
+        subscriptionId: newSubscription.id,
+        planPriceId: parseInt(validatedData.data.planPriceId),
+        startDate: new Date().toISOString(),
+        endDate: expDate.toISOString(),
+      })
+      .select()
+      .single();
+
+    if (subscriptionHistoryError) {
+      return {
+        status: "error",
+      } satisfies State;
+    }
+
     return {
       status: "success",
       data: {
-        profile: newProfile,
-        subscription: newSubscription,
+        success: true,
+        message: "Organizer profile created successfully",
       },
     } satisfies State;
   } catch (error) {

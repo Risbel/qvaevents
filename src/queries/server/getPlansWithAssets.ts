@@ -23,18 +23,21 @@ export async function getPlansWithAssets(): Promise<State> {
       .select(
         `
         *,
-        PlanPrice!inner(
+        PlanPrice(
           *,
-          Asset!inner(*)
+          Asset(*)
         )
       `
       )
       .eq("isActive", true)
       .eq("PlanPrice.isActive", true)
-      .eq("PlanPrice.Asset.isActive", true)
-      .order("price", { ascending: true });
+      .eq("PlanPrice.Asset.isActive", true);
 
+    console.log(plans);
+    console.log(error);
+    console.log(error?.message);
     if (error) {
+      console.log(error);
       return {
         status: "error",
       } satisfies State;

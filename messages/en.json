@@ -119,7 +119,11 @@
     "pending": "Pending",
     "reservedOn": "Reserved on",
     "expired": "Expired",
-    "full": "Sold Out"
+    "full": "Sold Out",
+    "create": "Created",
+    "renew": "Renewed",
+    "cancel": "Canceled",
+    "pause": "Paused"
   },
   "Sidebar": {
     "dashboard": "Dashboard",
@@ -199,7 +203,7 @@
   "Profile": {
     "title": "Profile",
     "basicInfo": "Basic Information",
-    "basicInfoDescription": "Your account information from Supabase",
+    "basicInfoDescription": "Your account information",
     "basicInfoNote": "This information is managed by your authentication provider and cannot be changed here.",
     "profileInfo": "Profile Information",
     "profileDescription": "Manage your account settings and preferences",
@@ -273,7 +277,15 @@
     "statusUnknown": "Unknown",
     "month": "month",
     "createBusiness": "Create Business",
-    "viewDashboard": "View Dashboard"
+    "viewDashboard": "View Dashboard",
+    "SubscriptionHistory": {
+      "title": "Subscription History",
+      "event": "Event",
+      "price": "Price",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "createdAt": "Created At"
+    }
   },
   "ClientProfile": {
     "title": "Client Profile",

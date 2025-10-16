@@ -8,6 +8,7 @@ import {
   getOrganizerSubscription,
   SubscriptionWithPlanPriceAndAsset,
 } from "@/queries/server/organizer/getOrganizerSubscription";
+import SubscriptionHistoryTable from "./SubscriptionHistoryTable";
 
 interface SubscriptionInfoProps {
   user: SupabaseUser;
@@ -33,44 +34,50 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
   const subscription = subscriptionResult.data.subscription as SubscriptionWithPlanPriceAndAsset;
 
   return (
-    <Card className="gap-4">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <CreditCard className="w-5 h-5" />
-          <CardTitle className="text-xl">{t("subscription")}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t("plan")}</span>
-              <span className="font-medium">{subscription.Plan.name}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t("price")}</span>
-              <span className="font-medium">
-                {subscription.PlanPrice.Asset.symbol}
-                {subscription.PlanPrice.amount}/{subscription.Plan.billingCycle === 0 ? t("month") : t("year")}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Currency</span>
-              <span className="font-medium">
-                {subscription.PlanPrice.Asset.code} ({subscription.PlanPrice.Asset.symbol})
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t("status")}</span>
-              <SubscriptionStatusBadge status={subscription.status} />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t("expiresAt")}</span>
-              <span className="font-medium">{new Date(subscription.expDate || "").toLocaleDateString()}</span>
+    <div className="space-y-4">
+      {/* Main Subscription Info */}
+      <Card className="gap-4 shadow-md shadow-primary/40">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            <CardTitle className="text-xl">{t("subscription")}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="bg-primary/10 rounded-lg p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">{t("plan")}:</span>
+                <span className="font-medium">{subscription.Plan.name}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">{t("price")}:</span>
+                <span className="font-medium">
+                  {subscription.PlanPrice.Asset.symbol}
+                  {subscription.PlanPrice.amount}/{subscription.Plan.billingCycle === 0 ? t("month") : t("year")}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Currency:</span>
+                <span className="font-medium">
+                  {subscription.PlanPrice.Asset.code} ({subscription.PlanPrice.Asset.symbol})
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">{t("status")}:</span>
+                <SubscriptionStatusBadge status={subscription.status} />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">{t("expiresAt")}:</span>
+                <span className="font-medium">{new Date(subscription.expDate || "").toLocaleDateString()}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      {/* Subscription History Table */}
+      <SubscriptionHistoryTable history={subscription.SubscriptionHistory} />
+    </div>
   );
 }

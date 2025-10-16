@@ -30,7 +30,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
 
   if (organizerProfileResult.status === "error") {
     return (
-      <Card>
+      <Card className="shadow-md shadow-primary/40">
         <CardHeader>
           <CardTitle className="text-xl flex items-center gap-2">
             <UserCheck2 className="w-5 h-5" />
@@ -53,7 +53,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
   }
 
   return (
-    <Card>
+    <Card className="shadow-md shadow-primary/40">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
             </div>
           </div>
 
-          <Button asChild variant="outline" size="sm">
+          <Button asChild size="sm">
             <Link href={`/${locale}/dashboard/org/${organizerProfile.codeId}`}>
               <LayoutDashboard className="w-4 h-4" />
               {t("viewDashboard")}

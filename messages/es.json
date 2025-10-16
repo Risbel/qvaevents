@@ -119,7 +119,11 @@
     "pending": "Pendiente",
     "reservedOn": "Reservado el",
     "expired": "Expirado",
-    "full": "Sold Out"
+    "full": "Sold Out",
+    "create": "Creado",
+    "renew": "Renovado",
+    "cancel": "Cancelado",
+    "pause": "Pausado"
   },
   "Sidebar": {
     "dashboard": "Panel de Control",
@@ -199,7 +203,7 @@
   "Profile": {
     "title": "Perfil",
     "basicInfo": "Información Básica",
-    "basicInfoDescription": "Tu información de cuenta desde Supabase",
+    "basicInfoDescription": "Tu información de cuenta",
     "basicInfoNote": "Esta información es gestionada por tu proveedor de autenticación y no se puede cambiar aquí.",
     "profileInfo": "Información del Perfil",
     "profileDescription": "Gestiona la configuración y preferencias de tu cuenta",
@@ -273,7 +277,15 @@
     "statusUnknown": "Desconocido",
     "month": "mes",
     "createBusiness": "Crear Negocio",
-    "viewDashboard": "Ver Dashboard"
+    "viewDashboard": "Ver Dashboard",
+    "SubscriptionHistory": {
+      "title": "Historial de Suscripciones",
+      "event": "Event",
+      "price": "Precio",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "createdAt": "Creado el"
+    }
   },
   "ClientProfile": {
     "title": "Perfil de Cliente",

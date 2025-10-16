@@ -640,7 +640,6 @@ export type Database = {
           id: number;
           isActive: boolean;
           name: string;
-          price: number | null;
           type: string;
           updatedAt: string | null;
         };
@@ -650,7 +649,6 @@ export type Database = {
           id?: number;
           isActive?: boolean;
           name: string;
-          price?: number | null;
           type: string;
           updatedAt?: string | null;
         };
@@ -660,7 +658,6 @@ export type Database = {
           id?: number;
           isActive?: boolean;
           name?: string;
-          price?: number | null;
           type?: string;
           updatedAt?: string | null;
         };
@@ -741,7 +738,7 @@ export type Database = {
           organizerId: number;
           pausedAt: string | null;
           planId: number;
-          planPriceId: number;
+          planPriceId: number | null;
           renewedAt: string | null;
           status: number;
           trialEndDate: string | null;
@@ -755,7 +752,7 @@ export type Database = {
           organizerId: number;
           pausedAt?: string | null;
           planId: number;
-          planPriceId: number;
+          planPriceId?: number | null;
           renewedAt?: string | null;
           status?: number;
           trialEndDate?: string | null;
@@ -769,7 +766,7 @@ export type Database = {
           organizerId?: number;
           pausedAt?: string | null;
           planId?: number;
-          planPriceId?: number;
+          planPriceId?: number | null;
           renewedAt?: string | null;
           status?: number;
           trialEndDate?: string | null;
@@ -795,6 +792,51 @@ export type Database = {
             columns: ["planPriceId"];
             isOneToOne: false;
             referencedRelation: "PlanPrice";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      SubscriptionHistory: {
+        Row: {
+          createdAt: string;
+          endDate: string | null;
+          event: string;
+          id: number;
+          planPriceId: number | null;
+          startDate: string | null;
+          subscriptionId: number;
+        };
+        Insert: {
+          createdAt?: string;
+          endDate?: string | null;
+          event: string;
+          id?: number;
+          planPriceId?: number | null;
+          startDate?: string | null;
+          subscriptionId: number;
+        };
+        Update: {
+          createdAt?: string;
+          endDate?: string | null;
+          event?: string;
+          id?: number;
+          planPriceId?: number | null;
+          startDate?: string | null;
+          subscriptionId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "SubscriptionHistory_planPriceId_fkey";
+            columns: ["planPriceId"];
+            isOneToOne: false;
+            referencedRelation: "PlanPrice";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "SubscriptionHistory_subscriptionId_fkey";
+            columns: ["subscriptionId"];
+            isOneToOne: false;
+            referencedRelation: "Subscription";
             referencedColumns: ["id"];
           }
         ];

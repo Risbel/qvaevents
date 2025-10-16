@@ -5,12 +5,13 @@ import { createClient } from "@/utils/supabase/server";
 import { Tables } from "@/types/supabase";
 
 export type Subscription = Tables<"Subscription">;
-
+export type SubscriptionHistory = Tables<"SubscriptionHistory">;
 export type Plan = Tables<"Plan">;
 export type PlanPrice = Tables<"PlanPrice">;
 export type Asset = Tables<"Asset">;
 
 export type SubscriptionWithPlanPriceAndAsset = Subscription & {
+  SubscriptionHistory: SubscriptionHistory[];
   Plan: Plan;
   PlanPrice: PlanPrice & {
     Asset: Asset;
@@ -26,13 +27,20 @@ export async function getOrganizerSubscription(organizerId: number): Promise<Sta
       .select(
         `
         *,
+        SubscriptionHistory (
+          *,
+          PlanPrice (
+            *,
+            Asset (*)
+          )
+        ),
         Plan (
           id,
           name,
           type
         ),
         PlanPrice (
-        *,
+          *,
           Asset (
             id,
             symbol,
@@ -40,7 +48,6 @@ export async function getOrganizerSubscription(organizerId: number): Promise<Sta
             type
           )
         )
-        
       `
       )
       .eq("organizerId", organizerId)

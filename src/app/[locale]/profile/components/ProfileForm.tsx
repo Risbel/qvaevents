@@ -33,7 +33,7 @@ export default function ProfileForm({ user }: { user: SupabaseUser }) {
   };
 
   return (
-    <Card>
+    <Card className="shadow-md shadow-primary/40">
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
@@ -115,8 +115,8 @@ export default function ProfileForm({ user }: { user: SupabaseUser }) {
             )}
           </div>
 
-          <div className="bg-muted/50 rounded-lg p-4">
-            <p className="text-sm text-muted-foreground">{t("basicInfoNote")}</p>
+          <div className="bg-primary/10 rounded-lg p-4">
+            <p className="text-sm">{t("basicInfoNote")}</p>
           </div>
         </div>
       </CardContent>

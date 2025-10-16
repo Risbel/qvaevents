@@ -25,12 +25,12 @@ export function getSubscriptionStatusText(status: Subscription["status"], t: any
   }
 }
 
-export function getSubscriptionStatusColor(status: Subscription["status"]): string {
+export function getSubscriptionStatusColor(status: Subscription["status"]) {
   switch (status) {
     case 0: // expired
       return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
     case 1: // active
-      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      return "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground";
     case 2: // trialing
       return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
     case 3: // canceled
