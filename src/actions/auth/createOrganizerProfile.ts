@@ -10,10 +10,10 @@ const createOrganizerProfileSchema = z.object({
   companyType: z.string().min(1, "Company type is required"),
   companyLogo: z.url().optional().or(z.literal("")),
   planId: z.string().min(1, "Plan selection is required"),
-  billingCycle: z.string().min(1, "Billing cycle is required"),
+  planPriceId: z.string().min(1, "Plan price selection is required"),
 });
 
-export async function createOrganizerProfile(prevState: State, formData: FormData): Promise<State> {
+export async function createOrganizerProfile(prevState: State, formData: FormData) {
   try {
     const supabase = await createClient();
 
@@ -23,7 +23,6 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      console.error(userError);
       return {
         status: "error",
       } satisfies State;
@@ -34,7 +33,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       companyType: formData.get("companyType") as string,
       companyLogo: (formData.get("companyLogo") ?? "") as string,
       planId: formData.get("planId") as string,
-      billingCycle: formData.get("billingCycle") as string,
+      planPriceId: formData.get("planPriceId") as string,
     };
 
     const validatedData = createOrganizerProfileSchema.safeParse(rawData);
@@ -62,15 +61,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .eq("user_id", user.id)
       .eq("isDeleted", false);
 
-    if (checkError) {
-      console.error(checkError);
-      return {
-        status: "error",
-      } satisfies State;
-    }
-
-    if (existingProfiles && existingProfiles.length > 0) {
-      console.error("Organizer profile already exists");
+    if (checkError || (existingProfiles && existingProfiles.length > 0)) {
       return {
         status: "error",
       } satisfies State;
@@ -93,7 +84,19 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .single();
 
     if (insertError) {
-      console.error(insertError);
+      return {
+        status: "error",
+      } satisfies State;
+    }
+
+    // Get plan information to determine billing cycle
+    const { data: plan, error: planError } = await supabase
+      .from("Plan")
+      .select("billingCycle")
+      .eq("id", validatedData.data.planId)
+      .single();
+
+    if (planError || !plan) {
       return {
         status: "error",
       } satisfies State;
@@ -101,34 +104,23 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
 
     // Calculate expiration date based on billing cycle
     const now = new Date();
-    let expDate: Date;
+    const billingCycleMonths = {
+      "0": 1, // Monthly
+      "1": 12, // Yearly
+      "2": 3, // Quarterly
+    };
 
-    switch (validatedData.data.billingCycle) {
-      case "0": // Monthly
-        const nextMonth = addMonths(now, 1);
-        // If the current day doesn't exist in the next month, use the last day of that month
-        expDate = nextMonth.getDate() !== now.getDate() ? endOfMonth(nextMonth) : nextMonth;
-        break;
-      case "2": // Quarterly
-        const nextQuarter = addMonths(now, 3);
-        // If the current day doesn't exist in the next quarter, use the last day of that month
-        expDate = nextQuarter.getDate() !== now.getDate() ? endOfMonth(nextQuarter) : nextQuarter;
-        break;
-      case "1": // Yearly
-        const nextYear = addMonths(now, 12);
-        // If the current day doesn't exist in the next year (leap year), use the last day of that month
-        expDate = nextYear.getDate() !== now.getDate() ? endOfMonth(nextYear) : nextYear;
-        break;
-      default:
-        // Default to monthly if billing cycle is not recognized
-        const defaultNextMonth = addMonths(now, 1);
-        expDate = defaultNextMonth.getDate() !== now.getDate() ? endOfMonth(defaultNextMonth) : defaultNextMonth;
-    }
+    const monthsToAdd = billingCycleMonths[plan.billingCycle.toString() as keyof typeof billingCycleMonths] || 1;
+    const futureDate = addMonths(now, monthsToAdd);
+
+    // Handle edge case where the current day doesn't exist in the target month
+    const expDate = futureDate.getDate() !== now.getDate() ? endOfMonth(futureDate) : futureDate;
 
     const { data: newSubscription, error: subscriptionError } = await supabase
       .from("Subscription")
       .insert({
         planId: parseInt(validatedData.data.planId),
+        planPriceId: parseInt(validatedData.data.planPriceId),
         organizerId: newProfile.id,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -138,7 +130,6 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       .single();
 
     if (subscriptionError) {
-      console.error(subscriptionError);
       return {
         status: "error",
       } satisfies State;
@@ -152,7 +143,6 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
       },
     } satisfies State;
   } catch (error) {
-    console.error(error);
     return {
       status: "error",
     } satisfies State;

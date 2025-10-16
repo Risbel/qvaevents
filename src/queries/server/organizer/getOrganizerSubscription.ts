@@ -7,9 +7,14 @@ import { Tables } from "@/types/supabase";
 export type Subscription = Tables<"Subscription">;
 
 export type Plan = Tables<"Plan">;
+export type PlanPrice = Tables<"PlanPrice">;
+export type Asset = Tables<"Asset">;
 
-export type SubscriptionWithPlan = Subscription & {
+export type SubscriptionWithPlanPriceAndAsset = Subscription & {
   Plan: Plan;
+  PlanPrice: PlanPrice & {
+    Asset: Asset;
+  };
 };
 
 export async function getOrganizerSubscription(organizerId: number): Promise<State> {
@@ -24,9 +29,18 @@ export async function getOrganizerSubscription(organizerId: number): Promise<Sta
         Plan (
           id,
           name,
-          type,
-          price
+          type
+        ),
+        PlanPrice (
+        *,
+          Asset (
+            id,
+            symbol,
+            code,
+            type
+          )
         )
+        
       `
       )
       .eq("organizerId", organizerId)
@@ -42,7 +56,7 @@ export async function getOrganizerSubscription(organizerId: number): Promise<Sta
     return {
       status: "success",
       data: {
-        subscription: subscriptionData as SubscriptionWithPlan,
+        subscription: subscriptionData as SubscriptionWithPlanPriceAndAsset,
       },
     } satisfies State;
   } catch (error) {

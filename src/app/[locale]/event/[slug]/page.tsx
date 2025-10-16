@@ -20,7 +20,6 @@ import Image from "next/image";
 import ShareEventButton from "./components/ShareEventButton";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getEventSubType, getEventType } from "@/utils/eventTypesSelector";
 
 const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: string }> }) => {
   const { slug, locale } = await params;

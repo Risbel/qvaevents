@@ -4,7 +4,10 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 import { getOrganizerProfile, OrganizerProfile, Subscription } from "@/queries/server/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import SubscriptionStatusBadge from "@/app/components/SubscriptionStatusBadge";
-import { getOrganizerSubscription, SubscriptionWithPlan } from "@/queries/server/organizer/getOrganizerSubscription";
+import {
+  getOrganizerSubscription,
+  SubscriptionWithPlanPriceAndAsset,
+} from "@/queries/server/organizer/getOrganizerSubscription";
 
 interface SubscriptionInfoProps {
   user: SupabaseUser;
@@ -27,7 +30,7 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
     return null;
   }
 
-  const subscription = subscriptionResult.data.subscription as SubscriptionWithPlan;
+  const subscription = subscriptionResult.data.subscription as SubscriptionWithPlanPriceAndAsset;
 
   return (
     <Card className="gap-4">
@@ -47,7 +50,14 @@ export default async function SubscriptionInfo({ user }: SubscriptionInfoProps) 
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t("price")}</span>
               <span className="font-medium">
-                ${subscription.Plan.price}/ {subscription.Plan.billingCycle === 0 ? t("month") : t("year")}
+                {subscription.PlanPrice.Asset.symbol}
+                {subscription.PlanPrice.amount}/{subscription.Plan.billingCycle === 0 ? t("month") : t("year")}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Currency</span>
+              <span className="font-medium">
+                {subscription.PlanPrice.Asset.code} ({subscription.PlanPrice.Asset.symbol})
               </span>
             </div>
             <div className="flex items-center justify-between">

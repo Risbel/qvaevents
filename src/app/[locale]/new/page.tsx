@@ -1,13 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import CreateOrganizerProfileForm from "./components/CreateOrganizerProfileForm";
-import { getActivePlans, Plan } from "@/queries/server/getPlans";
+import { getPlansWithAssets, PlanWithPrices, Asset } from "@/queries/server/getPlansWithAssets";
+
 import GoBackButton from "../../components/GoBackButton";
 import { getTranslations } from "next-intl/server";
 
 export default async function NewOrganizerProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations("Profile");
   const tnav = await getTranslations("navigation");
   const supabase = await createClient();
 
@@ -34,17 +34,20 @@ export default async function NewOrganizerProfilePage({ params }: { params: Prom
     redirect(`/${locale}/profile`);
   }
 
-  const plans = await getActivePlans();
+  const plansResponse = await getPlansWithAssets();
 
-  if (plans.status === "error") {
+  if (plansResponse.status === "error") {
     redirect(`/${locale}/profile`);
   }
 
   return (
-    <div className="flex flex-col justify-center py-16">
+    <div className="flex flex-col justify-center py-16 space-y-4">
       <GoBackButton text={tnav("goBack")} className="w-fit" />
 
-      <CreateOrganizerProfileForm plans={(plans.data?.plans as Plan[]) || []} />
+      <CreateOrganizerProfileForm
+        plans={(plansResponse.data?.plans as PlanWithPrices[]) || []}
+        assets={(plansResponse.data?.assets as Asset[]) || []}
+      />
     </div>
   );
 }

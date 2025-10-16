@@ -8,6 +8,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)";
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       AccessType: {
@@ -34,6 +59,36 @@ export type Database = {
           labelEn?: string;
           labelEs?: string;
           name?: string;
+        };
+        Relationships: [];
+      };
+      Asset: {
+        Row: {
+          code: string;
+          createdAt: string;
+          id: number;
+          isActive: boolean;
+          name: string;
+          symbol: string;
+          type: Database["public"]["Enums"]["ENUM(AssetTypes)"];
+        };
+        Insert: {
+          code: string;
+          createdAt?: string;
+          id?: number;
+          isActive?: boolean;
+          name: string;
+          symbol: string;
+          type: Database["public"]["Enums"]["ENUM(AssetTypes)"];
+        };
+        Update: {
+          code?: string;
+          createdAt?: string;
+          id?: number;
+          isActive?: boolean;
+          name?: string;
+          symbol?: string;
+          type?: Database["public"]["Enums"]["ENUM(AssetTypes)"];
         };
         Relationships: [];
       };
@@ -611,6 +666,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      PlanPrice: {
+        Row: {
+          amount: number;
+          assetId: number;
+          createdAt: string;
+          id: number;
+          isActive: boolean;
+          planId: number;
+        };
+        Insert: {
+          amount: number;
+          assetId: number;
+          createdAt?: string;
+          id?: number;
+          isActive: boolean;
+          planId: number;
+        };
+        Update: {
+          amount?: number;
+          assetId?: number;
+          createdAt?: string;
+          id?: number;
+          isActive?: boolean;
+          planId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "PlanPrice_assetId_fkey";
+            columns: ["assetId"];
+            isOneToOne: false;
+            referencedRelation: "Asset";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "PlanPrice_planId_fkey";
+            columns: ["planId"];
+            isOneToOne: false;
+            referencedRelation: "Plan";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       SpaceType: {
         Row: {
           createdAt: string;
@@ -644,6 +741,7 @@ export type Database = {
           organizerId: number;
           pausedAt: string | null;
           planId: number;
+          planPriceId: number;
           renewedAt: string | null;
           status: number;
           trialEndDate: string | null;
@@ -657,6 +755,7 @@ export type Database = {
           organizerId: number;
           pausedAt?: string | null;
           planId: number;
+          planPriceId: number;
           renewedAt?: string | null;
           status?: number;
           trialEndDate?: string | null;
@@ -670,6 +769,7 @@ export type Database = {
           organizerId?: number;
           pausedAt?: string | null;
           planId?: number;
+          planPriceId?: number;
           renewedAt?: string | null;
           status?: number;
           trialEndDate?: string | null;
@@ -688,6 +788,13 @@ export type Database = {
             columns: ["planId"];
             isOneToOne: false;
             referencedRelation: "Plan";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Subscription_planPriceId_fkey";
+            columns: ["planPriceId"];
+            isOneToOne: false;
+            referencedRelation: "PlanPrice";
             referencedColumns: ["id"];
           }
         ];
@@ -819,7 +926,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      "ENUM(AssetTypes)": "fiat" | "crypto";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -937,8 +1044,13 @@ export type CompositeTypes<
   : never;
 
 export const Constants = {
-  public: {
+  graphql_public: {
     Enums: {},
+  },
+  public: {
+    Enums: {
+      "ENUM(AssetTypes)": ["fiat", "crypto"],
+    },
   },
 } as const;
 
