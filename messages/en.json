@@ -285,6 +285,19 @@
       "startDate": "Start Date",
       "endDate": "End Date",
       "createdAt": "Created At"
+    },
+    "UploadProfilePicture": {
+      "title": "Upload Profile Picture",
+      "description": "Upload a profile picture for your organizer",
+      "invalidImageType": "Invalid image type. Please upload an image in webp, jpeg or png format.",
+      "uploadingImage": "Uploading image...",
+      "deleteTitle": "Delete Organizer Logo",
+      "deleteDescription": "Are you sure you want to delete your organizer logo?",
+      "deletingImage": "Deleting image...",
+      "deletingImageSuccess": "Image deleted successfully!",
+      "deletingImageError": "Error deleting image. Please try again.",
+      "profilePictureUpdated": "Profile picture updated successfully!",
+      "errorUpdatingProfilePicture": "Error updating profile picture. Please try again."
     }
   },
   "ClientProfile": {

@@ -7,7 +7,7 @@ import { State } from "@/types/state";
 const updateOrganizerProfileSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   companyType: z.string().min(1, "Company type is required"),
-  companyLogo: z.string().url().optional().or(z.literal("").or(z.null())),
+  logo: z.string().url().optional().or(z.literal("").or(z.null())),
 });
 
 export async function updateOrganizerProfile(prevState: State, formData: FormData): Promise<State> {
@@ -28,7 +28,7 @@ export async function updateOrganizerProfile(prevState: State, formData: FormDat
     const rawData = {
       companyName: formData.get("companyName") as string,
       companyType: formData.get("companyType") as string,
-      companyLogo: formData.get("companyLogo") as string,
+      logo: formData.get("logo") as string,
     };
 
     const validatedData = updateOrganizerProfileSchema.safeParse(rawData);
@@ -54,7 +54,7 @@ export async function updateOrganizerProfile(prevState: State, formData: FormDat
       .update({
         companyName: validatedData.data.companyName,
         companyType: validatedData.data.companyType,
-        companyLogo: validatedData.data.companyLogo || "",
+        logo: validatedData.data.logo || "",
         updatedAt: new Date().toISOString(),
       })
       .eq("user_id", user.id)

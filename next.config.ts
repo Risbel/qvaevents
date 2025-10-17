@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         hostname: "wkbkpitwnujokbqucubh.supabase.co",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "wkbkpitwnujokbqucubh.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/organizers/profile-logos/**",
+      },
     ],
   },
 };

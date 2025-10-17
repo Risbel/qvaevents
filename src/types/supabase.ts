@@ -597,7 +597,7 @@ export type Database = {
       OrganizerProfile: {
         Row: {
           codeId: string;
-          companyLogo: string | null;
+          logo: string | null;
           companyName: string | null;
           companyType: string | null;
           createdAt: string;
@@ -609,7 +609,7 @@ export type Database = {
         };
         Insert: {
           codeId?: string;
-          companyLogo?: string | null;
+          logo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
           createdAt?: string;
@@ -621,7 +621,7 @@ export type Database = {
         };
         Update: {
           codeId?: string;
-          companyLogo?: string | null;
+          logo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
           createdAt?: string;

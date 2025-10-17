@@ -285,6 +285,19 @@
       "startDate": "Fecha de Inicio",
       "endDate": "Fecha de Fin",
       "createdAt": "Creado el"
+    },
+    "UploadProfilePicture": {
+      "title": "Subir Foto de Perfil",
+      "description": "Subir una foto de perfil para tu organizador",
+      "invalidImageType": "Tipo de imagen inválido. Por favor sube una imagen en formato webp, jpeg o png.",
+      "uploadingImage": "Subiendo imagen...",
+      "deleteTitle": "Eliminar Logo de Organizador",
+      "deleteDescription": "¿Estás seguro de querer eliminar tu logo de organizador?",
+      "deletingImage": "Eliminando imagen...",
+      "deletingImageSuccess": "Imagen eliminada exitosamente!",
+      "deletingImageError": "Error al eliminar la imagen. Por favor intenta de nuevo.",
+      "profilePictureUpdated": "Foto de perfil actualizada exitosamente!",
+      "errorUpdatingProfilePicture": "Error al actualizar la foto de perfil. Por favor intenta de nuevo."
     }
   },
   "ClientProfile": {

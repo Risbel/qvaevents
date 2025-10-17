@@ -19,7 +19,7 @@ export async function getBusinessByCodeId(client: TypedSupabaseClient, codeId: s
           id,
           companyName,
           companyType,
-          companyLogo,
+          logo,
           codeId,
           user_id,
           isDeleted

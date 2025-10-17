@@ -24,7 +24,7 @@ export async function getBusinessBySlug(slug: string): Promise<State> {
           id,
           companyName,
           companyType,
-          companyLogo
+          logo
         )
       `
       )

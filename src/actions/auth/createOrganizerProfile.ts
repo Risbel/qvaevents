@@ -8,7 +8,7 @@ import { addMonths, endOfMonth } from "date-fns";
 const createOrganizerProfileSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   companyType: z.string().min(1, "Company type is required"),
-  companyLogo: z.url().optional().or(z.literal("")),
+  logo: z.url().optional().or(z.literal("")),
   planId: z.string().min(1, "Plan selection is required"),
   planPriceId: z.string().min(1, "Plan price selection is required"),
 });
@@ -31,7 +31,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
     const rawData = {
       companyName: formData.get("companyName") as string,
       companyType: formData.get("companyType") as string,
-      companyLogo: (formData.get("companyLogo") ?? "") as string,
+      logo: (formData.get("logo") ?? "") as string,
       planId: formData.get("planId") as string,
       planPriceId: formData.get("planPriceId") as string,
     };
@@ -74,7 +74,7 @@ export async function createOrganizerProfile(prevState: State, formData: FormDat
         user_id: user.id,
         companyName: validatedData.data.companyName,
         companyType: validatedData.data.companyType,
-        companyLogo: validatedData.data.companyLogo || "",
+        logo: validatedData.data.logo || "",
         isDeleted: false,
         isActive: true,
         createdAt: new Date().toISOString(),

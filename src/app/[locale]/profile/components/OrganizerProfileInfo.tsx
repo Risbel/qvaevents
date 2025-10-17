@@ -7,7 +7,10 @@ import EditOrganizerProfileModal from "./EditOrganizerProfileModal";
 import { getOrganizerProfile, OrganizerProfile } from "@/queries/server/organizer/getOrganizerProfile";
 import { getTranslations } from "next-intl/server";
 import EmptyState from "./EmptyState";
+import ProfilePictureUpload from "./ProfilePictureUpload";
+import ProfilePictureDelete from "./ProfilePictureDelete";
 import Link from "next/link";
+import Image from "next/image";
 
 interface OrganizerProfileInfoProps {
   user: SupabaseUser;
@@ -67,12 +70,19 @@ export default async function OrganizerProfileInfo({ user, locale }: OrganizerPr
       <CardContent>
         <div className="flex flex-col md:flex-row justify-between gap-4">
           <div className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={organizerProfile.companyLogo || undefined} />
-              <AvatarFallback className="text-lg">
-                {getInitials(organizerProfile.companyName || user.user_metadata?.full_name || user.email || "")}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={organizerProfile.logo || undefined} />
+                <AvatarFallback className="text-lg">
+                  {getInitials(organizerProfile.companyName || user.user_metadata?.full_name || user.email || "")}
+                </AvatarFallback>
+              </Avatar>
+              {organizerProfile.logo ? (
+                <ProfilePictureDelete organizerId={organizerProfile.id} logoUrl={organizerProfile.logo} />
+              ) : (
+                <ProfilePictureUpload organizerId={organizerProfile.id} />
+              )}
+            </div>
             <div>
               <h3 className="text-lg font-semibold">{organizerProfile.companyName || t("noCompanyName")}</h3>
               <p className="text-muted-foreground">{organizerProfile.companyType || t("noCompanyType")}</p>

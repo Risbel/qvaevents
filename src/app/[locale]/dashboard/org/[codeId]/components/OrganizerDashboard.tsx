@@ -33,7 +33,7 @@ export default function OrganizerDashboard({ codeId, organizer }: OrganizerDashb
         <CardHeader>
           <div className="flex items-center space-x-2 md:space-x-4">
             <Avatar className="h-12 w-12 md:h-16 md:w-16">
-              <AvatarImage src={organizer.companyLogo || undefined} />
+              <AvatarImage src={organizer.logo || undefined} />
               <AvatarFallback className="text-lg">{getInitials(organizer.companyName || "")}</AvatarFallback>
             </Avatar>
             <div>

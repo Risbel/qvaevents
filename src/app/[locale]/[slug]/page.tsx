@@ -44,7 +44,7 @@ export default async function BusinessPage({ params }: PageProps) {
             {/* Business Logo/Image */}
             <div className="flex-shrink-0">
               <Avatar className="h-24 w-24 lg:h-32 lg:w-32 border-4 border-background shadow-lg">
-                <AvatarImage src={organizer.companyLogo || undefined} />
+                <AvatarImage src={organizer.logo || undefined} />
                 <AvatarFallback className="text-2xl lg:text-3xl bg-primary/10">
                   {getInitials(business.name || organizer.companyName || "Business")}
                 </AvatarFallback>
