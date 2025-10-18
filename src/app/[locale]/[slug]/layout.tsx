@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
       business.description || `${businessName} is a business managed by ${organizer.companyName}.`;
 
     return {
-      title: `${businessName} - QvaEvents`,
+      title: `${businessName}`,
       description: businessDescription,
       openGraph: {
         title: businessName,
@@ -52,11 +52,11 @@ export default function BusinessLayout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content */}
-      <main className="relative">{children}</main>
+      <main className="relative max-w-4xl mx-auto">{children}</main>
 
       {/* Simple Footer */}
-      <footer className="border-t bg-muted/30">
-        <div className="container mx-auto px-4 py-6">
+      <footer className="border-t bg-primary/10" id="contact">
+        <div className="container mx-auto px-4 py-2">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} QvaEvents. All rights reserved.

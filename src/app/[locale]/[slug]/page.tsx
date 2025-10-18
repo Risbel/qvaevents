@@ -1,17 +1,17 @@
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/server/business/getBusinessBySlug";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Building, Calendar } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { ImageCarousel } from "@/app/components/ImageCarousel";
+import Navbar from "./components/Navbar";
+import { Button } from "@/components/ui/button";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
 
-export default async function BusinessPage({ params }: PageProps) {
-  const { slug, locale } = await params;
-  const t = await getTranslations("Business");
+const BusinessPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
 
   const businessResult = await getBusinessBySlug(slug);
 
@@ -35,74 +35,165 @@ export default async function BusinessPage({ params }: PageProps) {
       .slice(0, 2);
   };
 
-  return (
-    <div className="bg-gradient-to-br from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10">
-        <div className="container mx-auto px-4 py-16">
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            {/* Business Logo/Image */}
-            <div className="flex-shrink-0">
-              <Avatar className="h-24 w-24 lg:h-32 lg:w-32 border-4 border-background shadow-lg">
-                <AvatarImage src={organizer.logo || undefined} />
-                <AvatarFallback className="text-2xl lg:text-3xl bg-primary/10">
-                  {getInitials(business.name || organizer.companyName || "Business")}
-                </AvatarFallback>
-              </Avatar>
-            </div>
+  const getBusinessName = () => {
+    return business.name || "Business";
+  };
+  const mockUpcomingEvents = [
+    {
+      id: 1,
+      title: "Summer Festival 2024",
+      date: "July 15, 2024",
+      image: "/event1.jpg",
+      description: "Join us for an amazing summer celebration!",
+    },
+    {
+      id: 2,
+      title: "Winter Festival 2024",
+      date: "December 15, 2024",
+      image: "/event2.jpg",
+      description: "Join us for an amazing winter celebration!",
+    },
+    {
+      id: 3,
+      title: "Spring Festival 2024",
+      date: "March 15, 2024",
+      image: "/event3.jpg",
+      description: "Join us for an amazing spring celebration!",
+    },
+    {
+      id: 4,
+      title: "Fall Festival 2024",
+      date: "October 15, 2024",
+      image: "/event4.jpg",
+      description: "Join us for an amazing fall celebration!",
+    },
+    // Add more mock events as needed
+  ];
 
-            {/* Business Info */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="space-y-4">
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">{business.name}</h1>
-                  <p className="text-lg text-muted-foreground">
-                    {organizer.companyName} • {organizer.companyType}
-                  </p>
-                </div>
-              </div>
-            </div>
+  return (
+    <>
+      <Navbar
+        businessLogo={business.logo as string}
+        initials={getInitials(business.name as string)}
+        businessName={business.name as string}
+      />
+
+      {/* Banner/Slider Section with Overlapping Logo */}
+      <section className="w-full relative" id="hero">
+        <ImageCarousel
+          images={business.BusinessImage.map((image) => ({ id: image.id, url: image.url }))}
+          alt="Banner"
+          className="h-screen md:h-screen lg:h-screen"
+          rounded="rounded-none"
+          showControls={false}
+          showIndicators={true}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-16 text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">{business.name}</h1>
+            {business.description && (
+              <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 leading-tight">
+                {business.description}
+              </p>
+            )}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="flex flex-col gap-4 w-full md:max-w-xl lg:max-w-7xl mx-auto px-4 py-12">
-        <Card className="gap-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building className="w-5 h-5" />
-              {t("about")} {business.name}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="prose prose-sm max-w-none">
-              {business.description ? (
-                <p className="text-muted-foreground leading-relaxed">{business.description}</p>
-              ) : (
-                <p className="text-muted-foreground italic">{t("noDescription")}</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Upcoming Events Section */}
+      <section id="upcoming-events" className="py-16 px-4 bg-background snap-start">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockUpcomingEvents.map((event) => (
+              <Card key={event.id} className="overflow-hidden py-0">
+                <div className="aspect-video bg-gray-200"></div>
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold">{event.title}</h3>
+                  <p className="text-gray-600">{event.date}</p>
+                  <p className="mt-2">{event.description}</p>
+                  <Button className="mt-4 w-full">Learn More</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        {/* Upcoming Events Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5" />
-              {t("upcomingEvents")}
-            </CardTitle>
-            <CardDescription>{t("upcomingEventsDescription")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8">
-              <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">{t("noEventsYet")}</h3>
-              <p className="text-muted-foreground">{t("noEventsDescription")}</p>
+      {/* Footer */}
+      <footer id="contact" className="bg-background py-12 px-4 mt-auto snap-start">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Contact Information */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
+            <div className="space-y-2">
+              <p className="flex items-center gap-2">
+                <Phone size={20} />
+                <span>+1 (555) 123-4567</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail size={20} />
+                <span>contact@business.com</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <MapPin size={20} />
+                <span>123 Event Street, City, Country</span>
+              </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </div>
+
+          {/* Social Links */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
+            <div className="flex gap-4">
+              <a href="#" className="hover:opacity-70">
+                <Instagram size={24} />
+              </a>
+              <a href="#" className="hover:opacity-70">
+                <Facebook size={24} />
+              </a>
+              <a href="#" className="hover:opacity-70">
+                <Twitter size={24} />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="hover:opacity-70">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:opacity-70">
+                  Events
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:opacity-70">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:opacity-70">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center">
+          <p>
+            &copy; {new Date().getFullYear()} {getBusinessName() as string}. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </>
   );
-}
+};
+
+export default BusinessPage;

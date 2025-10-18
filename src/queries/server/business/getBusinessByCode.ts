@@ -6,7 +6,7 @@ import { Tables } from "@/types/supabase";
 
 export type Business = Tables<"Business">;
 
-export async function getBusinessByCode(codeId: string) {
+export async function getBusinessByCode(codeId: string): Promise<State<Business>> {
   try {
     const supabase = await createClient();
 
@@ -21,16 +21,16 @@ export async function getBusinessByCode(codeId: string) {
     if (error) {
       return {
         status: "error",
-      } satisfies State;
+      } satisfies State<Business>;
     }
 
     return {
       status: "success",
-      data: { business: business as Business },
-    } satisfies State;
+      data: business as Business,
+    } as State<Business>;
   } catch (error) {
     return {
       status: "error",
-    } satisfies State;
+    } as State<Business>;
   }
 }

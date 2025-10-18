@@ -139,6 +139,38 @@ export type Database = {
           }
         ];
       };
+      BusinessImage: {
+        Row: {
+          businessId: number | null;
+          createdAt: string;
+          id: number;
+          size: number;
+          url: string;
+        };
+        Insert: {
+          businessId?: number | null;
+          createdAt?: string;
+          id?: number;
+          size: number;
+          url: string;
+        };
+        Update: {
+          businessId?: number | null;
+          createdAt?: string;
+          id?: number;
+          size?: number;
+          url?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "BusinessImage_businessId_fkey";
+            columns: ["businessId"];
+            isOneToOne: false;
+            referencedRelation: "Business";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       ClientCompanion: {
         Row: {
           clientId: number;
@@ -597,37 +629,37 @@ export type Database = {
       OrganizerProfile: {
         Row: {
           codeId: string;
-          logo: string | null;
           companyName: string | null;
           companyType: string | null;
           createdAt: string;
           id: number;
           isActive: boolean;
           isDeleted: boolean;
+          logo: string | null;
           updatedAt: string | null;
           user_id: string;
         };
         Insert: {
           codeId?: string;
-          logo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
           createdAt?: string;
           id?: number;
           isActive?: boolean;
           isDeleted?: boolean;
+          logo?: string | null;
           updatedAt?: string | null;
           user_id?: string;
         };
         Update: {
           codeId?: string;
-          logo?: string | null;
           companyName?: string | null;
           companyType?: string | null;
           createdAt?: string;
           id?: number;
           isActive?: boolean;
           isDeleted?: boolean;
+          logo?: string | null;
           updatedAt?: string | null;
           user_id?: string;
         };

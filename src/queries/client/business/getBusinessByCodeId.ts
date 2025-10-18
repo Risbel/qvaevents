@@ -3,10 +3,12 @@ import { Tables, TypedSupabaseClient } from "@/types/supabase";
 export type Business = Tables<"Business">;
 export type OrganizerProfile = Tables<"OrganizerProfile">;
 export type CustomEventConfig = Tables<"CustomEventConfig">;
+export type BusinessImage = Tables<"BusinessImage">;
 
 export interface BusinessWithOrganizer extends Business {
   OrganizerProfile: OrganizerProfile;
   CustomEventConfig: CustomEventConfig[];
+  BusinessImage: BusinessImage[];
 }
 
 export async function getBusinessByCodeId(client: TypedSupabaseClient, codeId: string): Promise<BusinessWithOrganizer> {
@@ -15,6 +17,7 @@ export async function getBusinessByCodeId(client: TypedSupabaseClient, codeId: s
     .select(
       `
         *,
+        BusinessImage(*),
         OrganizerProfile (
           id,
           companyName,

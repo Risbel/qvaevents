@@ -8,7 +8,7 @@ import { getBusinessByCode } from "@/queries/server/business/getBusinessByCode";
 
 export default async function BusDashboard({ params }: { params: Promise<{ codeId: string; locale: string }> }) {
   const { codeId, locale } = await params;
-  const { data } = await getBusinessByCode(codeId);
+  const businessResult = await getBusinessByCode(codeId);
 
   const stats = [
     {
@@ -49,13 +49,13 @@ export default async function BusDashboard({ params }: { params: Promise<{ codeI
   ];
 
   return (
-    <div className="space-y-6 w-full flex flex-col items-center max-w-7xl">
+    <div className="space-y-6 w-full flex flex-col items-center max-w-5xl py-4">
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <div>
-          <h1 className="text-3xl font-bold">{data?.business.name || "Business Dashboard"}</h1>
+          <h1 className="text-3xl font-bold">{(businessResult.data?.name as string) || "Business Dashboard"}</h1>
           <p className="text-muted-foreground">
-            {data?.business.description || "Manage your business events and activities"}
+            {(businessResult.data?.description as string) || "Manage your business events and activities"}
           </p>
         </div>
       </div>

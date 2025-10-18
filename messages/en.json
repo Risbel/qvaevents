@@ -112,6 +112,20 @@
     "generating": "Generating...",
     "finishing": "Finishing..."
   },
+  "uploadFiles": {
+    "uploadImage": "Upload Image",
+    "success": "Image uploaded successfully",
+    "error": "Error uploading image",
+    "invalidImageType": "Invalid image type. Please upload an image in webp, jpeg or png format.",
+    "uploading": "Uploading image...",
+    "uploadingImages": "Uploading images...",
+    "deleting": "Deleting image...",
+    "deletingImages": "Deleting images...",
+    "deletingImageSuccess": "Image deleted successfully",
+    "deletingImageError": "Error deleting image",
+    "dialogTitle": "Delete Image",
+    "dialogDescription": "Are you sure you want to delete this image?"
+  },
   "status": {
     "confirmed": "Confirmed",
     "attended": "Attended",

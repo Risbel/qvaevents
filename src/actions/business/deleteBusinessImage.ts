@@ -2,44 +2,38 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { deleteImage } from "@/utils/supabase/storage/client";
-import { revalidatePath } from "next/cache";
 
-export async function deleteEventImage(imageId: number, imageUrl: string) {
+export async function deleteBusinessImage(imageId: number, imageUrl: string) {
   try {
     const supabase = await createClient();
 
+    // Delete the image from storage first
     const { error: storageError } = await deleteImage(imageUrl);
 
     if (storageError) {
       return {
         status: "error" as const,
         error: storageError,
-        data: null,
       };
     }
 
-    const { error: dbError } = await supabase.from("EventImage").delete().eq("id", imageId);
+    // Then delete the database record
+    const { error: dbError } = await supabase.from("BusinessImage").delete().eq("id", imageId);
 
     if (dbError) {
       return {
         status: "error" as const,
         error: dbError.message,
-        data: null,
       };
     }
 
-    revalidatePath("/dashboard");
-
     return {
       status: "success" as const,
-      data: { deleted: true },
-      error: null,
     };
   } catch (error) {
     return {
       status: "error" as const,
-      error: error instanceof Error ? error.message : "Unknown error occurred",
-      data: null,
+      error: "Failed to delete business image",
     };
   }
 }

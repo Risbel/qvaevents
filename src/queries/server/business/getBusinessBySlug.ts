@@ -9,6 +9,12 @@ export type OrganizerProfile = Tables<"OrganizerProfile">;
 
 export interface BusinessWithOrganizer extends Business {
   OrganizerProfile: OrganizerProfile;
+  BusinessImage: Array<{
+    id: number;
+    url: string;
+    type: string;
+    size: number | null;
+  }>;
 }
 
 export async function getBusinessBySlug(slug: string): Promise<State> {
@@ -20,6 +26,7 @@ export async function getBusinessBySlug(slug: string): Promise<State> {
       .select(
         `
         *,
+        BusinessImage(*),
         OrganizerProfile (
           id,
           companyName,

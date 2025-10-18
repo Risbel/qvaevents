@@ -3,18 +3,27 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, ImagesIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ImageCarouselProps {
   images: Array<{
     id: number;
     url: string;
-    type: string;
-    size: number | null;
+    type?: string;
+    size?: number | null;
   }>;
   alt: string;
   className?: string;
+  rounded?:
+    | "rounded-lg"
+    | "rounded-none"
+    | "rounded-sm"
+    | "rounded-md"
+    | "rounded-xl"
+    | "rounded-2xl"
+    | "rounded-3xl"
+    | "rounded-full";
   autoplayInterval?: number; // in milliseconds, default 5000ms
   showControls?: boolean;
   showIndicators?: boolean;
@@ -27,6 +36,7 @@ export function ImageCarousel({
   autoplayInterval = 5000,
   showControls = true,
   showIndicators = true,
+  rounded = "rounded-lg",
 }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoplay, setIsAutoplay] = useState(true);
@@ -55,9 +65,15 @@ export function ImageCarousel({
     setCurrentIndex(index);
   }, []);
 
-  // Don't render if no images
+  // Show placeholder if no images
   if (!images || images.length === 0) {
-    return null;
+    return (
+      <div
+        className={cn("relative w-full h-64 md:h-80 lg:h-96 bg-primary/80 flex items-center justify-center", className)}
+      >
+        <ImagesIcon className="h-24 w-24 text-primary-foreground" />
+      </div>
+    );
   }
 
   // If only one image, render it without carousel controls
@@ -68,7 +84,7 @@ export function ImageCarousel({
           src={images[0].url}
           alt={`${alt} - Image ${images[0].id}`}
           fill
-          className="object-cover rounded-lg"
+          className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
           priority
         />
@@ -83,7 +99,7 @@ export function ImageCarousel({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Main Image Container */}
-      <div className="relative w-full h-full overflow-hidden rounded-lg">
+      <div className={cn("relative w-full h-full overflow-hidden", rounded)}>
         {images.map((image, index) => (
           <div
             key={image.id}
@@ -134,7 +150,7 @@ export function ImageCarousel({
 
         {/* Dots Indicator - Overlay on image */}
         {showIndicators && images.length > 1 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+          <div className="absolute z-50 bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
             {images.map((_, index) => (
               <button
                 key={index}
