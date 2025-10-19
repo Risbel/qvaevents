@@ -1,6 +1,6 @@
 import { getEventBySlug } from "@/queries/server/event/getEventBySlug";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, Shield, Ticket, CalendarClockIcon } from "lucide-react";
+import { Calendar, Users, Shield, Ticket, CalendarClockIcon, ArrowLeftIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { ImageCarousel } from "@/app/components/ImageCarousel";
@@ -48,10 +48,12 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
               height={32}
             />
           )}
+
           <Link className="font-bold" href={`/${locale}/${eventResult.data?.event.Business.slug}`}>
             {eventResult.data?.event.Business.name}
           </Link>
         </div>
+
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ModeToggle />
@@ -110,8 +112,10 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 <AlertDescription>{t("eventExpiredDescription")}</AlertDescription>
               </Alert>
             )}
+            <section id="about-event">
+              <EventDescription />
+            </section>
 
-            <EventDescription />
             <EventLocation />
             <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 

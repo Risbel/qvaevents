@@ -5,6 +5,7 @@ import { Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react"
 import { ImageCarousel } from "@/app/components/ImageCarousel";
 import Navbar from "./components/Navbar";
 import { Button } from "@/components/ui/button";
+import EventList from "./components/events/EventList";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -65,7 +66,8 @@ const BusinessPage = async ({ params }: PageProps) => {
       title: "Fall Festival 2024",
       date: "October 15, 2024",
       image: "/event4.jpg",
-      description: "Join us for an amazing fall celebration!",
+      description:
+        "Join us for an amazing fall celebration! Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
     },
     // Add more mock events as needed
   ];
@@ -83,7 +85,7 @@ const BusinessPage = async ({ params }: PageProps) => {
         <ImageCarousel
           images={business.BusinessImage.map((image) => ({ id: image.id, url: image.url }))}
           alt="Banner"
-          className="h-screen md:h-screen lg:h-screen"
+          className="h-[85vh] md:h-[85vh] lg:h-[85vh]"
           rounded="rounded-none"
           showControls={false}
           showIndicators={true}
@@ -92,31 +94,17 @@ const BusinessPage = async ({ params }: PageProps) => {
           <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-16 text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">{business.name}</h1>
             {business.description && (
-              <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 leading-tight">
-                {business.description}
-              </p>
+              <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 line-clamp-2">{business.description}</p>
             )}
           </div>
         </div>
       </section>
 
       {/* Upcoming Events Section */}
-      <section id="upcoming-events" className="py-16 px-4 bg-background snap-start">
-        <div className="max-w-7xl mx-auto">
+      <section id="upcoming-events" className="py-24 px-4 bg-background snap-start">
+        <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockUpcomingEvents.map((event) => (
-              <Card key={event.id} className="overflow-hidden py-0">
-                <div className="aspect-video bg-gray-200"></div>
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold">{event.title}</h3>
-                  <p className="text-gray-600">{event.date}</p>
-                  <p className="mt-2">{event.description}</p>
-                  <Button className="mt-4 w-full">Learn More</Button>
-                </div>
-              </Card>
-            ))}
-          </div>
+          <EventList />
         </div>
       </section>
 
