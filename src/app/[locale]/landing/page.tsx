@@ -1,5 +1,6 @@
 import LandingNavbar from "./components/LandingNavbar";
 import { getTranslations } from "next-intl/server";
+import LogoIcon from "./components/LogoIcon";
 
 const LandingPage = async () => {
   const t = await getTranslations("Index");
@@ -17,21 +18,21 @@ const LandingPage = async () => {
           <div className="bg-gradient-to-bl from-foreground/20 blur-2xl" />
         </div>
 
-        <div className="container px-4 mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 pb-3">
-            {t("hero.title")}
-          </h1>
+        <div className=" flex flex-col items-center justify-center container px-4 mx-auto text-center">
+          <LogoIcon size={80} className="rounded-md shadow-md mb-6" />
+
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text">{t("hero.title")}</h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">{t("hero.description")}</p>
           <div className="flex gap-4 justify-center">
             <a
               href="#features"
-              className="px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               {t("hero.cta.primary")}
             </a>
             <a
               href="#contact"
-              className="px-6 py-3 rounded-full border border-foreground/10 hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="px-6 py-3 border border-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               {t("hero.cta.secondary")}
             </a>
@@ -64,7 +65,7 @@ const LandingPage = async () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">{t("contact.description")}</p>
           <a
             href="mailto:risbel961019@gmail.com"
-            className="inline-flex items-center px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             {t("contact.cta")}
           </a>

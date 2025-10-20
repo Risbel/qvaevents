@@ -18,6 +18,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { BusinessWithOrganizer } from "@/queries/client/business/getBusinessByCodeId";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Navigation data structure
 const navigationData = {
@@ -89,14 +90,27 @@ export function BusSidebar({ locale, codeId, business, ...props }: BusSidebarPro
     return pathname === fullUrl;
   };
 
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2">
-          <Building2 className="h-5 w-5 text-primary" />
+          <Avatar>
+            <AvatarImage src={business?.OrganizerProfile?.logo || ""} />
+            <AvatarFallback className="text-lg">
+              {getInitials(business?.name || business?.OrganizerProfile?.companyName || "QvaEvents")}
+            </AvatarFallback>
+          </Avatar>
           <Link
             href={`/${locale}/dashboard/org/${business?.OrganizerProfile?.codeId}`}
-            className="text-xl font-bold text-primary"
+            className="text-sm font-bold truncate max-w-[120px]"
           >
             {business?.name || business?.OrganizerProfile?.companyName || "QvaEvents"}
           </Link>

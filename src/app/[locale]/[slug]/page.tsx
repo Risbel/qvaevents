@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
-import { getBusinessBySlug, BusinessWithOrganizer } from "@/queries/server/business/getBusinessBySlug";
-import { Card } from "@/components/ui/card";
-import { Phone, Mail, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { BusinessWithOrganizer, getBusinessBySlug } from "@/queries/server/business/getBusinessBySlug";
 import { ImageCarousel } from "@/app/components/ImageCarousel";
 import Navbar from "./components/Navbar";
-import { Button } from "@/components/ui/button";
 import EventList from "./components/events/EventList";
+import ButtonsHero from "./components/events/ButtonsHero";
+import DynamicFooter from "./components/DynamicFooter";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -36,42 +35,6 @@ const BusinessPage = async ({ params }: PageProps) => {
       .slice(0, 2);
   };
 
-  const getBusinessName = () => {
-    return business.name || "Business";
-  };
-  const mockUpcomingEvents = [
-    {
-      id: 1,
-      title: "Summer Festival 2024",
-      date: "July 15, 2024",
-      image: "/event1.jpg",
-      description: "Join us for an amazing summer celebration!",
-    },
-    {
-      id: 2,
-      title: "Winter Festival 2024",
-      date: "December 15, 2024",
-      image: "/event2.jpg",
-      description: "Join us for an amazing winter celebration!",
-    },
-    {
-      id: 3,
-      title: "Spring Festival 2024",
-      date: "March 15, 2024",
-      image: "/event3.jpg",
-      description: "Join us for an amazing spring celebration!",
-    },
-    {
-      id: 4,
-      title: "Fall Festival 2024",
-      date: "October 15, 2024",
-      image: "/event4.jpg",
-      description:
-        "Join us for an amazing fall celebration! Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-    },
-    // Add more mock events as needed
-  ];
-
   return (
     <>
       <Navbar
@@ -85,17 +48,20 @@ const BusinessPage = async ({ params }: PageProps) => {
         <ImageCarousel
           images={business.BusinessImage.map((image) => ({ id: image.id, url: image.url }))}
           alt="Banner"
-          className="h-[85vh] md:h-[85vh] lg:h-[85vh]"
+          className="h-[90vh] md:h-[90vh] lg:h-[90vh]"
           rounded="rounded-none"
           showControls={false}
           showIndicators={true}
         />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-16 text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">{business.name}</h1>
+          <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-16">
+            <h1 className="text-3xl md:text-4xl font-bold text-white">{business.name}</h1>
             {business.description && (
-              <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 line-clamp-2">{business.description}</p>
+              <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 leading-tight line-clamp-2 text-white/90">
+                {business.description}
+              </p>
             )}
+            <ButtonsHero />
           </div>
         </div>
       </section>
@@ -108,78 +74,8 @@ const BusinessPage = async ({ params }: PageProps) => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer id="contact" className="bg-background py-12 px-4 mt-auto snap-start">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Contact Information */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
-            <div className="space-y-2">
-              <p className="flex items-center gap-2">
-                <Phone size={20} />
-                <span>+1 (555) 123-4567</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail size={20} />
-                <span>contact@business.com</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin size={20} />
-                <span>123 Event Street, City, Country</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Social Links */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
-            <div className="flex gap-4">
-              <a href="#" className="hover:opacity-70">
-                <Instagram size={24} />
-              </a>
-              <a href="#" className="hover:opacity-70">
-                <Facebook size={24} />
-              </a>
-              <a href="#" className="hover:opacity-70">
-                <Twitter size={24} />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="hover:opacity-70">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:opacity-70">
-                  Events
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:opacity-70">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:opacity-70">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-          <p>
-            &copy; {new Date().getFullYear()} {getBusinessName() as string}. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* Dynamic Footer */}
+      <DynamicFooter business={business as BusinessWithOrganizer} />
     </>
   );
 };

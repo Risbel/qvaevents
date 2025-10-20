@@ -104,6 +104,7 @@ export type Database = {
           name: string | null;
           organizerId: number;
           slug: string | null;
+          footerConfig: Json | null;
         };
         Insert: {
           codeId?: string;
@@ -116,6 +117,7 @@ export type Database = {
           name?: string | null;
           organizerId: number;
           slug?: string | null;
+          footerConfig?: Json | null;
         };
         Update: {
           codeId?: string;
@@ -128,6 +130,7 @@ export type Database = {
           name?: string | null;
           organizerId?: number;
           slug?: string | null;
+          footerConfig?: Json | null;
         };
         Relationships: [
           {

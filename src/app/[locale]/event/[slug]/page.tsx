@@ -119,18 +119,6 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
             <EventLocation />
             <EventMap lat={event.lat || 22.144943} lng={event.lng || -80.448366} />
 
-            {event.AccessType.name === "confirmations" && (
-              <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
-                <ReservationDialog
-                  isFull={event.isFull}
-                  eventId={event.id}
-                  visitsLimit={event.visitsLimit || 0}
-                  businessId={event.Business.id}
-                />
-                <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
-              </div>
-            )}
-
             <Card className="gap-2 shadow-md shadow-primary/20">
               <CardHeader>
                 <CardTitle>{t("eventDetails")}</CardTitle>
@@ -187,6 +175,18 @@ const EventPage = async ({ params }: { params: Promise<{ slug: string; locale: s
                 </div>
               </CardContent>
             </Card>
+
+            {event.AccessType.name === "confirmations" && (
+              <div className={cn("grid grid-cols-2 gap-3", isExpired && "hidden")}>
+                <ReservationDialog
+                  isFull={event.isFull}
+                  eventId={event.id}
+                  visitsLimit={event.visitsLimit || 0}
+                  businessId={event.Business.id}
+                />
+                <ShareEventButton eventDate={event.startDate} eventSlug={event.slug} locale={locale} />
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -51,6 +51,11 @@ export const UploadBannerImages = ({ business }: { business: BusinessWithOrganiz
             multiple={true}
             maxFiles={2}
             acceptedFileTypes={["image/webp", "image/jpeg", "image/png"]}
+            compression={{
+              maxSizeMB: 0.1,
+              maxWidthOrHeight: 1200,
+              initialQuality: 100,
+            }}
             className="space-y-2"
             onUploadComplete={handleUploadComplete}
             onUploadError={handleUploadError}

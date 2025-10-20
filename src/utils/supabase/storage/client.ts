@@ -27,7 +27,7 @@ export const uploadImage = async ({ file, bucket, folder, compression }: UploadP
     const defaultOptions = {
       maxSizeMB: 0.05, // 50KB limit
       maxWidthOrHeight: 1200, // Maintain reasonable resolution
-      initialQuality: 0.8, // Start with good quality
+      initialQuality: 100, // Start with good quality
     };
 
     // Merge with custom options if provided

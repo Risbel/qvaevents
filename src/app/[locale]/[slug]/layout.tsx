@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
       return {
         title: "Business Not Found - QvaEvents",
         description: "The requested business could not be found.",
+        robots: "noindex, nofollow",
       };
     }
 
@@ -26,24 +27,63 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
     const businessDescription =
       business.description || `${businessName} is a business managed by ${organizer.companyName}.`;
 
-    return {
+    // Get the logo URL - prefer business logo over organizer logo
+    const logoUrl = business.logo || null;
+    const images = business.BusinessImage?.map((img) => img.url) || [];
+
+    // Base metadata
+    const metadata: Metadata = {
       title: `${businessName}`,
       description: businessDescription,
+      robots: "index, follow",
+      alternates: {
+        canonical: `https://qvaevents.vercel.app/${locale}/${slug}`,
+      },
       openGraph: {
         title: businessName,
         description: businessDescription,
         type: "website",
+        url: `https://qvaevents.vercel.app/${locale}/${slug}`,
+        siteName: "QvaEvents",
+        locale: locale,
+        images: logoUrl
+          ? [
+              {
+                url: logoUrl,
+                width: 1200,
+                height: 630,
+                alt: `${businessName} logo`,
+              },
+            ]
+          : images.map((img) => ({
+              url: img,
+              width: 1200,
+              height: 630,
+              alt: `${businessName} image`,
+            })),
       },
       twitter: {
-        card: "summary",
+        card: logoUrl ? "summary" : "summary_large_image",
         title: businessName,
         description: businessDescription,
+        images: logoUrl ? [logoUrl] : images,
+        creator: "@qvaevents",
+        site: "@qvaevents",
       },
+      icons: logoUrl
+        ? {
+            icon: logoUrl,
+            apple: logoUrl,
+          }
+        : undefined,
     };
+
+    return metadata;
   } catch (error) {
     return {
       title: "Business Profile - QvaEvents",
       description: "View business information and upcoming events on QvaEvents.",
+      robots: "noindex, nofollow",
     };
   }
 }

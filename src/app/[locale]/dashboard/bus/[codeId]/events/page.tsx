@@ -20,7 +20,7 @@ const EventsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-6 max-w-4xl">
+      <div className="container mx-auto max-w-4xl">
         <h1 className="text-2xl font-bold mb-4">{t("events")}:</h1>
 
         <div className="flex items-center gap-2 mb-4">
@@ -80,7 +80,7 @@ const EventsPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 max-w-4xl">
+    <div className="container mx-auto max-w-4xl">
       <h1 className="text-2xl font-bold mb-4">{t("events")}:</h1>
 
       <EventsFilter />

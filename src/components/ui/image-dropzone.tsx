@@ -10,6 +10,12 @@ import { Upload, X, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
+interface CompressionOptions {
+  maxSizeMB?: number;
+  maxWidthOrHeight?: number;
+  initialQuality?: number;
+}
+
 interface ImageDropzoneProps {
   title?: string;
   description?: string;
@@ -18,6 +24,7 @@ interface ImageDropzoneProps {
   multiple?: boolean;
   maxFiles?: number;
   acceptedFileTypes?: string[];
+  compression?: CompressionOptions;
   onUploadComplete?: (urls: string[], sizes: number[]) => void;
   onUploadError?: (error: string) => void;
   onUploadStateChange?: (isPending: boolean) => void;
@@ -33,6 +40,11 @@ export function ImageDropzone({
   multiple = true,
   maxFiles = 10,
   acceptedFileTypes = ["image/webp", "image/jpeg", "image/png"],
+  compression = {
+    maxSizeMB: 0.05,
+    maxWidthOrHeight: 1200,
+    initialQuality: 100,
+  },
   onUploadComplete,
   onUploadError,
   onUploadStateChange,
@@ -122,6 +134,7 @@ export function ImageDropzone({
             file: imageFile,
             bucket,
             folder,
+            compression,
           });
 
           if (error) {

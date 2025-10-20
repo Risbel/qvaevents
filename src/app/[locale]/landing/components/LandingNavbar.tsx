@@ -6,6 +6,8 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import OpenDashboardButton from "@/app/components/OpenDashboardButton";
+import Image from "next/image";
+import LogoIcon from "./LogoIcon";
 
 const LandingNavbar = async () => {
   const t = await getTranslations("navigation");
@@ -17,18 +19,8 @@ const LandingNavbar = async () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="flex flex-1 justify-between items-center space-x-2 px-2 md:px-4 py-2">
-        <a href="#hero" className="text-primary text-xl font-bold">
-          {t("brand")}
-        </a>
-        <div className="hidden md:flex items-center gap-2 md:gap-4">
-          <a href="#features" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            {t("features")}
-          </a>
-          <a href="#contact" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            {t("contact")}
-          </a>
-        </div>
+      <nav className="flex flex-1 justify-between items-center space-x-2 px-4 py-2">
+        <LogoIcon size={30} className="rounded-md shadow-md" />
 
         <div className="flex items-center gap-2">
           {user && <OpenDashboardButton />}

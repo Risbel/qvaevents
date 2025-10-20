@@ -36,7 +36,7 @@ const ButtonShare = ({ locale, eventSlug, eventTitle, eventDescription }: Button
         }
       }}
     >
-      <Share2Icon className="w-4 h-4" />
+      <Share2Icon className="w-4 h-4 text-primary" />
     </Button>
   );
 };

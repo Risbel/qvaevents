@@ -393,7 +393,7 @@
   },
   "Index": {
     "hero": {
-      "title": "Gestiona tus eventos con nosotros",
+      "title": "Gestiona tus eventos con QvaEvents",
       "description": "Crea eventos inolvidables con nuestra potente plataforma. Desde la planificación hasta la ejecución, te tenemos cubierto.",
       "cta": {
         "primary": "Explorar",
@@ -464,6 +464,10 @@
       "description": "Únete a miles de empresas que confían en QvaEvent para ofrecer experiencias de eventos excepcionales.",
       "button": "Comenzar Hoy"
     }
+  },
+  "BusinessLanding": {
+    "events": "Eventos",
+    "contact": "Contactanos"
   },
   "EventCreation": {
     "title": "Nuevo Evento",
@@ -656,7 +660,7 @@
     "details": "Detalles"
   },
   "EventPage": {
-    "eventDetails": "Detalles del Evento",
+    "eventDetails": "Más detalles",
     "aboutEvent": "Sobre el Evento",
     "shareEvent": "Compartir Evento",
     "shareEventFailed": "Error al compartir el evento",

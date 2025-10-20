@@ -28,7 +28,10 @@ const EventList = () => {
   return (
     <div className="space-y-4">
       {eventsData.map((event) => (
-        <Card key={event.id} className="shadow-md shadow-primary/50 py-0 overflow-hidden relative">
+        <Card
+          key={event.id}
+          className="shadow-md shadow-primary/50 py-0 overflow-hidden relative border-none rounded-none"
+        >
           <div className="flex flex-col md:flex-row gap-4">
             <ImageCarousel
               images={event.EventImage.map((image) => ({ id: image.id, url: image.url }))}
@@ -52,10 +55,10 @@ const EventList = () => {
                   event.EventText[0].description}
               </p>
               <div className="flex gap-2 ">
-                <Button className="flex-1 md:flex-none w-fit" asChild>
+                <Button size="sm" className="flex-1 md:flex-none w-fit" asChild>
                   <Link href={`/${locale}/event/${event.slug}`}>{tActions("reserveNow")}</Link>
                 </Button>
-                <Button variant="outline" className="flex-1 md:flex-none w-fit" asChild>
+                <Button variant="outline" size="sm" className="flex-1 md:flex-none w-fit" asChild>
                   <Link href={`/${locale}/event/${event.slug}`}>
                     {tActions("viewDetails")}
                     <ArrowRightIcon className="w-4 h-4" />

@@ -74,6 +74,7 @@ export function BusinessImageCard({ image, onDelete }: BusinessImageCardProps) {
         width={100}
         height={150}
         priority={true}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className={`w-full h-64 object-cover rounded-lg border ${isLoading || isError ? "opacity-0" : "opacity-100"}`}
         onLoad={() => setIsLoading(false)}
         onError={() => {

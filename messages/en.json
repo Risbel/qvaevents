@@ -397,7 +397,7 @@
   },
   "Index": {
     "hero": {
-      "title": "Manage your events with us",
+      "title": "Manage your events with QvaEvents",
       "description": "Create unforgettable events with our powerful platform. From planning to execution, we've got you covered.",
       "cta": {
         "primary": "Explore",
@@ -468,6 +468,10 @@
       "description": "Join thousands of businesses that trust QvaEvent to deliver exceptional event experiences.",
       "button": "Get Started Today"
     }
+  },
+  "BusinessLanding": {
+    "events": "Events",
+    "contact": "Contact us"
   },
   "EventCreation": {
     "title": "New Event",
@@ -660,7 +664,7 @@
     "details": "Details"
   },
   "EventPage": {
-    "eventDetails": "Event Details",
+    "eventDetails": "More details",
     "aboutEvent": "About Event",
     "shareEvent": "Share Event",
     "shareEventFailed": "Failed to share event",

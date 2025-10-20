@@ -28,24 +28,20 @@ const Navbar = ({
           <AvatarImage src={businessLogo as string} />
           <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
         </Avatar>
-        <span className="text-primary font-semibold">{businessName}</span>
+        <span className="font-semibold">{businessName}</span>
       </a>
 
       <div className="flex items-center gap-4">
         <a
-          className="text-primary font-semibold hover:underline"
+          className="font-semibold hover:underline"
           href="#upcoming-events"
           onClick={(e) => scrollToSection(e, "upcoming-events")}
         >
           Events
         </a>
 
-        <a
-          className="text-primary font-semibold hover:underline"
-          href="#contact"
-          onClick={(e) => scrollToSection(e, "contact")}
-        >
-          Contact Us
+        <a className="font-semibold hover:underline" href="#contact" onClick={(e) => scrollToSection(e, "contact")}>
+          Contact
         </a>
       </div>
     </nav>

@@ -49,7 +49,7 @@ export default async function BusDashboard({ params }: { params: Promise<{ codeI
   ];
 
   return (
-    <div className="space-y-6 w-full flex flex-col items-center max-w-5xl py-4">
+    <div className="space-y-6 w-full flex flex-col items-center max-w-5xl py-4 px-4">
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <div>

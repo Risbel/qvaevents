@@ -21,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QvaEvent",
-  description: "QvaEvent",
+  title: "QvaEvents",
+  description: "QvaEvents",
 };
 
 export default async function RootLayout({
