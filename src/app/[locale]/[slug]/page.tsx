@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import EventList from "./components/events/EventList";
 import ButtonsHero from "./components/events/ButtonsHero";
 import DynamicFooter from "./components/DynamicFooter";
+import BusinessMap from "./components/BusinessMap";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -53,8 +54,8 @@ const BusinessPage = async ({ params }: PageProps) => {
           showControls={false}
           showIndicators={true}
         />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-16">
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 absolute bottom-24">
             <h1 className="text-3xl md:text-4xl font-bold text-white">{business.name}</h1>
             {business.description && (
               <p className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 leading-tight line-clamp-2 text-white/90">
@@ -74,6 +75,7 @@ const BusinessPage = async ({ params }: PageProps) => {
         </div>
       </section>
 
+      {business.lat && business.lng && <BusinessMap lat={business.lat} lng={business.lng} />}
       {/* Dynamic Footer */}
       <DynamicFooter business={business as BusinessWithOrganizer} />
     </>

@@ -43,6 +43,15 @@ export default function LoginPage() {
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
+        <GoogleSignIn mode="login" redirectTo={`/${locale}/new`} />
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <Separator />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">{t("or")}</span>
+          </div>
+        </div>
         <form action={formAction} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
@@ -98,17 +107,6 @@ export default function LoginPage() {
             )}
           </Button>
         </form>
-
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <Separator />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">{t("or")}</span>
-          </div>
-        </div>
-
-        <GoogleSignIn mode="login" redirectTo={`/${locale}/new`} />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <Button variant="link" className="w-full" asChild>

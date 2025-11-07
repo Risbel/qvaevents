@@ -4,13 +4,14 @@ import React from "react";
 import { useParams } from "next/navigation";
 import useGetBusinessByCodeId from "@/hooks/business/useGetBusinessByCodeId";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, ExternalLinkIcon, Link } from "lucide-react";
+import { AlertTriangle, ExternalLinkIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import UploadLogo from "./components/UploadLogo";
 import { UploadBannerImages } from "./components/UploadBannerImages";
 import FooterConfigForm from "./components/FooterConfigForm";
 import { Button } from "@/components/ui/button";
 import { FooterConfigType } from "@/lib/validations/footer";
+import UpdateLocation from "./components/UpdateLocation";
 
 const BusinessLanding = () => {
   const params = useParams();
@@ -44,6 +45,7 @@ const BusinessLanding = () => {
 
       <UploadLogo business={business} />
       <UploadBannerImages business={business} />
+      <UpdateLocation business={business} />
       <FooterConfigForm footerConfig={business.footerConfig as FooterConfigType} businessId={business.id} />
     </section>
   );

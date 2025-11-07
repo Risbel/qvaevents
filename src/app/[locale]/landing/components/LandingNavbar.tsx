@@ -20,7 +20,9 @@ const LandingNavbar = async () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="flex flex-1 justify-between items-center space-x-2 px-4 py-2">
-        <LogoIcon size={30} className="rounded-md shadow-md" />
+        <a href="#hero">
+          <LogoIcon size={30} className="rounded-md shadow-md" />
+        </a>
 
         <div className="flex items-center gap-2">
           {user && <OpenDashboardButton />}

@@ -102,6 +102,8 @@ export type Database = {
           isDeleted: boolean;
           logo: string | null;
           name: string | null;
+          lat: number | null;
+          lng: number | null;
           organizerId: number;
           slug: string | null;
           footerConfig: Json | null;
@@ -115,6 +117,8 @@ export type Database = {
           isDeleted?: boolean;
           logo?: string | null;
           name?: string | null;
+          lat?: number | null;
+          lng?: number | null;
           organizerId: number;
           slug?: string | null;
           footerConfig?: Json | null;
@@ -126,6 +130,8 @@ export type Database = {
           id?: number;
           isActive?: boolean;
           isDeleted?: boolean;
+          lat?: number | null;
+          lng?: number | null;
           logo?: string | null;
           name?: string | null;
           organizerId?: number;

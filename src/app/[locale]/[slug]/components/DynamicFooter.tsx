@@ -48,7 +48,7 @@ const DynamicFooter = ({ business }: DynamicFooterProps) => {
   };
 
   return (
-    <footer id="contact" className="bg-black text-white py-12 px-4 mt-auto snap-start border-t">
+    <footer id="contact" className="bg-black text-white py-12 px-4 mt-4 snap-start border-t">
       <div className="flex mb-4 justify-center md:justify-start">
         <Image
           src={business.OrganizerProfile.logo as string}

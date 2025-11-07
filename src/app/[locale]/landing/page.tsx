@@ -21,7 +21,12 @@ const LandingPage = async () => {
         <div className=" flex flex-col items-center justify-center container px-4 mx-auto text-center">
           <LogoIcon size={80} className="rounded-md shadow-md mb-6" />
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text">{t("hero.title")}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text">
+            <span className="text-foreground">{t("hero.title").split("QvaEvents")[0]}</span>
+            <span className="bg-gradient-to-r from-primary via-primary/70 to-primary/95 bg-clip-text text-transparent">
+              QvaEvents
+            </span>
+          </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">{t("hero.description")}</p>
           <div className="flex gap-4 justify-center">
             <a

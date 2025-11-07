@@ -52,7 +52,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       error: userError,
     } = await supabase.auth.getUser();
     if (userError || !user) {
-      console.error("userError: ", userError);
       return {
         status: "error",
         errors: { auth: ["User not authenticated"] },
@@ -83,7 +82,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
     const validatedData = createEventBasicInfoSchema.safeParse(rawData);
 
     if (!validatedData.success) {
-      console.log("validatedData.error: ", validatedData.error);
       return {
         status: "error",
         errors: validatedData.error.issues.reduce((acc, error) => {
@@ -146,7 +144,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         .single();
 
       if (eventError) {
-        console.log("eventError: ", eventError);
         return {
           status: "error",
           errors: { event: [eventError.message] },
@@ -167,7 +164,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       const { error: eventTextsError } = await supabase.from("EventText").insert(eventTextsData);
 
       if (eventTextsError) {
-        console.log("eventTextsError: ", eventTextsError);
         return {
           status: "error",
           errors: { eventTexts: [eventTextsError.message] },
@@ -179,7 +175,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
         data: { eventId: eventId, slug: event.slug },
       } satisfies State;
     } catch (tzError) {
-      console.log("tzError: ", tzError);
       return {
         status: "error",
         errors: {
@@ -188,8 +183,6 @@ export async function createEventBasicInfo(prevState: State, formData: FormData)
       } satisfies State;
     }
   } catch (error) {
-    console.log("error: ", error);
-
     return {
       status: "error",
       errors: { general: ["An unexpected error occurred"] },

@@ -57,13 +57,15 @@ export const CreateBasicInfo = () => {
   const [endTime, setEndTime] = useState<string>("");
   // Event texts for each language - only for the languages in the URL
   const [eventTexts, setEventTexts] = useState<{ [languageId: number]: EventText }>({});
-  // Coordinates state - separate from eventTexts
-  const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
-    lat: 22.144916,
-    lng: -80.448374,
-  });
+
   const { data: languagesResult, isLoading: languagesLoading, isError: languagesError } = useGetLanguages();
   const { data: businessResult, isError, isLoading: businessLoading } = useGetBusinessByCodeId(codeId as string);
+
+  // Coordinates state - separate from eventTexts
+  const [coordinates, setCoordinates] = useState<{ lat: number | null; lng: number | null }>({
+    lat: businessResult?.lat ?? 22.144916,
+    lng: businessResult?.lng ?? -80.448374,
+  });
 
   const initialState: State = { status: undefined };
   const [state, formAction, isPending] = useActionState(createEventBasicInfo, initialState);
