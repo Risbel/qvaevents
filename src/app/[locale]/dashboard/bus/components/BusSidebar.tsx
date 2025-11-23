@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Calendar, Users, BarChart3, Building2, Globe, Plus, QrCode } from "lucide-react";
+import { Calendar, Users, BarChart3, Building2, Globe, Plus, QrCode, UserCog, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -63,6 +63,16 @@ const navigationData = {
           title: "clients",
           url: `/dashboard/bus/{codeId}/clients`,
           icon: Users,
+        },
+        {
+          title: "roles",
+          url: `/dashboard/bus/{codeId}/roles`,
+          icon: ShieldCheck,
+        },
+        {
+          title: "staff",
+          url: `/dashboard/bus/{codeId}/staff`,
+          icon: UserCog,
         },
         {
           title: "qrCodes",

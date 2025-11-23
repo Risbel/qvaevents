@@ -150,6 +150,8 @@
     "myEvents": "My Events",
     "management": "Management",
     "clients": "Clients",
+    "staff": "Staff",
+    "roles": "Roles",
     "qrCodes": "QR Codes"
   },
   "Auth": {

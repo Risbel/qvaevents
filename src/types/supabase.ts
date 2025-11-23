@@ -97,36 +97,37 @@ export type Database = {
           codeId: string;
           createdAt: string;
           description: string;
+          footerConfig: Json | null;
           id: number;
           isActive: boolean;
           isDeleted: boolean;
-          logo: string | null;
-          name: string | null;
           lat: number | null;
           lng: number | null;
+          logo: string | null;
+          name: string | null;
           organizerId: number;
           slug: string | null;
-          footerConfig: Json | null;
         };
         Insert: {
           codeId?: string;
           createdAt?: string;
           description: string;
+          footerConfig?: Json | null;
           id?: number;
           isActive: boolean;
           isDeleted?: boolean;
-          logo?: string | null;
-          name?: string | null;
           lat?: number | null;
           lng?: number | null;
+          logo?: string | null;
+          name?: string | null;
           organizerId: number;
           slug?: string | null;
-          footerConfig?: Json | null;
         };
         Update: {
           codeId?: string;
           createdAt?: string;
           description?: string;
+          footerConfig?: Json | null;
           id?: number;
           isActive?: boolean;
           isDeleted?: boolean;
@@ -136,7 +137,6 @@ export type Database = {
           name?: string | null;
           organizerId?: number;
           slug?: string | null;
-          footerConfig?: Json | null;
         };
         Relationships: [
           {
@@ -674,6 +674,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      Permission: {
+        Row: {
+          createdAt: string;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: number;
+          name: string;
+        };
+        Update: {
+          createdAt?: string;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
       Plan: {
         Row: {
           billingCycle: number | null;
@@ -742,6 +760,144 @@ export type Database = {
             columns: ["planId"];
             isOneToOne: false;
             referencedRelation: "Plan";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      profileRole: {
+        Row: {
+          createdAt: string;
+          id: number;
+          profileId: number;
+          roleId: number;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: number;
+          profileId: number;
+          roleId: number;
+        };
+        Update: {
+          createdAt?: string;
+          id?: number;
+          profileId?: number;
+          roleId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profileRole_profileId_fkey";
+            columns: ["profileId"];
+            isOneToOne: false;
+            referencedRelation: "OrganizerProfile";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "profileRole_roleId_fkey";
+            columns: ["roleId"];
+            isOneToOne: false;
+            referencedRelation: "Role";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      Resource: {
+        Row: {
+          createdAt: string;
+          description: string | null;
+          id: number;
+          key: string;
+          name: string;
+        };
+        Insert: {
+          createdAt?: string;
+          description?: string | null;
+          id?: number;
+          key: string;
+          name: string;
+        };
+        Update: {
+          createdAt?: string;
+          description?: string | null;
+          id?: number;
+          key?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      Role: {
+        Row: {
+          businessId: number;
+          createdAt: string;
+          id: number;
+          key: string | null;
+          name: string | null;
+        };
+        Insert: {
+          businessId: number;
+          createdAt?: string;
+          id?: number;
+          key?: string | null;
+          name?: string | null;
+        };
+        Update: {
+          businessId?: number;
+          createdAt?: string;
+          id?: number;
+          key?: string | null;
+          name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Role_businessId_fkey";
+            columns: ["businessId"];
+            isOneToOne: false;
+            referencedRelation: "Business";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      rolePermissionResource: {
+        Row: {
+          createdAt: string;
+          id: number;
+          permissionId: number;
+          resourceId: number | null;
+          roleId: number;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: number;
+          permissionId: number;
+          resourceId?: number | null;
+          roleId: number;
+        };
+        Update: {
+          createdAt?: string;
+          id?: number;
+          permissionId?: number;
+          resourceId?: number | null;
+          roleId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "permissionOnRole_permissionId_fkey";
+            columns: ["permissionId"];
+            isOneToOne: false;
+            referencedRelation: "Permission";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "permissionOnRole_roleId_fkey";
+            columns: ["roleId"];
+            isOneToOne: false;
+            referencedRelation: "Role";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rolePermissionResource_resourceId_fkey";
+            columns: ["resourceId"];
+            isOneToOne: false;
+            referencedRelation: "Resource";
             referencedColumns: ["id"];
           }
         ];

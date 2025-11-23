@@ -150,6 +150,8 @@
     "myEvents": "Mis Eventos",
     "management": "Gestión",
     "clients": "Clientes",
+    "staff": "Personal",
+    "roles": "Roles",
     "qrCodes": "Códigos QR"
   },
   "Auth": {
